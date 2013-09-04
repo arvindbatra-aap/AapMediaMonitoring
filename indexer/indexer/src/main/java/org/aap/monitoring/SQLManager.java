@@ -8,30 +8,31 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import sun.misc.Version;
 
-/**
- * Hello world!
- */
-public class App {
-    public static void main(String[] args) {
+public class SQLManager {
 
-        Connection con = null;
-        Statement st = null;
-        ResultSet rs = null;
+    Connection con = null;
+    SolrManager solrManager;
 
+    public SQLManager(SolrManager solrManager) throws SQLException {
         String url = "jdbc:mysql://in-cia-dev00.in.walmartlabs.com:3306/hjp";
         String user = "hjp";
         String password = "";
+        con = DriverManager.getConnection(url, user, password);
+        this.solrManager = solrManager;
+    }
 
+    //yy-mm-dd
+    public void triggerIndexer(String dateString) {
+        ResultSet rs = null;
+        Statement st = null;
         try {
-            con = DriverManager.getConnection(url, user, password);
             st = con.createStatement();
-            rs = st.executeQuery("SELECT * from affiliatepl;");
-            processSqlResultItems(rs);
+            rs = st.executeQuery("SELECT * from affiliatepl where date=" + dateString + ";");
+            this.solrManager.insertDocument(rs);
 
         } catch (SQLException ex) {
-            Logger lgr = Logger.getLogger(Version.class.getName());
+            Logger lgr = Logger.getLogger(this.getClass().getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
@@ -47,20 +48,9 @@ public class App {
                 }
 
             } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(Version.class.getName());
+                Logger lgr = Logger.getLogger(this.getClass().getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
             }
         }
-    }
-
-    static void processSqlResultItems(ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            getObjectItem(resultSet);
-        }
-    }
-
-    static void getObjectItem(ResultSet resultSet) throws SQLException {
-        System.out.println(resultSet.getString("date"));
-        System.out.println(resultSet.getDouble("revenue"));
     }
 }
