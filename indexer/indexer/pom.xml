@@ -3,6 +3,13 @@
   <groupId>org.aap.monitoring</groupId>
   <artifactId>indexer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <repositories>
+    <repository>
+        <id>maven-restlet</id>
+        <name>Public online Restlet repository</name>
+        <url>http://maven.restlet.org</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.apache.solr</groupId>
@@ -24,6 +31,11 @@
       <artifactId>junit</artifactId>
       <version>4.10</version>
       </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
   </dependencies>
   <build>
 
