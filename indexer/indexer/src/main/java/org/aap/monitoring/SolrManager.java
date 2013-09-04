@@ -71,11 +71,11 @@ public class SolrManager {
     }
 
     private SolrQuery getQueryForKeywords(String keywords) {
-        return new SolrQuery().setQuery("src:" + keywords);
+        return new SolrQuery().setQuery("content:" + keywords);
     }
 
     private SolrQuery getQueryForKeywordsAndDate(String keywords, Date start, Date end) {
-        return new SolrQuery().setQuery("src:" + keywords).addDateRangeFacet("date", start, end, "+1DAY");
+        return new SolrQuery().setQuery("content:" + keywords).addDateRangeFacet("date", start, end, "+1DAY");
     }
 
     public List<Article> getArticlesForKeywords(String keywords) throws SolrServerException {

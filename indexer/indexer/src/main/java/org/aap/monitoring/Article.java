@@ -27,10 +27,10 @@ public class Article {
         article.setTitle(doc.get("title").toString());
         article.setDate((Date) doc.get("date"));
         article.setImage_url(doc.get("image_url").toString());
-        article.setContent(doc.get("content").toString());
+      //  article.setContent(doc.get("content").toString());
         article.setAuthor(doc.get("author").toString());
         article.setCategory(doc.get("category").toString());
-        article.setComments(doc.get("comments").toString());
+     //   article.setComments(doc.get("comments").toString());
         article.setCountry(doc.get("country").toString());
         article.setCity(doc.get("city").toString());
         article.setCommentcount((Integer)doc.get("commentcount"));
