@@ -29,6 +29,18 @@ public class HostRules {
 			if (url.contains("/news/")) {
 				return true;
 			}
+		}
+		
+		if ("zeenews.india.com".equals(host)) {
+			if (url.contains("_")) {
+				return true;
+			}
+		}
+		
+		if ("deccanherald.com".equals(domain)) {
+			if (url.contains("/content/")) {
+				return true;
+			}
 			
 		}
 		
