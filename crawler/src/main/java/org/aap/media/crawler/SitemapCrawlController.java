@@ -116,6 +116,7 @@ public class SitemapCrawlController {
 			mCrawlConfig.setCrawlStorageFolder(crawlDir);
 		}
 		mCrawlConfig.setMaxDepthOfCrawling(crawlDepth);
+		mCrawlConfig.setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.62 Safari/537.36");
 		mUrlStatus = new URLStatusInMem();
 		if (ignoreBootstrap == 0) {
 			boolean bootstrapSuccess = mUrlStatus.bootstrap(crawlDir);
