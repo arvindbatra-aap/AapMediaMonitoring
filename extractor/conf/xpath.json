@@ -1,0 +1,22 @@
+{
+	"times of india" : {
+		"title" : {
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
+			"validate": "^[a-zA-Z0-9 ,\"']+$"
+		},
+		"title2" : {
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
+			"validate": "^[a-zA-Z0-9 ,\"']+$"
+		}
+	},
+	"times of india2" : {
+		"title" : {
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
+			"validate": "^[a-zA-Z0-9 ,\"']+$"
+		},
+		"title2" : {
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
+			"validate": "^[a-zA-Z0-9 ,\"']+$"
+		}
+	}
+}
