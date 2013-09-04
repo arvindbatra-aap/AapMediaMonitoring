@@ -15,9 +15,10 @@ public class SQLManager {
     SolrManager solrManager;
 
     public SQLManager(SolrManager solrManager) throws SQLException {
-        String url = "jdbc:mysql://in-cia-dev00.in.walmartlabs.com:3306/hjp";
-        String user = "hjp";
-        String password = "";
+        //String url = "jdbc:mysql://in-cia-dev00.in.walmartlabs.com:3306/hjp";
+        String url = "jdbc:mysql://66.175.223.5:3306/AAP";
+        String user = "root";
+        String password = "aapmysql00t";
         con = DriverManager.getConnection(url, user, password);
         this.solrManager = solrManager;
     }
@@ -28,13 +29,13 @@ public class SQLManager {
         Statement st = null;
         try {
             st = con.createStatement();
-            rs = st.executeQuery("SELECT * from affiliatepl where date=" + dateString + ";");
-            this.solrManager.insertDocument(rs);
-
+            rs = st.executeQuery("SELECT * from ARTICLE_TBL where publishedDate=" + dateString + ";");
+            while (rs.next()) {
+                this.solrManager.insertDocument(rs);
+            }
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(this.getClass().getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
-
         } finally {
             try {
                 if (rs != null) {
