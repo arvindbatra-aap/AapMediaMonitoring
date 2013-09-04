@@ -59,6 +59,19 @@ public class URLUtils {
 		
 	}
 	
+	
+	public static String getHost(String url) {
+		URL urlObj;
+		try {
+			urlObj = new URL(url);
+			String host = urlObj.getHost();
+			return host;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return url;
+	}
+	
 	public static String getDomain(URL urlObj) {
 		if (urlObj == null) {
 			return null;

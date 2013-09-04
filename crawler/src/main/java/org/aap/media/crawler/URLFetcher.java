@@ -98,9 +98,9 @@ public class URLFetcher implements Runnable {
 			return false;
 		}
 		if (parentURLObj != null && url != null) {
-			String parentDomain = URLUtils.getDomain(parentURLObj.getURL());
-			String urlDomain = URLUtils.getDomain(url);
-			if (parentDomain == null || !parentDomain.equalsIgnoreCase(urlDomain)) {
+			String parentHost = URLUtils.getHost(parentURLObj.getURL());
+			String urlHost = URLUtils.getHost(url);
+			if (parentHost == null || !parentHost.equalsIgnoreCase(urlHost)) {
 				return false;
 			}
 		}
