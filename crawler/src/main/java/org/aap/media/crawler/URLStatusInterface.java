@@ -2,7 +2,7 @@ package org.aap.media.crawler;
 
 public interface URLStatusInterface {
 	
-	public boolean bootstrap();
+	public boolean bootstrap(String crawlDir);
 	public boolean isCrawled(String url);
 	public boolean isInProgress(String url);
 	public URLStatus getInfo(String url);
