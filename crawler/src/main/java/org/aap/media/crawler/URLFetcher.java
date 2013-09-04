@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.aap.media.utils.URLUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
 
@@ -28,12 +29,12 @@ public class URLFetcher implements Runnable {
 			+ "|png|tiff?|mid|mp2|mp3|mp4" + "|wav|avi|mov|mpeg|ram|m4v|pdf"
 			+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$", Pattern.CASE_INSENSITIVE);
 
-	final Pattern URL_DISCARD_PATTERN1 = Pattern.compile(".*/(rss|blogs?)/.*",
+	final Pattern URL_DISCARD_PATTERN1 = Pattern.compile(".*/(rss|blogs?|photo)/.*",
 			Pattern.CASE_INSENSITIVE);
 	final Pattern URL_DISCARD_PATTERN2 = Pattern.compile(".*(blog\\.).*",
 			Pattern.CASE_INSENSITIVE);
 
-	private CrawlController mCrawlController;
+	private SitemapCrawlController mCrawlController;
 	private PageFetcher mPageFetcher;
 	private URLStatusInterface mUrlStatus;
 	private RobotstxtServer mRobotstxtServer;
@@ -41,7 +42,7 @@ public class URLFetcher implements Runnable {
 	private boolean toStopProcessing = false;
 	HTMLWriter htmlWriter = null;
 
-	public URLFetcher(CrawlController controller) {
+	public URLFetcher(SitemapCrawlController controller) {
 		mCrawlController = controller;
 		mUrlStatus = controller.getUrlStatus();
 		mPageFetcher = controller.getPageFetcher();
@@ -88,11 +89,20 @@ public class URLFetcher implements Runnable {
 		}
 
 	}
-
-	private boolean toCrawlUrl(WebURL urlObj) {
+	
+	
+	private boolean toCrawlUrl(WebURL urlObj, WebURL parentURLObj) {
+		
 		String url = urlObj.getURL();
 		if (toFilterURL(url)) {
 			return false;
+		}
+		if (parentURLObj != null && url != null) {
+			String parentDomain = URLUtils.getDomain(parentURLObj.getURL());
+			String urlDomain = URLUtils.getDomain(url);
+			if (parentDomain == null || !parentDomain.equalsIgnoreCase(urlDomain)) {
+				return false;
+			}
 		}
 		if (isSeenBefore(url)) {
 			if (logger.isDebugEnabled()) {
@@ -116,8 +126,10 @@ public class URLFetcher implements Runnable {
 	private void postProcessorCrawledURL(Page page) throws MalformedURLException {
 		String url = page.getWebURL().getURL();
 		mUrlStatus.setCrawled(page.getWebURL().getURL());
-		if (htmlWriter != null) {
-			htmlWriter.write(url, page);
+		if (HostRules.isArticlePage(url)) {
+			if (htmlWriter != null) {
+				htmlWriter.write(url, page);
+			}
 		}
 		
 
@@ -145,6 +157,7 @@ public class URLFetcher implements Runnable {
 
 	protected void onHeaderFetchError(WebURL webUrl) {
 		logger.error("onHeaderFetchError " + webUrl.toString());
+		
 		this.mUrlStatus.setCrawled(webUrl.getURL());
 	}
 
@@ -160,7 +173,7 @@ public class URLFetcher implements Runnable {
 		webURL.setDepth(curURL.getDepth());
 		webURL.setDocid(-1);
 		webURL.setAnchor(curURL.getAnchor());
-		if (!toCrawlUrl(webURL)) {
+		if (!toCrawlUrl(webURL, curURL)) {
 			return;
 		}
 		if (mRobotstxtServer.allows(webURL)) {
@@ -174,7 +187,6 @@ public class URLFetcher implements Runnable {
 			return null;
 		}
 		
-		logger.info("arv_processing " + curURL.getURL());
 		PageFetchResult fetchResult = null;
 		try {
 
@@ -224,7 +236,7 @@ public class URLFetcher implements Runnable {
 						continue;
 					} else {
 						webURL.setDepth((short) (curURL.getDepth() + 1));
-						if (toCrawlUrl(webURL) && mRobotstxtServer.allows(webURL)) {
+						if (toCrawlUrl(webURL, curURL) && mRobotstxtServer.allows(webURL)) {
 							// logger.debug("adding to queue " + webURL.getURL());
 							addToQueue(webURL);
 						} else {
