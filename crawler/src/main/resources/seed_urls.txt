@@ -1,4 +1,4 @@
 http://www.thehindu.com/navigation/?type=sitemap
-#http://timesofindia.indiatimes.com/sitemap.cms
+http://timesofindia.indiatimes.com/sitemap.cms
 http://www.indianexpress.com/Sitemap/
 http://www.hindustantimes.com/sitemap/sitemap.aspx
