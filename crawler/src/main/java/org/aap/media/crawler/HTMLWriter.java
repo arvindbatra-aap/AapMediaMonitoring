@@ -20,10 +20,25 @@ public class HTMLWriter {
     crawlDir = new File(dir);
     logger.info("Setting crawl dir=" + crawlDir.getAbsolutePath());
   }
+  
+  
+  private void writeToFile(String filename, String content) throws IOException {
+  	 File crawlFile = new File(filename);                                     
+     if (!crawlFile.exists()) {                                               
+         crawlFile.createNewFile();                                           
+     }
+  	FileWriter writer = new FileWriter(crawlFile);                           
+    BufferedWriter bw = new BufferedWriter(writer);                          
+    bw.write(content);           
+    bw.close();                                               
+    writer.close();
+  	
+  }
 
   public void write(String url, Page page) {
     String date = AppConstants.DATE_FORMAT.format(Calendar.getInstance().getTime());
-    String dateCarwlDirString = crawlDir.getAbsolutePath() + "/" + date ;
+    String domain = URLUtils.getDomain(url);
+    String dateCarwlDirString = crawlDir.getAbsolutePath() + "/" + date + "/" + domain ;
     File dateCrawlDir = new File(dateCarwlDirString);
     if (!dateCrawlDir.exists()) {
       synchronized(this) {
@@ -33,16 +48,14 @@ public class HTMLWriter {
     }                                                                          
     String md5url = URLUtils.getURLMD5(url);                                   
     try {                                                                      
-      String filename = dateCarwlDirString + "/" + md5url + ".html";           
-      logger.info("Writing to file: " + filename + " " + url);                 
-      File crawlFile = new File(filename);                                     
-      if (!crawlFile.exists()) {                                               
-          crawlFile.createNewFile();                                           
-      }                                                                        
-      FileWriter writer = new FileWriter(crawlFile);                           
-      BufferedWriter bw = new BufferedWriter(writer);                          
-      bw.write(((HtmlParseData) page.getParseData()).getHtml());               
-      bw.close();                                                              
+      String filename = dateCarwlDirString + "/" + md5url + ".html";
+      logger.info("Writing to file: " + filename + " " + url);
+      writeToFile(filename, ((HtmlParseData) page.getParseData()).getHtml());
+      String urlFilename = dateCarwlDirString + "/" + md5url + ".url";
+      String urlFileContent = url;
+      writeToFile(urlFilename, urlFileContent);
+      
+      
     } catch (IOException ioe) {                                                
       logger.error("Error in writing html file for url " + url + " " + ioe.getMessage());
       ioe.printStackTrace();                                                   

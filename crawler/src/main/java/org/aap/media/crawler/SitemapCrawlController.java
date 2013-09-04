@@ -25,8 +25,8 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 
 
-public class CrawlController {
-	protected static final Logger logger = Logger.getLogger(CrawlController.class.getName());
+public class SitemapCrawlController {
+	protected static final Logger logger = Logger.getLogger(SitemapCrawlController.class.getName());
 	private ConcurrentLinkedQueue<WebURL> mUrlQueue = new ConcurrentLinkedQueue<WebURL>();
 	
 	public static final int DEFAULT_NUM_THREADS = 1;
@@ -50,8 +50,6 @@ public class CrawlController {
 		return mUrlStatus;
 	}
 
-	
-
 	public CrawlConfig getCrawlConfig() {
 		return mCrawlConfig;
 	}
@@ -63,6 +61,8 @@ public class CrawlController {
 	public RobotstxtServer getRobotstxtServer() {
 		return mRobotstxtServer;
 	}
+	
+	
 
 	
 	private void initSeedUrls(String file) throws IOException {
@@ -81,7 +81,7 @@ public class CrawlController {
 	
 	
 	
-	public CrawlController() throws FileNotFoundException {
+	public SitemapCrawlController() throws FileNotFoundException {
 		String configFile = "src/main/resources/crawl_config.properties";
 		InputStream configIS = new FileInputStream(configFile);
 		Properties configProps = new Properties();
@@ -118,7 +118,7 @@ public class CrawlController {
 		mCrawlConfig.setMaxDepthOfCrawling(crawlDepth);
 		mUrlStatus = new URLStatusInMem();
 		if (ignoreBootstrap == 0) {
-			boolean bootstrapSuccess = mUrlStatus.bootstrap();
+			boolean bootstrapSuccess = mUrlStatus.bootstrap(crawlDir);
 			if (!bootstrapSuccess) {
 				logger.error("Bootstrap failed, exiting");
 				System.exit(-1);
@@ -220,7 +220,7 @@ public class CrawlController {
 		// Set up a simple configuration that logs on the console.
 	    PropertyConfigurator.configure("src/main/resources/log4j.properties");
 		logger.debug("Hello world");
-		CrawlController crawlController = new CrawlController();
+		SitemapCrawlController crawlController = new SitemapCrawlController();
 		crawlController.initQueue();
 		crawlController.startCrawlers();
 	}
