@@ -46,5 +46,26 @@
       <artifactId>xercesImpl</artifactId>
       <version>2.9.1</version>
     </dependency>
+    
+    <dependency>
+    	<groupId>com.sun.jersey</groupId>
+    	<artifactId>jersey-server</artifactId>
+    	<version>1.17</version>
+	</dependency>
+	<dependency>
+    	<groupId>com.sun.jersey</groupId>
+    	<artifactId>jersey-grizzly2</artifactId>
+    	<version>1.17</version>
+	</dependency>
+	<dependency>
+    	<groupId>com.sun.jersey</groupId>
+    	<artifactId>jersey-json</artifactId>
+    	<version>1.17</version>
+	</dependency>
+	<dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
   </dependencies>
 </project>
