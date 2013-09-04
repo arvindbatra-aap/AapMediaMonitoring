@@ -1,6 +1,7 @@
 package org.aap.media.crawler;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -13,14 +14,20 @@ import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
 import org.aap.media.utils.AppConstants;
+import org.aap.media.utils.ConfigUtils;
+import org.aap.media.utils.URLUtils;
+import org.apache.log4j.Logger;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class RSSReader {
 
+	protected static final Logger logger = Logger.getLogger(RSSReader.class.getName());
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -38,8 +45,13 @@ public class RSSReader {
 	  static final String GUID = "guid";
 
 	  final URL url;
+	  
+	  private URLStatusInMem URLStatus;
+	  private String crawlDir;
 
-	  public RSSReader(String feedUrl) {
+	  public RSSReader(String feedUrl, URLStatusInMem urlstatus, String crawldir) {
+		crawlDir = crawldir;
+		URLStatus = urlstatus;
 	    try {
 	      this.url = new URL(feedUrl);
 	    } catch (MalformedURLException e) {
@@ -130,14 +142,24 @@ public class RSSReader {
 		    Feed feed = readFeed();
 		    System.out.println("Processing..."+feed);
 		    String source = feed.getTitle();
-		    //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		    //Date date = new Date();
-		    //String crawldate = dateFormat.format(date);
-		    //String filename;
-		    HTMLWriter htmlwriter = new HTMLWriter(dir);
+		    HTMLWriter htmlwriter = new HTMLWriter(crawlDir);
 		    for (FeedMessage message : feed.getMessages()) {
 		      System.out.println("Processing... " + message);
-		      htmlwriter.writeURLToFile(source, message.getLink());
+		      String url = message.getLink();
+		      if(!URLStatus.isCrawled(url)){
+		    	  try {
+		    		  String content = URLUtils.fetchHTML(url);
+		    		  htmlwriter.writeURLToFile(source, url, content);
+		    		  URLStatus.setCrawled(url);
+		    	  }
+		    	  catch(IOException ioe){
+		    	      logger.error("Error in fetching html file for url " + url + " " + ioe.getMessage());
+		    	      ioe.printStackTrace();
+		    	  }
+		      }
+		      else {
+		    	  logger.info("Url already crawled " + url);
+		      }
 		    }
 	  }
 
