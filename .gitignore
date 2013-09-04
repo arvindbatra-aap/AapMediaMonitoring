@@ -1,0 +1,3 @@
+indexer/solr/
+*.iml
+*target*
