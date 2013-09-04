@@ -13,6 +13,23 @@ public class HostRules {
 				return true;
 			}
 		}
+		if ("timesofindia.indiatimes.com".equals(domain)) {
+			if (url.contains("articleshow")) {
+				return true;
+			}
+		}
+		if ("hindustantimes.com".equals(domain)) {
+			url = url.toLowerCase();
+			if (url.contains("article1")) {
+				return true;
+			}
+		}
+		if ("indianexpress.com".equals(domain)) {
+			if (url.contains("/news/")) {
+				return true;
+			}
+			
+		}
 		
 		return false;
 	}

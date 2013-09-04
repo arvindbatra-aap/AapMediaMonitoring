@@ -29,7 +29,7 @@ public class URLFetcher implements Runnable {
 			+ "|png|tiff?|mid|mp2|mp3|mp4" + "|wav|avi|mov|mpeg|ram|m4v|pdf"
 			+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$", Pattern.CASE_INSENSITIVE);
 
-	final Pattern URL_DISCARD_PATTERN1 = Pattern.compile(".*/(rss|blogs?)/.*",
+	final Pattern URL_DISCARD_PATTERN1 = Pattern.compile(".*/(rss|blogs?|photo)/.*",
 			Pattern.CASE_INSENSITIVE);
 	final Pattern URL_DISCARD_PATTERN2 = Pattern.compile(".*(blog\\.).*",
 			Pattern.CASE_INSENSITIVE);
@@ -157,6 +157,7 @@ public class URLFetcher implements Runnable {
 
 	protected void onHeaderFetchError(WebURL webUrl) {
 		logger.error("onHeaderFetchError " + webUrl.toString());
+		
 		this.mUrlStatus.setCrawled(webUrl.getURL());
 	}
 
