@@ -1,22 +1,17 @@
 {
-	"times of india" : {
+	"timesofindia.com" : {
 		"title" : {
-			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
-			"validate": "^[a-zA-Z0-9 ,\"']+$"
-		},
-		"title2" : {
-			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
-			"validate": "^[a-zA-Z0-9 ,\"']+$"
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1"
 		}
 	},
-	"times of india2" : {
+	"thehindu.com" : {
 		"title" : {
-			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
-			"validate": "^[a-zA-Z0-9 ,\"']+$"
-		},
-		"title2" : {
-			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1",
-			"validate": "^[a-zA-Z0-9 ,\"']+$"
+			"xpath" : "//*[@id=\"left-column\"]/h1"
+		}
+	},
+	"indiatimes.com" : {
+		"title" : {
+			"xpath" : "//*[@id=\"mod-article-header\"]/h1"
 		}
 	}
 }
