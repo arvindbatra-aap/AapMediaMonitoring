@@ -27,6 +27,7 @@ public class URLStatusInMem implements URLStatusInterface{
 					reader = new BufferedReader(new FileReader(file));
 					String url = reader.readLine();
 					setCrawled(url);
+					reader.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -46,6 +47,7 @@ public class URLStatusInMem implements URLStatusInterface{
 		for (File dateDir : dirFile.listFiles()) {
 			for (File domainDir : dateDir.listFiles()) {
 				bootstrapDir(domainDir);
+				
 			}
 		}
 		logger.info("Bootstrapped " + statusMap.size() + " urls");
