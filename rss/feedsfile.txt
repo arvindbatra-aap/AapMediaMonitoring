@@ -1,2 +1,2 @@
-https://news.google.co.in/news/feeds?q=aam+aadmi+party&newwindow=1&safe=off&bav=on.2,or.r_cp.r_qf.&bvm=bv.51773540,d.bmk,pv.xjs.s.en_US.jkEW54nYU50.O&biw=1371&bih=806&um=1&ie=UTF-8&output=rss&num=300
-https://news.google.co.in/news/feeds?gs_rn=26&gs_ri=psy-ab&tok=oWsuaSPTmdmMVdbXJeE7eA&ds=n&pq=aam+aadmi+party&cp=3&gs_id=c&xhr=t&q=arvind+kejriwal&newwindow=1&safe=off&bav=on.2,or.r_cp.r_qf.&biw=1371&bih=806&um=1&ie=UTF-8&output=rss&num=300
+http://news.google.co.in/news?q=arvind+kejriwal&hl=en&gl=in&authuser=0&bav=on.2,or.r_qf.&bvm=bv.51773540,d.bmk,pv.xjs.s.en_US.jkEW54nYU50.O&biw=1371&bih=806&um=1&ie=UTF-8&output=rss&num=300
+http://news.google.co.in/news?q=aam+admi+party&hl=en&gl=in&authuser=0&bav=on.2,or.r_qf.&bvm=bv.51773540,d.bmk,pv.xjs.s.en_US.jkEW54nYU50.O&biw=1371&bih=806&um=1&ie=UTF-8&output=rss&num=300
