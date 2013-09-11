@@ -95,6 +95,13 @@ public class SolrManager {
         solrQuery.addFilterQuery(dateQuery);
     }
 
+    public List<Article> getArticlesForSolrQuery(String query) throws SolrServerException {
+    	SolrQuery solrQuery = new SolrQuery();
+    	solrQuery.setQuery(query);
+        QueryResponse response = solrServer.query(solrQuery);
+        return getArticles(response);
+    }
+    
     public List<Article> getArticlesForKeywords(String keywords, String src) throws SolrServerException {
     	SolrQuery solrQuery = getQueryForKeywords(keywords);
     	addSrcQuery(src, solrQuery);

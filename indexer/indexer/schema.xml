@@ -107,7 +107,7 @@
    -->
  
 
-   <field name="src" type="string" indexed="true" stored="true" multiValued="false"/>
+   <field name="src" type="lowercase" indexed="true" stored="true" multiValued="false"/>
    <field name="id" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="keywords" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="url" type="text_general" indexed="true" stored="true" multiValued="false"/>

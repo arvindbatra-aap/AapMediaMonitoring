@@ -15,7 +15,7 @@ create table IF NOT EXISTS ARTICLE_TBL(
 create index pDateIndex on ARTICLE_TBL(publishedDate);
 	
 insert into  ARTICLE_TBL values (
-'/myUrl','My title','13-08-03','/myImage','mysrc','My content','my author', 'my category', 'my country', 'my city', 1 ,'my comments');
+'/myUrl', "md5", 'My title','13-08-03','/myImage','MYNewSRC','My content','my author', 'my category', 'my country', 'my city', 1 ,'my comments', null);
  
  
 GRANT ALL PRIVILEGES ON AAP.* TO 'root'@'%' IDENTIFIED BY 'aapmysql00t';
