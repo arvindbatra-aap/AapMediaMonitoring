@@ -28,7 +28,26 @@ public class WordCloud {
     public Map<String, Integer> getWordCloud(String query) {
         Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
         try {
-            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query);
+            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, null);
+            for (Article article : articlesForKeyword) {
+                processArticle(article, keywordCounts);
+            }
+            return keywordCounts;
+        } catch (Exception e) {
+            return keywordCounts;
+        }
+    }
+
+    /**
+     *
+     * @param query - input query string.
+     * @return map - <keyword, count> for all keywords that occur along with the query.
+     * Counts one keyword only once in a document
+     */
+    public Map<String, Integer> getWordCloud(String query, Date startDate, Date endDate) {
+        Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
+        try {
+            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, startDate, endDate, null);
             for (Article article : articlesForKeyword) {
                 processArticle(article, keywordCounts);
             }
