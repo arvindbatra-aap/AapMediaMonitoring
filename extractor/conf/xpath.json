@@ -5,8 +5,26 @@
 		}
 	},
 	"thehindu.com" : {
+		"canonical_url" : {
+			"xpath" : "//link[@rel='canonical']/@href"
+		},
 		"title" : {
 			"xpath" : "//*[@id=\"left-column\"]/h1"
+		},
+		"date" : {
+			"xpath" : "//meta[@name=\"DC.date.issued\"]/@content"
+		},
+		"author" : {
+			"xpath" : "//meta[@name='Author']/@content"
+		},
+		"keywords" : {
+			"xpath" : "//meta[@name='keywords']/@content"
+		},
+		"content" : {
+			"xpath" : "//p[@class='body']"
+		},
+		"section" : {
+			"xpath" : "//meta[@property='article:section']/@content"
 		}
 	},
 	"indiatimes.com" : {

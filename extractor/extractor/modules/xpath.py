@@ -40,13 +40,18 @@ class XPathExtractor(BasicExtractor):
 		for attr in self._config[foundSourceName].keys():
 			# Extract
 			xpath = self._config[foundSourceName][attr]['xpath']
-			node = html.find(xpath)
-
+			nodes = html.xpath(xpath)
 			# Validate
-			if node == None or not node.text: continue			
-
-			data = filter(lambda x: x in string.printable, node.text).encode('utf-8')
-			
+			data = "" 
+			if nodes == None or len(nodes) == 0: continue
+			for item in nodes:
+				if item is None: continue
+				if hasattr(item, 'text') and item.text != None:
+					data += " " + item.text
+				elif hasattr(item,'is_text'): 
+					data += str(item)
+			data = data.strip()
+				
 			if len(data) == 0: continue
 
 			if self._config[foundSourceName][attr].has_key('validate'):
