@@ -9,7 +9,7 @@ public class ReadTest {
 	    //for (FeedMessage message : feed.getMessages()) {
 	      //System.out.println(message);
 	    //}
-		AllRSSReader allReader = new AllRSSReader();
-		allReader.readAllRSS();
+		//AllRSSReader allReader = new AllRSSReader();
+		//allReader.readAllRSS();
 	  }
 	} 

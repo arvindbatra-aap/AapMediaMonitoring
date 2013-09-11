@@ -20,24 +20,36 @@ package webservice.api;
  */
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.aap.monitoring.Article;
+import org.aap.monitoring.ArticleCount;
 
-
-/**
- * HelloService!
- */
 @Path( "media" )
 public interface MediaMonitoringService
 {
     @Path( "getArticles" )
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    Collection<Article> getArticles(@QueryParam(value = "query") String keyword);
+    Collection<Article> getArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate);
+    
+    @Path("getArticlesCount")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate);
+    
+    @Path("triggerIndexer")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    //yyyy-MM-dd
+    Response triggerIndexer(@QueryParam(value = "query")String date);
+    
 }

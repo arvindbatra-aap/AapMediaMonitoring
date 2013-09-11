@@ -11,6 +11,11 @@
   <artifactId>webservice-api-impl</artifactId>
 
   <dependencies>
+   <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.17</version>
+      </dependency>
     <dependency>
        <groupId>org.aap.monitoring</groupId>
        <artifactId>webservice-api</artifactId>
@@ -25,6 +30,16 @@
 		<artifactId>log4j</artifactId>
 		<version>1.2.17</version>
 	</dependency>
+	<dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-solrj</artifactId>
+      <version>4.4.0</version>
+      </dependency>
+    <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-core</artifactId>
+      <version>4.4.0</version>
+      </dependency>
 	<dependency>
           <groupId>org.codehaus.jackson</groupId>
           <artifactId>jackson-jaxrs</artifactId>

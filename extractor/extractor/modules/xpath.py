@@ -28,24 +28,34 @@ class XPathExtractor(BasicExtractor):
 
 		extracted = {}
 		source = source.lower()
-		if source not in self._sources: 
-			error("Source %s not found in Xpath config!" % source)
-			return extracted
+		foundSourceName = None
+		for _source in self._sources:
+			if source.endswith(_source):
+				foundSourceName = _source
+		
+		if foundSourceName == None:
+		 error("Source %s not found in Xpath config!" % source)
+		 return extracted
 
-		for attr in self._config[source].keys():
+		for attr in self._config[foundSourceName].keys():
 			# Extract
-			xpath = self._config[source][attr]['xpath']
-			node = html.find(xpath)
-
+			xpath = self._config[foundSourceName][attr]['xpath']
+			nodes = html.xpath(xpath)
 			# Validate
-			if node == None or not node.text: continue			
-
-			data = filter(lambda x: x in string.printable, node.text).encode('utf-8')
-			
+			data = "" 
+			if nodes == None or len(nodes) == 0: continue
+			for item in nodes:
+				if item is None: continue
+				if hasattr(item, 'text') and item.text != None:
+					data += " " + item.text
+				elif hasattr(item,'is_text'): 
+					data += str(item)
+			data = data.strip()
+				
 			if len(data) == 0: continue
 
-			if self._config[source][attr].has_key('validate'):
-				regex = self._config[source][attr]['validate'] 
+			if self._config[foundSourceName][attr].has_key('validate'):
+				regex = self._config[foundSourceName][attr]['validate'] 
 				match = regex.match(data)
 				
 				if match and match.group() == data:
