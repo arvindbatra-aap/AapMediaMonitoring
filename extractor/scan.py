@@ -16,7 +16,8 @@ db.autocommit(True)
 
 cur = db.cursor() 
 
-EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.indianexpress.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.indianexpress.com'
+EXTRACT_PATH = '/root/crawl-raw'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
