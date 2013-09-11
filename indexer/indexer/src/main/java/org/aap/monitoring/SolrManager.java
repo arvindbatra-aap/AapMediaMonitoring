@@ -90,7 +90,7 @@ public class SolrManager {
         return result;
     }
 
-    public Map<String, Map<String, Integer>> getArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
+    public Map<String, Map<String, Integer>> getNumArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(keywords);
         solrQuery.setFacet(true);
@@ -113,7 +113,7 @@ public class SolrManager {
                 results.get(dateString).put((String) source.getValue(), source.getCount());
             }
         }
-
+        /*
         List<PivotField> sourceDate = pivots.get("source, date");
         for (PivotField sourceOnly : sourceDate) {
             String sourceString = (String) sourceOnly.getValue();
@@ -121,7 +121,7 @@ public class SolrManager {
             for (PivotField date: sourceOnly.getPivot()) {
                 results.get(sourceString).put((String) date.getValue(), date.getCount());
             }
-        }
+        }*/
 
         return results;
     }
