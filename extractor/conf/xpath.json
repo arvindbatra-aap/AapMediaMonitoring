@@ -27,7 +27,7 @@
 			"xpath" : "//meta[@property='article:section']/@content"
 		}
 	},
-	"indiatimes.com" : {
+	"articles.timesofindia.indiatimes.com" : {
 		"canonical_url" : {
 			"xpath" : "//link[@rel='canonical']/@href"
 		},
@@ -41,7 +41,24 @@
 			"xpath" : "//*[@id=\"mod-article-byline\"]/span[3]"
         },
         "content": {
-            "xpath" : "//*[@id=\"mod-a-body-first-para\"]/p[1]/span"
+            "xpath" : "//*[@id=\"mod-a-body-first-para\"]/p"
+        }
+	},
+	"timesofindia.indiatimes.com" : {
+		"canonical_url" : {
+			"xpath" : "//link[@rel='canonical']/@href"
+		},
+		"title" : {
+			"xpath" : "//meta[@property=\"og:title\"]/@content"
+		},
+        "author": {
+			"xpath" : "//*[@id=\"authortext\"]"
+        },
+        "date": {
+			"xpath" : "//*[@class=\"byline\"]/text()[last()]"
+        },
+        "content": {
+            "xpath" : "//*[@id=\"artext1\"]//text()"
         }
 	}
 }
