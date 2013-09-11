@@ -20,6 +20,7 @@ package webservice.api;
  */
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -29,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.aap.monitoring.Article;
+import org.aap.monitoring.ArticleCount;
 
 @Path( "media" )
 public interface MediaMonitoringService
@@ -42,5 +44,5 @@ public interface MediaMonitoringService
     @Path("getArticlesCount")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    Map<String, Map<String, Integer>> getNumArticles(@QueryParam(value = "query") String keyword);
+    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") Date startDate, @QueryParam(value = "endDate") Date endDate);
 }

@@ -1,18 +1,18 @@
 package org.aap.monitoring;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.PivotField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -89,39 +89,47 @@ public class SolrManager {
         return result;
     }
 
-    public Map<String, Map<String, Integer>> getNumArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
+    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
         SolrQuery solrQuery = new SolrQuery();
-        solrQuery.setQuery(keywords);
+        solrQuery.setQuery("content:"+ keywords);
+       // solrQuery.addFilterQuery("date:[2013-09-01T00:00:00.999Z TO *]");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        String dateRange = "date:[" + sdf.format(start) + " TO " + sdf.format(end) + "]";
+        System.out.println(dateRange);
+        solrQuery.addFilterQuery(dateRange);
         solrQuery.setFacet(true);
         solrQuery.setRows(0);
 
         solrQuery.set("facet.method", "enum");
         solrQuery.set("facet.limit", "-1");
-        solrQuery.addFacetPivotField("date,source");
-        solrQuery.addFacetPivotField("source,date");
+        solrQuery.addFacetPivotField("date,src");
+        solrQuery.addFacetPivotField("src,date");
 
         QueryResponse response = solrServer.query(solrQuery);
         NamedList<List<PivotField>> pivots = response.getFacetPivot();
-        List<PivotField> dateSource = pivots.get("date,source");
+        List<PivotField> dateSource = pivots.get("date,src");
 
-        Map<String, Map<String, Integer>> results = new HashMap<String, Map<String, Integer>>();
+        ArticleCount artCountRes  = new ArticleCount();
+        Map<String, Map<String, Integer>> dateResults = new HashMap<String, Map<String, Integer>>();
         for (PivotField dateOnly : dateSource) {
-            String dateString = (String) dateOnly.getValue();
-            if (results.get(dateString) != null ) results.put(dateString, new HashMap<String, Integer>());
+            String dateString = ((Date) dateOnly.getValue()).toString();
+            if (dateResults.get(dateString) == null ) dateResults.put(dateString, new HashMap<String, Integer>());
             for (PivotField source: dateOnly.getPivot()) {
-                results.get(dateString).put((String) source.getValue(), source.getCount());
+            	dateResults.get(dateString).put((String) source.getValue(), source.getCount());
             }
         }
-        /*
-        List<PivotField> sourceDate = pivots.get("source, date");
+        
+        List<PivotField> sourceDate = pivots.get("src,date");
+        Map<String, Map<String, Integer>> srcResults = new HashMap<String, Map<String, Integer>>();
         for (PivotField sourceOnly : sourceDate) {
             String sourceString = (String) sourceOnly.getValue();
-            if (results.get(sourceString) != null ) results.put(sourceString, new HashMap<String, Integer>());
+            if (srcResults.get(sourceString) == null ) srcResults.put(sourceString, new HashMap<String, Integer>());
             for (PivotField date: sourceOnly.getPivot()) {
-                results.get(sourceString).put((String) date.getValue(), date.getCount());
+            	srcResults.get(sourceString).put(((Date) date.getValue()).toString(), date.getCount());
             }
-        }*/
-
-        return results;
+        }
+        artCountRes.setCountByDate(dateResults);
+        artCountRes.setCountBySrc(srcResults);
+        return artCountRes;
     }
 }
