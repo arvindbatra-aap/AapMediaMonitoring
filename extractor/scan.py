@@ -2,7 +2,7 @@ import os
 
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
-from datetime import *
+import datetime
 
 EXTRACT_PATH = 'crawl-raw'
 
