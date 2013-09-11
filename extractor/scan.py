@@ -17,7 +17,7 @@ cur.execute("SELECT * FROM ARTICLE_TBL")
 for row in cur.fetchall() :
     print row[0]
 
-EXTRACT_PATH = '/root/crawl-raw/'
+EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.thehindu.com'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
@@ -56,7 +56,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					for row in cur.fetchall() :
 						print "DATA->"
 						print row[0]
-						continue; 
+						#continue; 
 					print "item NOT FOUND in the DB"
  
 					content = open(file, 'r').read()
@@ -71,7 +71,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					url=''
 					content=''
 					date1=''
-					src=''
+					src=source
 					if 'title' in extracted:
 						title=extracted['title']
 					if 'canonical_url' in extracted:
@@ -84,15 +84,11 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					if 'date' in extracted:
 						date1=extracted['date']
 					else:
-						query = "INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (url, hashed, title, content, date1, src)
-						print query
 						print "Date not found"
-						#continue
-						break
-					if hasattr(extracted, 'src'):
-						src=extracted.src
+						continue
+
 					query = "INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (url, hashed, title, content, date1, src)
-					#print query
+					print query
 					try:
 						repl=lambda x: string.replace(x,"'","\\'")
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
