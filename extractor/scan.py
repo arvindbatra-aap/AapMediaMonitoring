@@ -24,8 +24,8 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 				info("Processing dump file: %s" % file)
 				file_count += 1
 
-				#url = open(file.split(".")[0]+".url", 'r').read()
-				url = "url%d" % file_count
+				url = open(file.split(".")[0]+".url", 'r').read()
+				#url = "url%d" % file_count
 				content = open(file, 'r').read()
 				info("URL: %s" % url)
 				extracted = manager.extractAll(content, url, source, date, file)
