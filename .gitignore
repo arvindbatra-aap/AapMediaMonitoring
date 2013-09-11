@@ -1,3 +1,4 @@
 indexer/solr/
 *.iml
 *target*
+*.pyc
