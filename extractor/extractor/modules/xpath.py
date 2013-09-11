@@ -47,9 +47,9 @@ class XPathExtractor(BasicExtractor):
 			for item in nodes:
 				if item is None: continue
 				if hasattr(item, 'text') and item.text != None:
-					data += " " + item.text
+					data += " " + item.text.encode("utf-8")
 				elif hasattr(item,'is_text'): 
-					data += str(item)
+					data += str(item.encode("utf-8"))
 			data = data.strip()
 				
 			if len(data) == 0: continue
