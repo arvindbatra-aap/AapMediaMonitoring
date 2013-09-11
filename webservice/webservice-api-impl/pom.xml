@@ -11,6 +11,11 @@
   <artifactId>webservice-api-impl</artifactId>
 
   <dependencies>
+   <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.17</version>
+      </dependency>
     <dependency>
        <groupId>org.aap.monitoring</groupId>
        <artifactId>webservice-api</artifactId>

@@ -13,23 +13,27 @@ public class SQLManager {
 
     Connection con = null;
     SolrManager solrManager;
+    String url = "jdbc:mysql://66.175.223.5:3306/AAP";
+    String user = "root";
+    String password = "aapmysql00t";
 
     public SQLManager(SolrManager solrManager) throws SQLException {
-        //String url = "jdbc:mysql://in-cia-dev00.in.walmartlabs.com:3306/hjp";
-        String url = "jdbc:mysql://66.175.223.5:3306/AAP";
-        String user = "root";
-        String password = "aapmysql00t";
-        con = DriverManager.getConnection(url, user, password);
         this.solrManager = solrManager;
     }
 
+    
     //yy-mm-dd
-    public void triggerIndexer(String dateString) {
+    public void triggerIndexer(String dateString) throws SQLException {
+    	if(con == null){
+    		getConn();
+    	}
         ResultSet rs = null;
         Statement st = null;
         try {
+        	String query = "SELECT * from ARTICLE_TBL where publishedDate >" + dateString + ";";
+        	System.out.println(query);
             st = con.createStatement();
-            rs = st.executeQuery("SELECT * from ARTICLE_TBL where publishedDate=" + dateString + ";");
+            rs = st.executeQuery(query);
             while (rs.next()) {
                 this.solrManager.insertDocument(rs);
             }
@@ -44,14 +48,19 @@ public class SQLManager {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
-
             } catch (SQLException ex) {
                 Logger lgr = Logger.getLogger(this.getClass().getName());
                 lgr.log(Level.WARNING, ex.getMessage(), ex);
             }
+        }
+    }
+    
+    public void getConn() throws SQLException {
+    	con = DriverManager.getConnection(url, user, password);
+    }
+    public void closeConn() throws SQLException{
+    	if (con != null) {
+            con.close();
         }
     }
 }
