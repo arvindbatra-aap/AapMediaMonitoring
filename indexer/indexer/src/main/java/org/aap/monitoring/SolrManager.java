@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -31,6 +32,7 @@ public class SolrManager {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", result.getString("src"));
             inputDocument.addField("url", result.getString("url"));
+            inputDocument.addField("id", result.getString("id"));
             inputDocument.addField("title", result.getString("title"));
             inputDocument.addField("date", result.getDate("publishedDate"));
             inputDocument.addField("image_url", result.getString("imageUrl"));
@@ -41,6 +43,7 @@ public class SolrManager {
             inputDocument.addField("country", result.getString("country"));
             inputDocument.addField("city", result.getString("city"));
             inputDocument.addField("commentcount", result.getInt("commentCount"));
+            inputDocument.addField("keywords", result.getString("keywords"));
             solrServer.add(inputDocument);
             solrServer.commit();
         } catch (Exception e) {
@@ -54,6 +57,7 @@ public class SolrManager {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", "dummysrc");
             inputDocument.addField("url", url);
+            inputDocument.addField("id", url);
             inputDocument.addField("title", "dummytitle");
             inputDocument.addField("date", date);
             inputDocument.addField("image_url", "dummy_image_url");
@@ -75,9 +79,14 @@ public class SolrManager {
 
 
     private SolrQuery getQueryForKeywords(String keywords) {
-        return new SolrQuery().setQuery("content:" + keywords);
+        return new SolrQuery().setQuery("content:" + keywords + " title:" + keywords);
     }
 
+    private void addSrcQuery(String src ,  SolrQuery solrQuery){
+    	if(StringUtils.isBlank(src)) return;
+    	solrQuery.setQuery("src:" + src);
+    }
+    
     private void createDateFilter(SolrQuery solrQuery, Date startDate, Date endDate){
     	DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
@@ -86,14 +95,18 @@ public class SolrManager {
         solrQuery.addFilterQuery(dateQuery);
     }
 
-    public List<Article> getArticlesForKeywords(String keywords) throws SolrServerException {
-        QueryResponse response = solrServer.query(getQueryForKeywords(keywords));
+    public List<Article> getArticlesForKeywords(String keywords, String src) throws SolrServerException {
+    	SolrQuery solrQuery = getQueryForKeywords(keywords);
+    	addSrcQuery(src, solrQuery);
+        QueryResponse response = solrServer.query(solrQuery);
+        
         return getArticles(response);
     }
 
-    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate) throws SolrServerException {
+    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate, String src) throws SolrServerException {
     	SolrQuery solrQuery = getQueryForKeywords(keywords);
     	createDateFilter(solrQuery,startDate,endDate);
+    	addSrcQuery(src, solrQuery);
         QueryResponse response = solrServer.query(solrQuery);
         return getArticles(response);
     }
@@ -108,9 +121,10 @@ public class SolrManager {
         return result;
     }
 
-    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date startDate, Date endDate) throws SolrServerException {
+    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date startDate, Date endDate, String src) throws SolrServerException {
         SolrQuery solrQuery = getQueryForKeywords(keywords);
         createDateFilter(solrQuery,startDate,endDate);
+        addSrcQuery(src, solrQuery);
         solrQuery.setFacet(true);
         solrQuery.setRows(0);
 
