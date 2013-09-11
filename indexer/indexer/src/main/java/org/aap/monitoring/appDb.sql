@@ -22,3 +22,6 @@ GRANT ALL PRIVILEGES ON AAP.* TO 'root'@'%' IDENTIFIED BY 'aapmysql00t';
 
 /etc/mysql/my.cnf
 Comment the bind address for making it accessible from all ip-address
+
+
+wget http://mirror.cogentco.com/pub/apache/lucene/solr/4.4.0/solr-4.4.0-src.tgz
