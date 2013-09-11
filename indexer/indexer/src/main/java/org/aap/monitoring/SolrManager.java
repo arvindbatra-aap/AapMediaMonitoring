@@ -46,15 +46,15 @@ public class SolrManager {
         }
     }
 
-    public void insertFraudyDocument() {
+    public void insertFraudyDocument(String url, String content) {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", "dummysrc");
-            inputDocument.addField("url", "dummyurl");
+            inputDocument.addField("url", url);
             inputDocument.addField("title", "dummytitle");
             inputDocument.addField("date", new java.util.Date());
             inputDocument.addField("image_url", "dummy_image_url");
-            inputDocument.addField("content", "dummy_content");
+            inputDocument.addField("content", content);
             inputDocument.addField("author", "dummy_author");
             inputDocument.addField("category", "dummy_category");
             inputDocument.addField("comments", "dummy_comments");
@@ -69,6 +69,7 @@ public class SolrManager {
             e.printStackTrace();
         }
     }
+
 
     private SolrQuery getQueryForKeywords(String keywords) {
         return new SolrQuery().setQuery("content:" + keywords);
