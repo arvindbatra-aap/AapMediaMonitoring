@@ -20,6 +20,7 @@ package webservice.api;
  */
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -29,10 +30,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.aap.monitoring.Article;
 
-
-/**
- * HelloService!
- */
 @Path( "media" )
 public interface MediaMonitoringService
 {
@@ -40,4 +37,10 @@ public interface MediaMonitoringService
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
     Collection<Article> getArticles(@QueryParam(value = "query") String keyword);
+    
+    
+    @Path("getArticlesCount")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Map<String, Map<String, Integer>> getNumArticles(@QueryParam(value = "query") String keyword);
 }

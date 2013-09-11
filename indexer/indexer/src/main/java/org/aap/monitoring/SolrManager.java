@@ -46,15 +46,15 @@ public class SolrManager {
         }
     }
 
-    public void insertFraudyDocument() {
+    public void insertFraudyDocument(String url, String content) {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", "dummysrc");
-            inputDocument.addField("url", "dummyurl");
+            inputDocument.addField("url", url);
             inputDocument.addField("title", "dummytitle");
             inputDocument.addField("date", new java.util.Date());
             inputDocument.addField("image_url", "dummy_image_url");
-            inputDocument.addField("content", "dummy_content");
+            inputDocument.addField("content", content);
             inputDocument.addField("author", "dummy_author");
             inputDocument.addField("category", "dummy_category");
             inputDocument.addField("comments", "dummy_comments");
@@ -69,6 +69,7 @@ public class SolrManager {
             e.printStackTrace();
         }
     }
+
 
     private SolrQuery getQueryForKeywords(String keywords) {
         return new SolrQuery().setQuery("content:" + keywords);
@@ -89,7 +90,7 @@ public class SolrManager {
         return result;
     }
 
-    public Map<String, Map<String, Integer>> getArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
+    public Map<String, Map<String, Integer>> getNumArticlesForKeywordsAndDate(String keywords, Date start, Date end) throws SolrServerException {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(keywords);
         solrQuery.setFacet(true);
@@ -112,7 +113,7 @@ public class SolrManager {
                 results.get(dateString).put((String) source.getValue(), source.getCount());
             }
         }
-
+        /*
         List<PivotField> sourceDate = pivots.get("source, date");
         for (PivotField sourceOnly : sourceDate) {
             String sourceString = (String) sourceOnly.getValue();
@@ -120,7 +121,7 @@ public class SolrManager {
             for (PivotField date: sourceOnly.getPivot()) {
                 results.get(sourceString).put((String) date.getValue(), date.getCount());
             }
-        }
+        }*/
 
         return results;
     }
