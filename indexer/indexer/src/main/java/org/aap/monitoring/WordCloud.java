@@ -39,6 +39,25 @@ public class WordCloud {
     }
 
     /**
+     *
+     * @param query - input query string.
+     * @return map - <keyword, count> for all keywords that occur along with the query.
+     * Counts one keyword only once in a document
+     */
+    public Map<String, Integer> getWordCloud(String query, Date startDate, Date endDate) {
+        Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
+        try {
+            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, startDate, endDate);
+            for (Article article : articlesForKeyword) {
+                processArticle(article, keywordCounts);
+            }
+            return keywordCounts;
+        } catch (Exception e) {
+            return keywordCounts;
+        }
+    }
+
+    /**
      * Parse the content in the article, get keywords and increment count. (Only once
      * per article.)
      * @param article
