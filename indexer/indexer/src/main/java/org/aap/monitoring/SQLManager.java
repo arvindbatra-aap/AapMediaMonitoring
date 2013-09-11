@@ -5,12 +5,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.log4j.Logger;
 
 public class SQLManager {
 
+	private static Logger LOG = Logger.getLogger(SQLManager.class);
     Connection con = null;
     SolrManager solrManager;
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";
@@ -30,16 +29,18 @@ public class SQLManager {
         ResultSet rs = null;
         Statement st = null;
         try {
+        	int count=0;
         	String query = "SELECT * from ARTICLE_TBL where publishedDate >" + dateString + ";";
         	System.out.println(query);
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
                 this.solrManager.insertDocument(rs);
+                count++;
             }
+            LOG.info("Indexer trigger: indexed " + count + " documents for trigger: " + dateString);
         } catch (SQLException ex) {
-            Logger lgr = Logger.getLogger(this.getClass().getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            LOG.error(ex.getMessage(), ex);
         } finally {
             try {
                 if (rs != null) {
@@ -49,8 +50,7 @@ public class SQLManager {
                     st.close();
                 }
             } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(this.getClass().getName());
-                lgr.log(Level.WARNING, ex.getMessage(), ex);
+                LOG.info(ex.getMessage(), ex);
             }
         }
     }
