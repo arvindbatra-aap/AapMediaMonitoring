@@ -1,0 +1,17 @@
+{
+	"timesofindia.com" : {
+		"title" : {
+			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1"
+		}
+	},
+	"thehindu.com" : {
+		"title" : {
+			"xpath" : "//*[@id=\"left-column\"]/h1"
+		}
+	},
+	"indiatimes.com" : {
+		"title" : {
+			"xpath" : "//*[@id=\"mod-article-header\"]/h1"
+		}
+	}
+}

@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -14,6 +16,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -41,7 +46,7 @@ public class APIResource {
 	@Path("/content")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getEventsForInterest(@Context UriInfo ui) {
+	public String getContentFromUrl(@Context UriInfo ui) {
 		Map<String, String> queryParams = getQueryParams(ui);
 		for (String key : queryParams.keySet()) {
 			logger.info(key + "\t" +  queryParams.get(key));
@@ -78,5 +83,39 @@ public class APIResource {
 		}
 		
 		return jsonNode.toString();
-	}	
+	}
+	
+	@Path("/content")
+	@POST
+	@Consumes("text/html")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getContentFromHTML(String rawHTML) {
+		logger.info("Serving POST request");
+				
+		String status = "success";
+		String content = null;
+		String url = null;
+		
+		try {
+			content = ArticleExtractor.INSTANCE.getText(rawHTML);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			status = "error";
+		}
+    	
+    	if (content == null) {
+    		status = "error";
+		}
+	
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode jsonNode = mapper.createObjectNode();
+		
+		jsonNode.put("status",status);
+		if(content != null) {
+			jsonNode.put("content", content);
+		}
+		
+		return jsonNode.toString();
+	}
 }
