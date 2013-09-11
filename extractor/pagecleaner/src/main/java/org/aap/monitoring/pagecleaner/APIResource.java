@@ -22,6 +22,7 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
@@ -84,38 +85,75 @@ public class APIResource {
 		
 		return jsonNode.toString();
 	}
-	
+
 	@Path("/content")
 	@POST
-	@Consumes("text/html")
+	@Consumes("text/plain")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getContentFromHTML(String rawHTML) {
-		logger.info("Serving POST request");
-				
-		String status = "success";
-		String content = null;
+	public String getContentFromHTML(String jsonInputStr) {
+		logger.info("Serving POST request for input: " + jsonInputStr);
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonFactory factory = mapper.getJsonFactory(); // since 2.1 use mapper.getFactory() instead
+
+		String rawHTML = null;
 		String url = null;
-		
+
 		try {
-			content = ArticleExtractor.INSTANCE.getText(rawHTML);
+			JsonParser jp = factory.createJsonParser(jsonInputStr);
+			JsonNode inputJSON = mapper.readTree(jp);
+			if(inputJSON.has("content")) {
+				rawHTML = inputJSON.get("content").asText();
+			}
+			if(inputJSON.has("url")) {
+				url = inputJSON.get("url").asText();
+			}
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 			e.printStackTrace();
-			status = "error";
+			String status = "error: unable to parse input json";
+			return getJsonWithStatus(status).toString();
 		}
-    	
-    	if (content == null) {
-    		status = "error";
+
+		String content = null;
+
+		if(rawHTML != null) {
+			try {
+				content = ArticleExtractor.INSTANCE.getText(rawHTML);
+			}		
+			catch(Exception e) {
+				e.printStackTrace();
+				String status = "error: boilerpipe exception";
+				return getJsonWithStatus(status).toString();
+			}
 		}
+		else if (url != null) {
+			URL urlObject;
+			try {
+				urlObject = new URL(url);
+				content = ArticleExtractor.INSTANCE.getText(urlObject);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				String status = "error: url parsing or boilerpipe exception";
+				return getJsonWithStatus(status).toString();
+			}	
+		}
+		
+		if(content != null) {
+			ObjectNode jsonNode = getJsonWithStatus("success");	
+			jsonNode.put("content", content);
+			return jsonNode.toString();
+		}
+		else {
+			return getJsonWithStatus("error: no content found").toString();
+		}
+	}
 	
+	public ObjectNode getJsonWithStatus(String status) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonNode = mapper.createObjectNode();
-		
 		jsonNode.put("status",status);
-		if(content != null) {
-			jsonNode.put("content", content);
-		}
-		
-		return jsonNode.toString();
+		return jsonNode;
 	}
 }
