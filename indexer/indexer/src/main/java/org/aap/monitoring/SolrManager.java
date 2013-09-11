@@ -20,9 +20,12 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
 
+import java.text.DateFormat;
+import java.util.*;
+
 public class SolrManager {
     public static SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     public void insertDocument(ResultSet result) {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
@@ -46,15 +49,15 @@ public class SolrManager {
         }
     }
 
-    public void insertFraudyDocument() {
+    public void insertFraudyDocument(String url, String content, Date date) {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", "dummysrc");
-            inputDocument.addField("url", "dummyurl");
+            inputDocument.addField("url", url);
             inputDocument.addField("title", "dummytitle");
-            inputDocument.addField("date", new java.util.Date());
+            inputDocument.addField("date", date);
             inputDocument.addField("image_url", "dummy_image_url");
-            inputDocument.addField("content", "dummy_content");
+            inputDocument.addField("content", content);
             inputDocument.addField("author", "dummy_author");
             inputDocument.addField("category", "dummy_category");
             inputDocument.addField("comments", "dummy_comments");
@@ -70,17 +73,30 @@ public class SolrManager {
         }
     }
 
+
     private SolrQuery getQueryForKeywords(String keywords) {
         return new SolrQuery().setQuery("content:" + keywords);
     }
 
-    private SolrQuery getQueryForKeywordsAndDate(String keywords, Date start, Date end) {
-        return new SolrQuery().setQuery("content:" + keywords).addDateRangeFacet("date", start, end, "+1DAY");
+    private SolrQuery getQueryForKeywords(String keywords, Date startDate, Date endDate) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateQuery = "date:" + "[" + df.format(startDate) + " TO " + df.format(endDate) + "]";
+        return new SolrQuery().addFilterQuery(dateQuery).setQuery("content:" + keywords);
     }
 
     public List<Article> getArticlesForKeywords(String keywords) throws SolrServerException {
-        List<Article> result = new ArrayList<Article>();
         QueryResponse response = solrServer.query(getQueryForKeywords(keywords));
+        return getArticles(response);
+    }
+
+    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate) throws SolrServerException {
+        QueryResponse response = solrServer.query(getQueryForKeywords(keywords, startDate, endDate));
+        return getArticles(response);
+    }
+
+    private List<Article> getArticles(QueryResponse response) {
+        List<Article> result = new ArrayList<Article>();
         SolrDocumentList object = (SolrDocumentList) response.getResponse().get("response");
         for (SolrDocument doc : object) {
             Article article = Article.getArticleFrom(doc);

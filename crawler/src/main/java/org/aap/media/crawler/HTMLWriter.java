@@ -71,8 +71,8 @@ public class HTMLWriter {
   
   public void write(String url, Page page) {
     String date = AppConstants.DATE_FORMAT.format(Calendar.getInstance().getTime());
-    String domain = URLUtils.getDomain(url);
-    String dateCarwlDirString = crawlDir.getAbsolutePath() + "/" + date + "/" + domain ;
+    String host = URLUtils.getHost(url);
+    String dateCarwlDirString = crawlDir.getAbsolutePath() + "/" + date + "/" + host ;
     File dateCrawlDir = new File(dateCarwlDirString);
     if (!dateCrawlDir.exists()) {
       synchronized(this) {
