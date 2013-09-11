@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,6 +35,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -73,6 +76,7 @@ public class GoogleNewsFeedCrawler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws ParseException, IllegalArgumentException,
                     MalformedURLException, UnsupportedEncodingException, FileNotFoundException,
                     ClientProtocolException, IOException, FeedException {
@@ -115,7 +119,16 @@ public class GoogleNewsFeedCrawler {
 
                     writeToFile(fetchHTML(siteURL), outputFilePrefix + ".html");
                     writeToFile(siteURL.toString() + "\n", outputFilePrefix + ".url");
-                    writeToFile(syndEntry.getTitle(), outputFilePrefix + ".title");
+
+                    JSONObject obj = new JSONObject();
+                    obj.put("url", siteURL.toString());
+                    obj.put("title", syndEntry.getTitle());
+                    obj.put("publishedDate", syndEntry.getPublishedDate());
+                    obj.put("description", Jsoup.parse(syndEntry.getDescription().getValue())
+                                    .text());
+                    StringWriter out = new StringWriter();
+                    obj.writeJSONString(out);
+                    writeToFile(out.toString(), outputFilePrefix + ".item");
                 } catch (Exception e) {
                     LOG.log(Level.WARNING, "Exception in crawler", e);
                 }
