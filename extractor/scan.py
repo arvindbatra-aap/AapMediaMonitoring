@@ -31,12 +31,6 @@ date_7_days_ago = (datetime.datetime.now() - datetime.timedelta(days=7)).date()
 
 manager = ExtractionManager()
 for root, dirs, files in os.walk(EXTRACT_PATH):
-	print "..."
-	print root
-	print dirs
-	print files
-	print "..."
-
 	if len(dirs) == 0 and len(files) > 0:
 		(date, source) = root.split("/")[-2:]
 

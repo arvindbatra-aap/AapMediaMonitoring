@@ -38,7 +38,6 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src) {
-		SolrManager solrManager = new SolrManager();
 		try {
 			if(startDate == 0 && endDate == 0){
 				return solrManager.getArticlesForKeywords(keyword, src);
@@ -56,7 +55,6 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src){
-		SolrManager solrManager = new SolrManager();
 		if(endDate==0){
 			endDate = new Date().getTime();
 		}
@@ -74,6 +72,16 @@ public class MediaMonitoringServiceImpl
 		try {
 			sqlManager.triggerIndexer(date);
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Collection<Article> getArticlesFromSolr(String solrQuery) {
+		try {
+			return solrManager.getArticlesForSolrQuery(solrQuery);
+		} catch (SolrServerException e) {
 			e.printStackTrace();
 		}
 		return null;
