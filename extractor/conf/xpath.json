@@ -4,13 +4,30 @@
 			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1"
 		}
 	},
-  "www.indianexpress.com" : {
-    "title" : {
-      "xpath" : "//title"
-    },
-    "canonical_url" : {
+	"hindustantimes.com" : {
+		"title" : {
+			"xpath" : "//title"
+		},
+    	"canonical_url" : {
 			"xpath" : "//link[@rel='canonical']/@href"
-    },
+ 	   },
+		"keywords" : {
+			"xpath" : "//meta[@name='keywords']/@content"
+		},
+		"date" : {
+			"xpath" : "//span[@id='ctl00_lblDate']"
+		},
+		"content" : {
+			"xpath" : "//p"
+		}
+	},
+	"indianexpress.com" : {
+		"title" : {
+	  		"xpath" : "//title"
+		},
+		"canonical_url" : {
+			"xpath" : "//link[@rel='canonical']/@href"
+		},
 		"keywords" : {
 			"xpath" : "//meta[@name='keywords']/@content"
 		},

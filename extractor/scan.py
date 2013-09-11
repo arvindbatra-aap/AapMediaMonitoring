@@ -1,5 +1,6 @@
 import os
 import os.path
+import sys, traceback
 
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
@@ -8,15 +9,15 @@ import json
 import MySQLdb
 import string 
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
-                     user="root", # your username
-                      passwd="aapmysql00t", # your password
-                      db="AAP") # name of the data base
+					 user="root", # your username
+					  passwd="aapmysql00t", # your password
+					  db="AAP") # name of the data base
 db.charset="utf8"
 db.autocommit(True)
 
 cur = db.cursor() 
 
-#EXTRACT_PATH = '/root/crawl-raw/2013-09-11/articles.timesofindia.indiatimes.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-05/indianexpress.com'
 EXTRACT_PATH = '/root/crawl-raw'
 
 # Set Log Level to Info
@@ -44,15 +45,6 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					url = open('.'.join(file.split('.')[:-1])+ ".url", 'r').read()
 					hashed = file.split('/')[-1].split('.')[-2]
 
-					#Check if the url exists in the table
-					cur.execute("SELECT * FROM ARTICLE_TBL WHERE id='"+hashed+"'")
-
-					for row in cur.fetchall() :
-						print "DATA->"
-						print row[0]
-						#continue; 
-					print "item NOT FOUND in the DB"
- 
 					content = open(file, 'r').read()
 					info("URL: %s" % url)
 					extracted = manager.extractAll(content, url, source, date, file)
@@ -76,7 +68,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 							print "Failed loading json for ", itemFile	
 						itemFH.close()
 
-					print extracted
+					#print extracted
 					print "---"
 
 
@@ -103,12 +95,18 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					try:
 						repl=lambda x: string.replace(x,"'","\\'")
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
-						cur.execute(query.encode('cp1252'))
+						cur.execute(query)
 					except UnicodeEncodeError:
-						print "Unicode issue in query "
+						print "Unicode encode issue in query ", file
+						print '-'*60
+						traceback.print_exc(file=sys.stdout)
+						print '-'*60
 						continue
 					except UnicodeDecodeError:
-						print "Unicode issue in query "
+						print "Unicode decode issue in query ", file
+						print '-'*60
+						traceback.print_exc(file=sys.stdout)
+						print '-'*60
 						continue
 					except Exception:
 						print query
