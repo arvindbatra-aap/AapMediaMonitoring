@@ -1,6 +1,7 @@
 package org.aap.monitoring;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,15 +20,19 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.text.DateFormat;
 import java.util.*;
 
 public class SolrManager {
+	
+	private static Logger LOG = LoggerFactory.getLogger(SolrManager.class);
     public static SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
     public static int minCount = 100;
-    public void insertDocument(ResultSet result) {
+    public void insertDocument(ResultSet result) throws Exception {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", result.getString("src"));
@@ -47,8 +52,8 @@ public class SolrManager {
             solrServer.add(inputDocument);
             solrServer.commit();
         } catch (Exception e) {
-            System.err.println("Exception aa gayi baap. Ab kya hoga ??");
-            e.printStackTrace();
+           LOG.error("Exception in adding document" + (String)result.getString("url"));
+            throw e;
         }
     }
 
