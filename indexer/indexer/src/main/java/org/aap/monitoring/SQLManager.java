@@ -5,11 +5,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SQLManager {
 
-	private static Logger LOG = Logger.getLogger(SQLManager.class);
+	private static Logger LOG = LoggerFactory.getLogger(SQLManager.class);
     Connection con = null;
     SolrManager solrManager;
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";

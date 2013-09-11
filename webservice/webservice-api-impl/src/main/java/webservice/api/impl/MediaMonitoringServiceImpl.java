@@ -37,15 +37,15 @@ public class MediaMonitoringServiceImpl
 	}
 	
 	@Override
-	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src) {
+	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
 		try {
 			if(startDate == 0 && endDate == 0){
-				return solrManager.getArticlesForKeywords(keyword, src);
+				return solrManager.getArticlesForKeywords(keyword, src, start, count);
 			}
 			if(endDate == 0 ){
 				endDate = new Date().getTime();
 			}
-			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src);
+			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles",e);
 		}
@@ -54,12 +54,12 @@ public class MediaMonitoringServiceImpl
 	
 	
 	@Override
-	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src){
+	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src,  int start, int count){
 		if(endDate==0){
 			endDate = new Date().getTime();
 		}
 		try {
-			return solrManager.getNumArticlesForKeywordsAndDate(keyword, new Date(startDate), new Date(endDate), src);
+			return solrManager.getNumArticlesForKeywordsAndDate(keyword, new Date(startDate), new Date(endDate), src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles count",e);
 		}
@@ -78,9 +78,9 @@ public class MediaMonitoringServiceImpl
 	}
 
 	@Override
-	public Collection<Article> getArticlesFromSolr(String solrQuery) {
+	public Collection<Article> getArticlesFromSolr(String solrQuery, int start, int count) {
 		try {
-			return solrManager.getArticlesForSolrQuery(solrQuery);
+			return solrManager.getArticlesForSolrQuery(solrQuery,start,count);
 		} catch (SolrServerException e) {
 			e.printStackTrace();
 		}
