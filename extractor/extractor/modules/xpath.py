@@ -49,7 +49,10 @@ class XPathExtractor(BasicExtractor):
 				if hasattr(item, 'text') and item.text != None:
 					data += " " + item.text.encode("utf-8")
 				elif hasattr(item,'is_text'): 
-					data += str(item.encode("utf-8"))
+					try:
+						data += str(item.encode("utf-8"))
+					except UnicodeEncodeError:
+						print 'ignoring unicode char data ...'
 			data = data.strip()
 				
 			if len(data) == 0: continue
