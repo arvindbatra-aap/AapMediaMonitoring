@@ -3,7 +3,7 @@ import os
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
 
-EXTRACT_PATH = 'crawl-raw'
+EXTRACT_PATH = '/root/crawl-raw/2013-09-11/'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
@@ -14,9 +14,14 @@ file_count = 0
 
 manager = ExtractionManager()
 for root, dirs, files in os.walk(EXTRACT_PATH):
-	
+	print "..."
+	print root
+	print dirs
+	print files
+	print "..."
+
 	if len(dirs) == 0 and len(files) > 0:
-		(date, source) = root.split("/")[1:3]
+		(date, source) = root.split("/")[-2:]
 
 		for file in files:
 			if file.endswith(".html"):
@@ -24,8 +29,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 				info("Processing dump file: %s" % file)
 				file_count += 1
 
-				url = open(file.split(".")[0]+".url", 'r').read()
-				#url = "url%d" % file_count
+				url = open('.'.join(file.split('.')[:-1])+ ".url", 'r').read()
 				content = open(file, 'r').read()
 				info("URL: %s" % url)
 				extracted = manager.extractAll(content, url, source, date, file)
