@@ -3,8 +3,21 @@ import os
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
 import datetime
+import MySQLdb
+import string 
+db = MySQLdb.connect(host="localhost", # your host, usually localhost
+                     user="root", # your username
+                      passwd="aapmysql00t", # your password
+                      db="AAP") # name of the data base
+db.charset="utf8"
+db.autocommit(True)
 
-EXTRACT_PATH = '/root/crawl-raw/2013-09-11/'
+cur = db.cursor() 
+cur.execute("SELECT * FROM ARTICLE_TBL")
+for row in cur.fetchall() :
+    print row[0]
+
+EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
@@ -35,12 +48,61 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					file_count += 1
 
 					url = open('.'.join(file.split('.')[:-1])+ ".url", 'r').read()
+					hashed = file.split('/')[-1].split('.')[-2]
+
+					#Check if the url exists in the table
+					cur.execute("SELECT * FROM ARTICLE_TBL WHERE id='"+hashed+"'")
+
+					for row in cur.fetchall() :
+						print "DATA->"
+						print row[0]
+						continue; 
+					print "item NOT FOUND in the DB"
+ 
 					content = open(file, 'r').read()
 					info("URL: %s" % url)
 					extracted = manager.extractAll(content, url, source, date, file)
 					attr_count += len(extracted.keys())
 					print extracted
 					print "---"
+
+
+					title=''
+					url=''
+					content=''
+					date1=''
+					src=''
+					if 'title' in extracted:
+						title=extracted['title']
+					if 'canonical_url' in extracted:
+						url=extracted['canonical_url']
+					else: 
+						if 'url' in extracted:
+							url=extracted['url']
+					if 'content' in extracted:
+						content=extracted['content']
+					if 'date' in extracted:
+						date1=extracted['date']
+					else:
+						query = "INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (url, hashed, title, content, date1, src)
+						print query
+						print "Date not found"
+						#continue
+						break
+					if hasattr(extracted, 'src'):
+						src=extracted.src
+					query = "INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (url, hashed, title, content, date1, src)
+					#print query
+					try:
+						repl=lambda x: string.replace(x,"'","\\'")
+						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
+						cur.execute(query.encode('cp1252'))
+					except UnicodeEncodeError:
+						print "Unicode issue in query "
+						continue
+					except Exception:
+						print query
+						raise
 
 info("Extraction completed. Totally extracted %d attributes from %s HTML dump files." % (attr_count, file_count))
 
