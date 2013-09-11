@@ -1,8 +1,10 @@
 import os
+import os.path
 
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
 import datetime
+import json
 import MySQLdb
 import string 
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
@@ -13,11 +15,9 @@ db.charset="utf8"
 db.autocommit(True)
 
 cur = db.cursor() 
-cur.execute("SELECT * FROM ARTICLE_TBL")
-for row in cur.fetchall() :
-    print row[0]
 
-EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.thehindu.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-11/articles.timesofindia.indiatimes.com'
+EXTRACT_PATH = '/root/crawl-raw'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
@@ -57,6 +57,25 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					info("URL: %s" % url)
 					extracted = manager.extractAll(content, url, source, date, file)
 					attr_count += len(extracted.keys())
+					itemFile = '.'.join(file.split('.')[:-1]) + ".item"
+					print itemFile
+					if os.path.exists(itemFile):
+						itemFH = open(itemFile)
+						print itemFH
+						try:
+							itemData = json.load(itemFH)
+							if 'canonical_url' not in extracted and 'url' in itemData:
+								extracted['url'] = itemData['url']
+							if 'title' not in extracted and 'title' in itemData:
+								extracted['title'] = itemData['title']
+							if 'content' not in extracted and 'description' in itemData:
+								extracted['content'] = itemData['description']
+							if 'date' not in extracted and 'publishedDate' in itemData:
+								extracted['date'] = itemData['publishedDate']
+						except Exception:
+							print "Failed loading json for ", itemFile	
+						itemFH.close()
+
 					print extracted
 					print "---"
 
@@ -81,13 +100,14 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 						print "Date not found"
 						continue
 
-					query = "INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (url, hashed, title, content, date1, src)
-					print query
 					try:
 						repl=lambda x: string.replace(x,"'","\\'")
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
 						cur.execute(query.encode('cp1252'))
 					except UnicodeEncodeError:
+						print "Unicode issue in query "
+						continue
+					except UnicodeDecodeError:
 						print "Unicode issue in query "
 						continue
 					except Exception:

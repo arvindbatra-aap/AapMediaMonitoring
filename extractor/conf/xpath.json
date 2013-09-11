@@ -4,6 +4,26 @@
 			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1"
 		}
 	},
+  "www.indianexpress.com" : {
+    "title" : {
+      "xpath" : "//title"
+    },
+    "canonical_url" : {
+			"xpath" : "//link[@rel='canonical']/@href"
+    },
+		"keywords" : {
+			"xpath" : "//meta[@name='keywords']/@content"
+		},
+		"date" : {
+			"xpath" : "//meta[@name='Last-Modified']/@content"
+		},
+		"content" : {
+			"xpath" : "//p"
+		},
+    "image_url" : {
+      "xpath" : "//meta[@name='twitter:image']/@content"
+    }
+  },
 	"thehindu.com" : {
 		"canonical_url" : {
 			"xpath" : "//link[@rel='canonical']/@href"

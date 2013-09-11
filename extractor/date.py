@@ -157,7 +157,7 @@ def dfs_find(root):
 def get_date(html_text, bad_title_phrase_list):
     soup = BeautifulSoup(html_text)
     title_node = get_title_node(soup, bad_title_phrase_list)
-    print "[debug] title_node : ", title_node, ",  par : ", title_node.parent, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name 
+    print "[debug] title_node : ", title_node, ",  par : ", title_node.parent#, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name 
     date_node = dfs_find(title_node)
     print "[debug] date_node : ", date_node
     return extract_date(date_node)
