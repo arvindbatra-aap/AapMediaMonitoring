@@ -13,11 +13,8 @@ db.charset="utf8"
 db.autocommit(True)
 
 cur = db.cursor() 
-cur.execute("SELECT * FROM ARTICLE_TBL")
-for row in cur.fetchall() :
-    print row[0]
 
-EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.thehindu.com'
+EXTRACT_PATH = '/root/crawl-raw'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
