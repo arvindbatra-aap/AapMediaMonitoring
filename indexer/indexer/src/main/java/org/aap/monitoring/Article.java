@@ -25,19 +25,31 @@ public class Article {
         article.setSrc(doc.get("src").toString());
         article.setUrl(doc.get("url").toString());
         article.setTitle(doc.get("title").toString());
-        article.setDate((Date) doc.get("date"));
-        article.setImage_url(doc.get("image_url").toString());
+        if(doc.get("date") != null){
+        	article.setDate((Date) doc.get("date"));
+        }
+        if(doc.get("image_url") != null){
+        	article.setImage_url(doc.get("image_url").toString());
+        }
         if(doc.get("content") != null){
         	article.setContent(doc.get("content").toString());
         }
-        article.setAuthor(doc.get("author").toString());
-        article.setCategory(doc.get("category").toString());
+        if(doc.get("author") != null){
+        	article.setAuthor(doc.get("author").toString());
+        }
+        if(doc.get("category") != null){
+        	article.setCategory(doc.get("category").toString());
+        }
         // article.setComments(doc.get("comments").toString());
         if(doc.get("country") != null){
         	article.setCountry(doc.get("country").toString());
         }
-        article.setCity(doc.get("city").toString());
-        article.setCommentcount((Integer)doc.get("commentcount"));
+        if(doc.get("city") != null){
+        	article.setCity(doc.get("city").toString());
+        }
+        if(doc.get("commentcount") != null){
+        	article.setCommentcount((Integer)doc.get("commentcount"));
+        }
         return article;
     }
 
