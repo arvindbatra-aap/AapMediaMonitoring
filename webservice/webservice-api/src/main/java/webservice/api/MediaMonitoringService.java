@@ -50,4 +50,9 @@ public interface MediaMonitoringService
     //yyyy-MM-dd
     Response triggerIndexer(@QueryParam(value = "date")String date);
     
+    @Path("getArticlesFromSolr")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Collection<Article> getArticlesFromSolr(@QueryParam(value = "query")String query);
+    
 }
