@@ -1,8 +1,10 @@
 import os
+import os.path
 
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR
 import datetime
+import json
 
 EXTRACT_PATH = '/root/crawl-raw/2013-09-11/'
 
@@ -26,6 +28,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 
 	if len(dirs) == 0 and len(files) > 0:
 		(date, source) = root.split("/")[-2:]
+		if source != "articles.timesofindia.indiatimes.com": continue	
 
 		if (datetime.datetime.strptime(date, '%Y-%m-%d').date() > date_7_days_ago):
 			for file in files:
@@ -39,6 +42,15 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					info("URL: %s" % url)
 					extracted = manager.extractAll(content, url, source, date, file)
 					attr_count += len(extracted.keys())
+					itemFile = '.'.join(file.split('.')[:-1]) + ".item"
+					print itemFile
+					if os.path.exists(itemFile):
+						itemFH = open(itemFile)
+						print itemFH
+						itemData = json.load(itemFH)
+						print itemData
+						itemFH.close()
+
 					print extracted
 					print "---"
 
