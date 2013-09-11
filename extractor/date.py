@@ -21,6 +21,9 @@ def extract_date(txt):
     if re.match(month_regex, txt.lower()) == None or re.match(one_digit_regex, txt) == None:
        return None 
     
+#     debug
+#     return txt.strip()
+    
     p = Popen(['java', '-jar', 'nattyrunner/target/nattyrunner-1.0-SNAPSHOT-jar-with-dependencies.jar'], stdout=PIPE, stdin=PIPE)
     date = p.communicate(input=txt)[0]
     if date == "" or date == None:
@@ -68,16 +71,23 @@ def get_title_node(soup, bad_phrases):
     #dfs
     stack = deque([soup.body])
     while len(stack) > 0:
-#         print "stack len : ", len(stack)
         node = stack.pop()
         if is_leaf(node):
             if str(type(node)) == "<class 'BeautifulSoup.NavigableString'>":
                 txt = node
+                tag = node.parent.name
+                ptag = node.parent.parent.name
             else:
                 try:
                     txt = node.text
                 except:
                     continue
+                tag = node.pname
+                ptag = node.parent.name
+            # discard anchors
+            if tag == 'a' or ptag == 'a':
+                continue
+                
             matchableTokens = tokenize(txt)
             match_len = getLCSLength(pTokens, matchableTokens) / float(1 + len(matchableTokens))
 #             print ">>>> ", match_len, el
@@ -147,7 +157,7 @@ def dfs_find(root):
 def get_date(html_text, bad_title_phrase_list):
     soup = BeautifulSoup(html_text)
     title_node = get_title_node(soup, bad_title_phrase_list)
-    print "[debug] title_node : ", title_node, ",  par : ", title_node.parent, ', pp : ', title_node.parent.parent 
+    print "[debug] title_node : ", title_node, ",  par : ", title_node.parent#, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name 
     date_node = dfs_find(title_node)
     print "[debug] date_node : ", date_node
     return extract_date(date_node)
@@ -158,7 +168,7 @@ def main():
     soup = BeautifulSoup(open("test/a.html").read())
     
     title_node = get_title_node(soup, bad_phrases)
-    print "title_node : ", title_node, ",  par : ", title_node.parent 
+    print "title_node : ", title_node, ",  par : ", title_node.parent, title_node.parent.name, title_node.parent.parent.name 
     
     date_node = dfs_find(title_node)
     print "date_node : ", date_node

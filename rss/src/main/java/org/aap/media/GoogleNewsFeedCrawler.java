@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,6 +91,8 @@ public class GoogleNewsFeedCrawler {
         Set<String> crawledURLMd5Set = getAllCrawledURLMd5Set(command.getOutputDirectory());
 
         // Create output folder for today.
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+05:30"));
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         File outputDir = new File(command.getOutputDirectory() + File.separatorChar + today);
 
@@ -123,7 +127,8 @@ public class GoogleNewsFeedCrawler {
                     JSONObject obj = new JSONObject();
                     obj.put("url", siteURL.toString());
                     obj.put("title", syndEntry.getTitle());
-                    obj.put("publishedDate", syndEntry.getPublishedDate());
+                    obj.put("publishedDate", formatter.format(syndEntry.getPublishedDate()));
+                    obj.put("publishedDateTimestamp", syndEntry.getPublishedDate().getTime());
                     obj.put("description", Jsoup.parse(syndEntry.getDescription().getValue())
                                     .text());
                     StringWriter out = new StringWriter();
