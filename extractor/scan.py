@@ -16,7 +16,7 @@ db.autocommit(True)
 
 cur = db.cursor() 
 
-#EXTRACT_PATH = '/root/crawl-raw/2013-09-11/www.indianexpress.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-11/articles.timesofindia.indiatimes.com'
 EXTRACT_PATH = '/root/crawl-raw'
 
 # Set Log Level to Info
@@ -62,8 +62,18 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					if os.path.exists(itemFile):
 						itemFH = open(itemFile)
 						print itemFH
-						itemData = json.load(itemFH)
-						print itemData
+						try:
+							itemData = json.load(itemFH)
+							if 'canonical_url' not in extracted and 'url' in itemData:
+								extracted['url'] = itemData['url']
+							if 'title' not in extracted and 'title' in itemData:
+								extracted['title'] = itemData['title']
+							if 'content' not in extracted and 'description' in itemData:
+								extracted['content'] = itemData['description']
+							if 'date' not in extracted and 'publishedDate' in itemData:
+								extracted['date'] = itemData['publishedDate']
+						except Exception:
+							print "Failed loading json for ", itemFile	
 						itemFH.close()
 
 					print extracted
@@ -95,6 +105,9 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
 						cur.execute(query.encode('cp1252'))
 					except UnicodeEncodeError:
+						print "Unicode issue in query "
+						continue
+					except UnicodeDecodeError:
 						print "Unicode issue in query "
 						continue
 					except Exception:
