@@ -28,7 +28,6 @@ public class SolrManager {
     public static SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
     public void insertDocument(ResultSet result) {
         try {
-        	System.out.println("Inserting a document");
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", result.getString("src"));
             inputDocument.addField("url", result.getString("url"));
@@ -79,7 +78,9 @@ public class SolrManager {
 
 
     private SolrQuery getQueryForKeywords(String keywords) {
-        return new SolrQuery().setQuery("content:" + keywords + " title:" + keywords);
+    	SolrQuery solrQuery =  new SolrQuery().setQuery("content:" + keywords + " title:" + keywords + " keywords:" + keywords);
+    	solrQuery.setRows(Integer.MAX_VALUE);
+    	return solrQuery;
     }
 
     private void addSrcQuery(String src ,  SolrQuery solrQuery){
@@ -98,6 +99,7 @@ public class SolrManager {
     public List<Article> getArticlesForSolrQuery(String query) throws SolrServerException {
     	SolrQuery solrQuery = new SolrQuery();
     	solrQuery.setQuery(query);
+    	solrQuery.setRows(Integer.MAX_VALUE);
         QueryResponse response = solrServer.query(solrQuery);
         return getArticles(response);
     }
@@ -106,7 +108,6 @@ public class SolrManager {
     	SolrQuery solrQuery = getQueryForKeywords(keywords);
     	addSrcQuery(src, solrQuery);
         QueryResponse response = solrServer.query(solrQuery);
-        
         return getArticles(response);
     }
 

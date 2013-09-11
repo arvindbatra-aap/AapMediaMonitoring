@@ -109,15 +109,15 @@
 
    <field name="src" type="lowercase" indexed="true" stored="true" multiValued="false"/>
    <field name="id" type="string" indexed="true" stored="true" multiValued="false"/>
-   <field name="keywords" type="string" indexed="true" stored="true" multiValued="true"/>
+   <field name="keywords" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="url" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="title" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="date" type="date" indexed="true" stored="true" multiValued="false"/>
    <field name="image_url" type="text_general" indexed="false" stored="true" multiValued="true"/>
-   <field name="content" type="text_general" indexed="true" stored="false" multiValued="false"/>
+   <field name="content" type="text_general" indexed="true" stored="true" multiValued="false"/>
    <field name="author" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="category" type="string" indexed="true" stored="true" multiValued="false"/>
-   <field name="comments" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="comments" type="text_general" indexed="true" stored="true" multiValued="true"/>
    <field name="country" type="string" indexed="true" stored="true" multiValued="false"/>
    <field name="city" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="commentcount" type="int" indexed="true" stored="true" />
