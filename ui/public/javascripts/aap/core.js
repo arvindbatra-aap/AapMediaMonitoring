@@ -9,6 +9,9 @@ _AAP.prototype.init = function(config) {
 
 _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 	console.log("Loading Article Counts for query:" + query + " and start:" + start + " and end:" + end);
+
+	this._ui.showLoading();
+	
 	var params = {
 		query : query,
 		start : start,
@@ -47,7 +50,7 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 			for(var i=0; i<chart_data.dates.length; i++) {
 				chart_data.dates[i] = (new Date(chart_data.dates[i])).toDateString();
 			}
-
+			that._ui.hideLoading();
 			that._ui.renderArticleCountChart(chart_data);
 		}
 	});
