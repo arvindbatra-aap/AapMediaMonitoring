@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>AAP Media Monitoring Service</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Aam Admi Party Media Monitoring Service" />
+		<meta name="author" content="" />
+		<meta name="keywords" content="AAP, Media, Times Of India, The Hindu, India, Monitoring Service" />
+
+		<!-- Le styles -->
+		<link href="/stylesheets/bootstrap.css" rel="stylesheet" />
+		<link href="/stylesheets/theme.css" rel="stylesheet" />
+		<link href="/stylesheets/datepicker.css" rel="stylesheet" />
+		<link href="/stylesheets/aap.css" rel="stylesheet" />
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.core.css">
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.bootstrap.css">
+
+		<style>
+		  body {
+		    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		  }
+		  .control-group::before, .control-group::after {
+		  	display: inline !important; /* bootstrap override */
+		  }	
+		</style>
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		  <script src="/javascripts/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="shortcut icon" href="/favicon.png" />
+
+	</head>
+
+	<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">AAP Media Monitoring Service</a>
+	    </div>
+	    <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Trend</a></li>
+	        <li><a id="about-btn" href="#">About</a></li>
+	      </ul>
+	    </div><!--/.nav-collapse -->
+	  </div>
+	</div>
+
+	<div class="container">
+
+	  <div class="starter-template">
+	    <h1>Welcome to AAP Media Monitoring Service</h1>
+	    <p class="lead">Here is the latest related media trend across different Indian sources...</p>
+
+		<div class="form-inline">
+		  <div class="form-group">
+		    <input type="text" class="form-control" id="trend-query-string" placeholder="Aam Aadmi Party" value="Aam Aadmi Party">
+		  </div>
+		  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Update</button>
+		</div>
+
+	    <div id="article-count-trend">
+	    </div>
+
+	    <div id="trend-loading">
+	    	<div class="progress progress-striped active">
+			  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+			    Crunching data... Hold on..
+			  </div>
+			</div>
+		</div>
+
+	  </div>
+
+	</div>
+
+<!-- About Modal -->
+  <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">About AAP...</h4>
+        </div>
+        <div class="modal-body">
+          ... Arvind Kejriwal Rocks ... \m/
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+	<!-- /container -->
+
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!--<script src="/javascripts/jquery.min.js"></script>-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="/javascripts/handlebars.js"></script>
+	<script src="/javascripts/bootstrap.min.js"></script>
+	<script src="/javascripts/alertify-0.3.7.min.js"></script>		
+
+	<script src="/javascripts/aap/ui.js"></script>
+	<script src="/javascripts/aap/core.js"></script>
+	<script src="/javascripts/aap/aap.js"></script>
+
+	</body>
+</html>

@@ -1,6 +1,7 @@
 package org.aap.monitoring;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,14 +20,19 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.text.DateFormat;
 import java.util.*;
 
 public class SolrManager {
+	
+	private static Logger LOG = LoggerFactory.getLogger(SolrManager.class);
     public static SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
-    public void insertDocument(ResultSet result) {
+    public static int minCount = 100;
+    public void insertDocument(ResultSet result) throws Exception {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();
             inputDocument.addField("src", result.getString("src"));
@@ -46,8 +52,8 @@ public class SolrManager {
             solrServer.add(inputDocument);
             solrServer.commit();
         } catch (Exception e) {
-            System.err.println("Exception aa gayi baap. Ab kya hoga ??");
-            e.printStackTrace();
+           LOG.error("Exception in adding document" + (String)result.getString("url"));
+            throw e;
         }
     }
 
@@ -77,15 +83,26 @@ public class SolrManager {
     }
 
 
-    private SolrQuery getQueryForKeywords(String keywords) {
-    	SolrQuery solrQuery =  new SolrQuery().setQuery("content:" + keywords + " title:" + keywords + " keywords:" + keywords);
-    	solrQuery.setRows(Integer.MAX_VALUE);
+    private SolrQuery getQueryForKeywords(String keywords, int start, int count) {
+    	SolrQuery solrQuery =  new SolrQuery();
+    	if(!StringUtils.isBlank(keywords)){
+    		solrQuery.setQuery("content:" + keywords + " OR title:" + keywords + " OR keywords:" + keywords);
+    	}
+    	solrQuery.setStart(start);
+    	if(count == 0){
+    		count = minCount;
+    	}
+    	solrQuery.setRows(count);
     	return solrQuery;
     }
 
     private void addSrcQuery(String src ,  SolrQuery solrQuery){
     	if(StringUtils.isBlank(src)) return;
-    	solrQuery.setQuery("src:" + src);
+    	String queryString = "src:" + src ;
+    	if(StringUtils.isBlank(solrQuery.getQuery())){
+    		queryString = solrQuery.getQuery() + " AND " + queryString;
+    	}
+    	solrQuery.setQuery(queryString);
     }
     
     private void createDateFilter(SolrQuery solrQuery, Date startDate, Date endDate){
@@ -96,23 +113,27 @@ public class SolrManager {
         solrQuery.addFilterQuery(dateQuery);
     }
 
-    public List<Article> getArticlesForSolrQuery(String query) throws SolrServerException {
+    public List<Article> getArticlesForSolrQuery(String query, int start, int count) throws SolrServerException {
     	SolrQuery solrQuery = new SolrQuery();
     	solrQuery.setQuery(query);
-    	solrQuery.setRows(Integer.MAX_VALUE);
+    	solrQuery.setStart(start);
+    	if(count == 0){
+    		count = minCount;
+    	}
+    	solrQuery.setRows(count);
         QueryResponse response = solrServer.query(solrQuery);
         return getArticles(response);
     }
     
-    public List<Article> getArticlesForKeywords(String keywords, String src) throws SolrServerException {
-    	SolrQuery solrQuery = getQueryForKeywords(keywords);
+    public List<Article> getArticlesForKeywords(String keywords, String src, int start, int count) throws SolrServerException {
+    	SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
     	addSrcQuery(src, solrQuery);
         QueryResponse response = solrServer.query(solrQuery);
         return getArticles(response);
     }
 
-    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate, String src) throws SolrServerException {
-    	SolrQuery solrQuery = getQueryForKeywords(keywords);
+    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate, String src,  int start, int count) throws SolrServerException {
+    	SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
     	createDateFilter(solrQuery,startDate,endDate);
     	addSrcQuery(src, solrQuery);
         QueryResponse response = solrServer.query(solrQuery);
@@ -129,8 +150,8 @@ public class SolrManager {
         return result;
     }
 
-    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date startDate, Date endDate, String src) throws SolrServerException {
-        SolrQuery solrQuery = getQueryForKeywords(keywords);
+    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date startDate, Date endDate, String src,  int start, int count) throws SolrServerException {
+        SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
         createDateFilter(solrQuery,startDate,endDate);
         addSrcQuery(src, solrQuery);
         solrQuery.setFacet(true);

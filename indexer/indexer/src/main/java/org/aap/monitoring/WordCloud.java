@@ -28,7 +28,7 @@ public class WordCloud {
     public Map<String, Integer> getWordCloud(String query) {
         Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
         try {
-            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, null);
+            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, null, 0, Integer.MAX_VALUE);
             for (Article article : articlesForKeyword) {
                 processArticle(article, keywordCounts);
             }
@@ -47,7 +47,7 @@ public class WordCloud {
     public Map<String, Integer> getWordCloud(String query, Date startDate, Date endDate) {
         Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
         try {
-            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, startDate, endDate, null);
+            List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, startDate, endDate, null, 0, Integer.MAX_VALUE);
             for (Article article : articlesForKeyword) {
                 processArticle(article, keywordCounts);
             }
