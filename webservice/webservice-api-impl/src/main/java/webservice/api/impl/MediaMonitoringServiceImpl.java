@@ -4,6 +4,9 @@ package webservice.api.impl;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
@@ -12,6 +15,7 @@ import org.aap.monitoring.Article;
 import org.aap.monitoring.ArticleCount;
 import org.aap.monitoring.SQLManager;
 import org.aap.monitoring.SolrManager;
+import org.aap.monitoring.WordCloud;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,7 @@ public class MediaMonitoringServiceImpl
 	private static Logger LOG = Logger.getLogger(MediaMonitoringServiceImpl.class);
 	private SolrManager solrManager;
 	private SQLManager sqlManager;
+	private int THRESHOLD = 4;
 	
 	public MediaMonitoringServiceImpl(){
 		solrManager = new SolrManager();
@@ -85,5 +90,22 @@ public class MediaMonitoringServiceImpl
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Integer> getWordCloud(String query, String src, long startDate,  long endDate,int count) {
+		WordCloud wc = new WordCloud(solrManager);
+		Map<String, Integer> wordCount = wc.getWordCloud(query, null, null, src,count);
+		return filterMap(wordCount);
+	}
+	
+	private Map<String,Integer> filterMap(Map<String,Integer> map){
+		Map<String ,Integer> newMap = new HashMap<String, Integer>();
+		for(String key: map.keySet()){
+			if(map.get(key) > THRESHOLD){
+				newMap.put(key,map.get(key));
+			}
+		}
+		return newMap;
 	}
 }
