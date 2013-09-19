@@ -4,5 +4,6 @@
  */
 
 exports.home = function(req, res){
-  res.render('index', { title: 'Express' });
+  var query = req.param("q") || 'Aam Aadmi Party';
+  res.render('index', { user_query: query });
 };
