@@ -58,7 +58,7 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 			chart_data.series.push({name: 'Total', data: total_data});
 
 			for(var i=0; i<chart_data.dates.length; i++) {
-				chart_data.dates[i] = (new Date(chart_data.dates[i])).toDateString();
+				chart_data.dates[i] = (new Date(parseInt(chart_data.dates[i]))).toDateString();
 			}
 			that._ui.hideTrendLoading();
 			that._ui.renderArticleCountChart(chart_data);
