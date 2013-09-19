@@ -169,22 +169,22 @@ public class SolrManager {
         List<PivotField> dateSource = pivots.get("date,src");
 
         ArticleCount artCountRes  = new ArticleCount();
-        Map<String, Map<String, Integer>> dateResults = new HashMap<String, Map<String, Integer>>();
+        Map<String, Map<String, Integer>> dateResults = new TreeMap<String, Map<String, Integer>>();
         for (PivotField dateOnly : dateSource) {
-            String dateString = ((Date) dateOnly.getValue()).toString();
-            if (dateResults.get(dateString) == null ) dateResults.put(dateString, new HashMap<String, Integer>());
+            String dateString = String.valueOf(((Date) dateOnly.getValue()).getTime());
+            if (dateResults.get(dateString) == null ) dateResults.put(dateString, new TreeMap<String, Integer>());
             for (PivotField source: dateOnly.getPivot()) {
             	dateResults.get(dateString).put((String) source.getValue(), source.getCount());
             }
         }
         
         List<PivotField> sourceDate = pivots.get("src,date");
-        Map<String, Map<String, Integer>> srcResults = new HashMap<String, Map<String, Integer>>();
+        Map<String, Map<String, Integer>> srcResults = new TreeMap<String, Map<String, Integer>>();
         for (PivotField sourceOnly : sourceDate) {
             String sourceString = (String) sourceOnly.getValue();
-            if (srcResults.get(sourceString) == null ) srcResults.put(sourceString, new HashMap<String, Integer>());
+            if (srcResults.get(sourceString) == null ) srcResults.put(sourceString, new TreeMap<String, Integer>());
             for (PivotField date: sourceOnly.getPivot()) {
-            	srcResults.get(sourceString).put(((Date) date.getValue()).toString(), date.getCount());
+            	srcResults.get(sourceString).put(String.valueOf(((Date) date.getValue()).getTime()), date.getCount());
             }
         }
         artCountRes.setCountByDate(dateResults);
