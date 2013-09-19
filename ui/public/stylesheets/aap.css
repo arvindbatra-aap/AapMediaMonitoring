@@ -34,6 +34,9 @@ body {
 	.article-inner-row {
 		background-color: rgb(248, 245, 243);
 		height: 53px;	
+		position: absolute;
+		bottom: 0px;
+		width: 100%;
 	}
 
 }
@@ -47,6 +50,8 @@ body {
 	border-image-width: initial;
 	border-image-outset: initial;
 	border-image-repeat: initial;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 .article-inner-box {
@@ -58,4 +63,8 @@ body {
 	text-align: center;
 	margin-top: 10px;
 	color: #777;
+}
+
+.view-article-btn {
+	margin: 10px;
 }

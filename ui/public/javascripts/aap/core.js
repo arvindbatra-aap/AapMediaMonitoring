@@ -32,6 +32,9 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 				chart_data.dates.push(date);
 			}
 
+
+			var total_data = new Array(chart_data.dates.length);
+
 			for(var source in data.countBySrc) {
 				var blob = {
 					name: source,
@@ -41,13 +44,18 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 
 					if(data.countBySrc[source][chart_data.dates[i]]) {
 						blob.data.push(data.countBySrc[source][chart_data.dates[i]]);
+						total_data[i] = total_data[i] + data.countBySrc[source][chart_data.dates[i]] || data.countBySrc[source][chart_data.dates[i]];
 					}
 					else {
 						blob.data.push(0);	
+						total_data[i] = total_data[i] + 0 || 0;
 					}
 				}
 				chart_data.series.push(blob);
 			}
+
+			// All timeline
+			chart_data.series.push({name: 'Total', data: total_data});
 
 			for(var i=0; i<chart_data.dates.length; i++) {
 				chart_data.dates[i] = (new Date(chart_data.dates[i])).toDateString();
