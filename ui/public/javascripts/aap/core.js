@@ -1,10 +1,19 @@
 var _AAP = function() {
 	console.log("Initializing AAP Media Monitoring Service...");
 	this._ui = new _AAP_UI(this);
+	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com"];
 };
 
 _AAP.prototype.init = function(config) {
 	this.showArticleCountTrend(config.query, config.start, config.end);
+};
+
+_AAP.prototype.showAllTrendSeries = function() {
+	this._ui.showAllTrendSeries();
+};
+
+_AAP.prototype.hideAllTrendSeries = function() {
+	this._ui.hideAllTrendSeries();
 };
 
 _AAP.prototype.showArticleCountTrend = function(query, start, end) {
@@ -32,13 +41,13 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 				chart_data.dates.push(date);
 			}
 
-
 			var total_data = new Array(chart_data.dates.length);
 
 			for(var source in data.countBySrc) {
 				var blob = {
 					name: source,
-					data: []
+					data: [],
+					visible: (that._VISIBLE_SOURCES.indexOf(source) != -1)
 				};
 				for(var i=0; i<chart_data.dates.length; i++) {
 

@@ -13,5 +13,5 @@ class DateExtractor(BasicExtractor):
 
 	def extract(self, datum):
 		date = self.genericDateExtractor.extract(datum)
-		logging.info("Genrically extracted date : " + date)
+		logging.info("Genrically extracted date : " + str(date))
 		return date

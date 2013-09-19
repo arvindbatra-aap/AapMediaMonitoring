@@ -19,6 +19,14 @@ $(document).ready(function(){
 	$('#about-btn').click(function(){
 		$('#about-modal').modal();
 	});
+
+	$('#show-all-series-btn').click(function(){
+		$AAP.showAllTrendSeries();
+	});
+
+	$('#hide-all-series-btn').click(function(){
+		$AAP.hideAllTrendSeries();
+	});
 });
 
 

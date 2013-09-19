@@ -1,4 +1,15 @@
 {
+	"zeenews.india.com" : {
+		"title": {
+			"xpath" : "//h1[@class='h1title']"
+		},
+		"content" : {
+            "xpath" : "//div[@class='content']"
+        },
+		"date" : {
+			"xpath" : "//div[@class='last-updated']"
+		}
+	},
 	"hindustantimes.com" : {
 		"title" : {
 			"xpath" : "//title"
