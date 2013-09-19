@@ -70,7 +70,6 @@ public class WordCloud {
             insertString(keywordCounts, keywordsSeen, s);
         }
         List<String> phrases = new ArrayList<String>();
-        LOG.info("Content size: calling getPhrases" + content.length());
         getPhrases2(content, phrases);
         for (String phrase : phrases) {        	
             insertString(keywordCounts, keywordsSeen, phrase);
@@ -157,7 +156,6 @@ public class WordCloud {
         List<String> tempPhrase = new ArrayList();
         while (true) {
             String word = getWord(content);
-            content = content.substring(word.length() + 1);
 
             if (isCharWord(word)) {
                 tempPhrase.add(word);
@@ -173,7 +171,7 @@ public class WordCloud {
             if (content.isEmpty()) {
                 break;
             }
-
+            content = content.substring(word.length());
         }
         if (tempPhrase.size() > 1) {
             String newPhrase = getString(tempPhrase);
@@ -196,6 +194,7 @@ public class WordCloud {
         for (int i = 0; i < content.length(); i++) {
             if (!Character.isLetter(content.charAt(i))) {
                 // non letter char seen
+            	if(i==0) break;
                 return content.substring(0, i);
             }
         }
