@@ -1,9 +1,4 @@
 {
-	"timesofindia.com" : {
-		"title" : {
-			"xpath" : "//*[@id=\"storydiv\"]/div[1]/span/h1"
-		}
-	},
 	"hindustantimes.com" : {
 		"title" : {
 			"xpath" : "//title"
