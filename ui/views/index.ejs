@@ -32,6 +32,9 @@
 		<![endif]-->
 
 		<link rel="shortcut icon" href="/favicon.png" />
+		<script>
+			var user_query = "<%= user_query %>";
+		</script>
 
 	</head>
 
@@ -85,7 +88,7 @@
 
 		<div class="form-inline">
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="trend-query-string" placeholder="Aam Aadmi Party" value="Aam Aadmi Party">
+		    <input type="text" class="form-control" id="trend-query-string" placeholder="<%= user_query %>" value="<%= user_query %>">
 		  </div>
 		  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Update</button>
 		</div>
