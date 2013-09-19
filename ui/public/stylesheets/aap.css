@@ -7,7 +7,7 @@ body {
 }
 
 #article-count-trend {
-	width: 800px;
+	width: 700px;
 	margin: 0 auto;
 }
 
@@ -34,12 +34,27 @@ body {
 	.article-inner-row {
 		background-color: rgb(248, 245, 243);
 		height: 53px;	
+		position: absolute;
+		bottom: 0px;
+		width: 100%;
 	}
 
 }
 
 .article-box {
 	margin: 10px;
+	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
+	border: 0px solid rgb(212, 212, 212);
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.chart-box {
 	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
 	border: 0px solid rgb(212, 212, 212);
 	border-image-source: initial;
@@ -58,4 +73,8 @@ body {
 	text-align: center;
 	margin-top: 10px;
 	color: #777;
+}
+
+.view-article-btn {
+	margin: 10px;
 }

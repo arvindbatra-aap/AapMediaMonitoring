@@ -52,6 +52,7 @@ class ExtractionManager(object):
 		# Create a data object to use throughout 
 		html = etree.parse(StringIO(content), self._parser)
 		datum = {
+			'raw_html': content,
 			'content': html,
 			'url'	 : url,
 			'source' : source,

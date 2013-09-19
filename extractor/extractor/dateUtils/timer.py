@@ -10,4 +10,4 @@ class Timer:
         cur_time = int(time.time() * 1000)
         lap_time = cur_time - self.start
         self.start = cur_time
-        logging.info("[timer] %s took : %d ms" % (name, lap_time))
+        logging.debug("[timer] %s took : %d ms" % (name, lap_time))
