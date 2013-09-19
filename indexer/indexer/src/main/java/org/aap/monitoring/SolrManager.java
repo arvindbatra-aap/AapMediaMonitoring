@@ -38,6 +38,7 @@ public class SolrManager {
             inputDocument.addField("src", result.getString("src"));
             inputDocument.addField("url", result.getString("url"));
             inputDocument.addField("id", result.getString("id"));
+            inputDocument.addField("title_md5", result.getString("title_md5"));
             inputDocument.addField("title", result.getString("title"));
             inputDocument.addField("date", result.getDate("publishedDate"));
             inputDocument.addField("image_url", result.getString("imageUrl"));
@@ -63,6 +64,7 @@ public class SolrManager {
             inputDocument.addField("src", "dummysrc");
             inputDocument.addField("url", url);
             inputDocument.addField("id", url);
+            inputDocument.addField("title_md5", url);
             inputDocument.addField("title", "dummytitle");
             inputDocument.addField("date", date);
             inputDocument.addField("image_url", "dummy_image_url");
@@ -110,7 +112,6 @@ public class SolrManager {
     	DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         String dateQuery = "date:" + "[" + df.format(startDate) + " TO " + df.format(endDate) + "]";
-        System.out.println(dateQuery);
         solrQuery.addFilterQuery(dateQuery);
     }
 
