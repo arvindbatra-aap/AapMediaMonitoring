@@ -1,6 +1,6 @@
 var AAP_INI_CONFIG = {
-	'query' : 'Aam Aadmi Party'
- };
+	'query' : user_query 
+};
 
 var $AAP;
 

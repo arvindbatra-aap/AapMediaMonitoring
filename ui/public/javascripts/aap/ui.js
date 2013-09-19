@@ -11,7 +11,8 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	$(this._ARTICLE_COUNT_CHART_DIV).empty();
 	$(this._ARTICLE_COUNT_CHART_DIV).highcharts({
 		chart: {
-            type: 'column'
+            type: 'line',
+            zoomType: 'x'
         },
         title: {
             text: 'Media Trend'
