@@ -20,8 +20,6 @@ package webservice.api;
  */
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,17 +37,22 @@ public interface MediaMonitoringService
     @Path( "getArticles" )
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    Collection<Article> getArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate);
+    Collection<Article> getArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "src") String src, @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
     @Path("getArticlesCount")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate);
+    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "src") String src,  @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
     @Path("triggerIndexer")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
     //yyyy-MM-dd
-    Response triggerIndexer(@QueryParam(value = "query")String date);
+    Response triggerIndexer(@QueryParam(value = "date")String date);
+    
+    @Path("getArticlesFromSolr")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Collection<Article> getArticlesFromSolr(@QueryParam(value = "query")String query, @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
 }

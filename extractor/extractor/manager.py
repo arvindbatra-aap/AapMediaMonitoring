@@ -1,7 +1,9 @@
 import string
 
 from logging import info, error
+import time
 from lxml import etree
+import datetime
 
 from extractor.modules.xpath import XPathExtractor
 from extractor.modules.date import DateExtractor
@@ -11,7 +13,7 @@ from extractor.modules.title import TitleExtractor
 from extractor.modules.category import CategoryExtractor
 from extractor.modules.comments import CommentsExtractor
 from extractor.modules.location import LocationExtractor
-
+from extractor.parsedatetime import parsedatetime as pdt
 from StringIO import StringIO
 
 XPATH_CONFIG = 'conf/xpath.json'
@@ -36,6 +38,14 @@ class ExtractionManager(object):
 	def _clean(self, val):
 		return filter(lambda x: x in string.printable, val).encode('utf-8')
 
+	def _isValidDate(self, date):
+		try:
+  			valid_date = time.strptime(date, '%m/%d/%Y')
+			return True
+		except ValueError:
+			return False
+		return False
+
 	def extractAll(self, content, url, source, date, html_file):
 		# Create a data object to use throughout 
 		html = etree.parse(StringIO(content), self._parser)
@@ -59,5 +69,15 @@ class ExtractionManager(object):
 				else:
 					error("Could not extract attribute %s" % (attr))
 
+		#Special check for date
+		if 'date' in extracted and (not self._isValidDate(extracted['date'])):
+			#try using the datetimeparse lib
+			invalidDate = extracted['date']
+			c = pdt.Constants()
+			p = pdt.Calendar(c)
+			result,retVal = p.parse(invalidDate)
+			#http://stackoverflow.com/questions/1810432/handling-the-different-results-from-parsedatetime
+			if retVal in (1,2,3):
+				extracted['date'] = datetime.datetime( *result[:6] ).strftime('%Y-%m-%d')
 		return extracted
 

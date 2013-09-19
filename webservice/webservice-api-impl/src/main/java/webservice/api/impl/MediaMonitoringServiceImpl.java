@@ -37,16 +37,15 @@ public class MediaMonitoringServiceImpl
 	}
 	
 	@Override
-	public Collection<Article> getArticles(String keyword, long startDate, long endDate) {
-		SolrManager solrManager = new SolrManager();
+	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
 		try {
 			if(startDate == 0 && endDate == 0){
-				return solrManager.getArticlesForKeywords(keyword);
+				return solrManager.getArticlesForKeywords(keyword, src, start, count);
 			}
 			if(endDate == 0 ){
 				endDate = new Date().getTime();
 			}
-			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate));
+			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles",e);
 		}
@@ -55,13 +54,12 @@ public class MediaMonitoringServiceImpl
 	
 	
 	@Override
-	public ArticleCount getNumArticles(String keyword, long startDate, long endDate){
-		SolrManager solrManager = new SolrManager();
+	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src,  int start, int count){
 		if(endDate==0){
 			endDate = new Date().getTime();
 		}
 		try {
-			return solrManager.getNumArticlesForKeywordsAndDate(keyword, new Date(startDate), new Date(endDate));
+			return solrManager.getNumArticlesForKeywordsAndDate(keyword, new Date(startDate), new Date(endDate), src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles count",e);
 		}
@@ -71,7 +69,21 @@ public class MediaMonitoringServiceImpl
 
 	@Override
 	public Response triggerIndexer(String date) {
-		sqlManager.triggerIndexer(date);
+		try {
+			sqlManager.triggerIndexer(date);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Collection<Article> getArticlesFromSolr(String solrQuery, int start, int count) {
+		try {
+			return solrManager.getArticlesForSolrQuery(solrQuery,start,count);
+		} catch (SolrServerException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

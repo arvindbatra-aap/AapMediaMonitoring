@@ -6,10 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +37,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -73,6 +78,7 @@ public class GoogleNewsFeedCrawler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws ParseException, IllegalArgumentException,
                     MalformedURLException, UnsupportedEncodingException, FileNotFoundException,
                     ClientProtocolException, IOException, FeedException {
@@ -85,6 +91,8 @@ public class GoogleNewsFeedCrawler {
         Set<String> crawledURLMd5Set = getAllCrawledURLMd5Set(command.getOutputDirectory());
 
         // Create output folder for today.
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+05:30"));
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         File outputDir = new File(command.getOutputDirectory() + File.separatorChar + today);
 
@@ -115,7 +123,17 @@ public class GoogleNewsFeedCrawler {
 
                     writeToFile(fetchHTML(siteURL), outputFilePrefix + ".html");
                     writeToFile(siteURL.toString() + "\n", outputFilePrefix + ".url");
-                    writeToFile(syndEntry.getTitle(), outputFilePrefix + ".title");
+
+                    JSONObject obj = new JSONObject();
+                    obj.put("url", siteURL.toString());
+                    obj.put("title", syndEntry.getTitle());
+                    obj.put("publishedDate", formatter.format(syndEntry.getPublishedDate()));
+                    obj.put("publishedDateTimestamp", syndEntry.getPublishedDate().getTime());
+                    obj.put("description", Jsoup.parse(syndEntry.getDescription().getValue())
+                                    .text());
+                    StringWriter out = new StringWriter();
+                    obj.writeJSONString(out);
+                    writeToFile(out.toString(), outputFilePrefix + ".item");
                 } catch (Exception e) {
                     LOG.log(Level.WARNING, "Exception in crawler", e);
                 }

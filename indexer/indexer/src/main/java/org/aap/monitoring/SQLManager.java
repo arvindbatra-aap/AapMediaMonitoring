@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SQLManager {
 
+	private static Logger LOG = LoggerFactory.getLogger(SQLManager.class);
     Connection con = null;
     SolrManager solrManager;
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";
@@ -30,16 +32,29 @@ public class SQLManager {
         ResultSet rs = null;
         Statement st = null;
         try {
-        	String query = "SELECT * from ARTICLE_TBL where publishedDate >" + dateString + ";";
-        	System.out.println(query);
+        	int count=0, failedCount=0;
+        	String query = "SELECT * from ARTICLE_TBL" ;
+        	if(!StringUtils.isBlank(dateString)){
+        		query += " where publishedDate > " + dateString ;
+        	}
+        	query += ";";
+        	
+        	LOG.info(query);
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
-                this.solrManager.insertDocument(rs);
+                try {
+					this.solrManager.insertDocument(rs);
+					count++;
+				} catch (Exception e) {
+					LOG.error("Failed to index document");
+					failedCount++;
+				}
+                count++;
             }
+            LOG.info("Indexer trigger: indexed successfully: " + count + ", failed: " + failedCount +   " documents for trigger: " + dateString);
         } catch (SQLException ex) {
-            Logger lgr = Logger.getLogger(this.getClass().getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            LOG.error(ex.getMessage(), ex);
         } finally {
             try {
                 if (rs != null) {
@@ -49,8 +64,7 @@ public class SQLManager {
                     st.close();
                 }
             } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(this.getClass().getName());
-                lgr.log(Level.WARNING, ex.getMessage(), ex);
+                LOG.info(ex.getMessage(), ex);
             }
         }
     }

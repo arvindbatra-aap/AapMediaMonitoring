@@ -1,4 +1,8 @@
 import logging
+import urllib
+import urllib2
+import json as simplejson
+from lxml import etree
 
 from extractor.basic import BasicExtractor
 
@@ -8,4 +12,15 @@ class ContentExtractor(BasicExtractor):
 		super(ContentExtractor, self).__init__('ContentExtractor', *args, **kwargs)
 
 	def extract(self, datum):
-		return {}
+		input_data = {}
+		input_data["content"] = etree.tostring(datum['content'])
+		input_data["url"] = datum['url']
+		url = 'http://localhost:2121/api/content'
+		req = urllib2.Request(url, simplejson.dumps(input_data))
+		req.add_header('Content-Type', 'text/plain; charset=utf-8')
+		response = urllib2.urlopen(req)
+		output = simplejson.loads(response.read())
+		if output["status"] == "success":
+			return output["content"]
+		else:
+			return {}
