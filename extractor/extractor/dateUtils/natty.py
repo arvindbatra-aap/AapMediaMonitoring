@@ -12,7 +12,7 @@ class Natty:
         self.nattyJavaObj = javaClass() 
     
     def extract_date(self, text):
-        _FORMAT = '%m/%d/%Y'
+        _FORMAT = '%Y-%m-%d'
         nattyDateFormat = '%a %b %d  %H:%M:%S UTC %Y'
         dateStr = self.nattyJavaObj.extractDate(text)
         try:
