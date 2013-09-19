@@ -1,5 +1,5 @@
 {
-  "name": "Aam Admi Party Media Monitoring Service",
+  "name": "aap",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
     "express": "3.2.0",
     "ejs": "*",
 	  "mysql": "*",
-	  "request": "*"
+	  "request": "*",
+"csv": "*"
   }
 }
