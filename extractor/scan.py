@@ -18,7 +18,7 @@ db.autocommit(True)
 cur = db.cursor() 
 
 #EXTRACT_PATH = '/root/crawl-raw/2013-09-05/indianexpress.com'
-EXTRACT_PATH = '/root/crawl-raw'
+EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
 getLogger().setLevel(INFO)
@@ -34,7 +34,6 @@ manager = ExtractionManager()
 for root, dirs, files in os.walk(EXTRACT_PATH):
 	if len(dirs) == 0 and len(files) > 0:
 		(date, source) = root.split("/")[-2:]
-
 		if (datetime.datetime.strptime(date, '%Y-%m-%d').date() > date_7_days_ago):
 			for file in files:
 				if file.endswith(".html"):
@@ -93,7 +92,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 						continue
 
 					try:
-						repl=lambda x: string.replace(x,"'","\\'")
+						repl=lambda x: MySQLdb.escape_string(x)
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
 						cur.execute(query)
 					except UnicodeEncodeError:
