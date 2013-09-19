@@ -106,6 +106,7 @@ public class SolrManager {
     }
     
     private void createDateFilter(SolrQuery solrQuery, Date startDate, Date endDate){
+    	if(startDate == null || endDate == null) return;
     	DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         String dateQuery = "date:" + "[" + df.format(startDate) + " TO " + df.format(endDate) + "]";
