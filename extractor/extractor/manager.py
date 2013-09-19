@@ -42,7 +42,7 @@ class ExtractionManager(object):
 
 	def _isValidDate(self, date):
 		try:
-			valid_date = time.strptime(date, '%m/%d/%Y')
+			valid_date = time.strptime(date, '%Y-%m-%d')
 			return True
 		except ValueError:
 			return False
