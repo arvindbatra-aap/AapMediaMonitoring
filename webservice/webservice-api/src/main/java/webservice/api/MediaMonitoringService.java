@@ -20,6 +20,7 @@ package webservice.api;
  */
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -55,4 +56,8 @@ public interface MediaMonitoringService
     @Produces( { MediaType.APPLICATION_JSON } )
     Collection<Article> getArticlesFromSolr(@QueryParam(value = "query")String query, @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
+    @Path("getWordCloud")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    Map<String,Integer> getWordCloud(@QueryParam(value = "query")String query,@QueryParam(value = "src")String src, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "count") int count);
 }
