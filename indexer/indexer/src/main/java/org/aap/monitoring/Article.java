@@ -32,7 +32,7 @@ public class Article {
         	article.setImage_url(doc.get("image_url").toString());
         }
         if(doc.get("content") != null){
-        	article.setContent(doc.get("content").toString());
+        	article.setContent(doc.get("content").toString().substring(0, 300) + "....");
         }
         if(doc.get("author") != null){
         	article.setAuthor(doc.get("author").toString());
