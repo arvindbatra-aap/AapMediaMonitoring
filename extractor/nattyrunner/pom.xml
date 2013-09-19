@@ -41,7 +41,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.aap.monitoring.natty.NattyServer</mainClass>
+							<mainClass>org.aap.monitoring.natty.NattyRunner</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -51,7 +51,7 @@
       			<configuration>
         		<archive>
           		<manifest>
-            		<mainClass>org.aap.monitoring.natty.NattyServer</mainClass>
+            		<mainClass>org.aap.monitoring.natty.NattyRunner</mainClass>
           		</manifest>
         		</archive>
         		<descriptorRefs>
