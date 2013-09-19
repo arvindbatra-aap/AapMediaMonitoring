@@ -5,11 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
@@ -22,6 +25,9 @@ import org.aap.monitoring.WordCloud;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import webservice.api.MediaMonitoringService;
 
@@ -108,19 +114,59 @@ public class MediaMonitoringServiceImpl
 		return filterMap(wordCount, TOP_N);
 	}
 	
-	private Map<String,Integer> filterMap(Map<String,Integer> map, int topN){
-		if (topN > map.size()) 
-			return map;
-		Map<String ,Integer> newMap = new HashMap<String, Integer>();		
-		Collection<Integer> values = map.values();
-	    List<Integer> listValues = new ArrayList(values);
-	    Collections.sort(listValues);
-	    int threshold = listValues.get(listValues.size() - topN);
-		for(String key: map.keySet()){
-			if(map.get(key) >= threshold){
-				newMap.put(key, map.get(key));
+	private Map<String,Integer> filterMap(Map<String,Integer> map, int topN){			
+		ArrayList<Entry<String,Integer>> newArrayList = Lists.newArrayList(map.entrySet());
+		Collections.sort(newArrayList, new Comparator<Entry<String, Integer>>() {
+
+			@Override
+			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+				// TODO Auto-generated method stub
+				return (o2.getValue().compareTo(o1.getValue()));
 			}
+		});
+				
+		Map<String, Integer> newMap = Maps.newHashMap();
+		for (Entry<String, Integer> e : newArrayList.subList(0, Math.min(newArrayList.size(), topN))) {			
+			newMap.put(e.getKey(), e.getValue());
 		}
 		return newMap;
+				
+//		ValueComparator vc = new ValueComparator(map);
+//		Map<String,Integer> sortedMap  = new TreeMap<String, Integer>(vc);
+//		sortedMap.putAll(map);
+//		System.out.println("Before printing >." + sortedMap.size());
+//		if(sortedMap.size() > topN){
+//			int count = 0;
+//			Map<String,Integer> prunedMap = new HashMap<String, Integer>();
+//			System.out.println("key set size: " + map.keySet().size());
+//			for(String key: sortedMap.keySet()){
+//				System.out.println(" key checking : " + key);
+//				if(count<=topN && sortedMap.get(key) != null){
+//					System.out.println("map vlaue : " + sortedMap.get(key));
+//					prunedMap.put(key, sortedMap.get(key));
+//					count++;
+//				}
+//			}
+//			return prunedMap;
+//		}else{
+//			return sortedMap;
+//		}
+	}
+	
+	class ValueComparator implements Comparator<String> {
+
+	    Map<String, Integer> base;
+	    public ValueComparator(Map<String, Integer> base) {
+	        this.base = base;
+	    }
+
+	    // Note: this comparator imposes orderings that are inconsistent with equals.    
+	    public int compare(String a, String b) {
+	        if (base.get(a) >= base.get(b)) {
+	            return -1;
+	        } else {
+	            return 1;
+	        } 
+	    }
 	}
 }
