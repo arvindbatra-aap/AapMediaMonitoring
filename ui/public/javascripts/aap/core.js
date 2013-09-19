@@ -10,7 +10,8 @@ _AAP.prototype.init = function(config) {
 _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 	console.log("Loading Article Counts for query:" + query + " and start:" + start + " and end:" + end);
 
-	this._ui.showLoading();
+	this._ui.showTrendLoading();
+	this._ui.showArticlesLoading();
 	
 	var params = {
 		query : query,
@@ -19,6 +20,7 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 	};
 	var that = this;
 
+	// Update trend graph
 	$.get('/articles/count', params, function(data, status, xhr) {
 		if(data) {
 			var chart_data = {
@@ -50,9 +52,18 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 			for(var i=0; i<chart_data.dates.length; i++) {
 				chart_data.dates[i] = (new Date(chart_data.dates[i])).toDateString();
 			}
-			that._ui.hideLoading();
+			that._ui.hideTrendLoading();
 			that._ui.renderArticleCountChart(chart_data);
 		}
 	});
+
+	// Update article list
+	$.get('/articles/content', params, function(data, status, xhr) {
+		if(data) {
+			that._ui.renderArticles(data);
+			that._ui.hideArticlesLoading();
+		}
+	});
+
 };
 

@@ -70,6 +70,7 @@ public class WordCloud {
             insertString(keywordCounts, keywordsSeen, s);
         }
         List<String> phrases = new ArrayList<String>();
+        LOG.info("Content size: calling getPhrases" + content.length());
         getPhrases(content, new ArrayList<String>(), phrases);
         for (String phrase : phrases) {        	
             insertString(keywordCounts, keywordsSeen, phrase);
@@ -82,7 +83,6 @@ public class WordCloud {
     private void removeKeywords(String phrase, Map<String, Integer> keywordCounts) {
     	String [] keywords = phrase.split("[ ]");
     	for (int i = 0; i < keywords.length; i++) {
-    		System.out.println("REmovign : " + keywords[i]);
     		keywordCounts.remove(keywords[i]);
     	}
     }

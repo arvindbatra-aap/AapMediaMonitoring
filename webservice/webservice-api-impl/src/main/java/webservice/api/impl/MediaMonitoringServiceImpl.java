@@ -2,11 +2,14 @@ package webservice.api.impl;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
@@ -30,7 +33,7 @@ public class MediaMonitoringServiceImpl
 	private static Logger LOG = Logger.getLogger(MediaMonitoringServiceImpl.class);
 	private SolrManager solrManager;
 	private SQLManager sqlManager;
-	private int THRESHOLD = 4;
+	private int TOP_N = 20;
 	
 	public MediaMonitoringServiceImpl(){
 		solrManager = new SolrManager();
@@ -44,13 +47,19 @@ public class MediaMonitoringServiceImpl
 	@Override
 	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
 		try {
+			List<Article> articles;
 			if(startDate == 0 && endDate == 0){
-				return solrManager.getArticlesForKeywords(keyword, src, start, count);
+				articles =  solrManager.getArticlesForKeywords(keyword, src, start, count);
 			}
 			if(endDate == 0 ){
 				endDate = new Date().getTime();
 			}
-			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			articles =  solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			for(Article article: articles){
+				String content = article.getContent();
+				article.setContent(content.substring(0, Math.min(content.length()-2, 300)) + "...");
+			}
+			return articles;
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles",e);
 		}
@@ -96,14 +105,20 @@ public class MediaMonitoringServiceImpl
 	public Map<String, Integer> getWordCloud(String query, String src, long startDate,  long endDate,int count) {
 		WordCloud wc = new WordCloud(solrManager);
 		Map<String, Integer> wordCount = wc.getWordCloud(query, null, null, src,count);
-		return filterMap(wordCount);
+		return filterMap(wordCount, TOP_N);
 	}
 	
-	private Map<String,Integer> filterMap(Map<String,Integer> map){
-		Map<String ,Integer> newMap = new HashMap<String, Integer>();
+	private Map<String,Integer> filterMap(Map<String,Integer> map, int topN){
+		if (topN > map.size()) 
+			return map;
+		Map<String ,Integer> newMap = new HashMap<String, Integer>();		
+		Collection<Integer> values = map.values();
+	    List<Integer> listValues = new ArrayList(values);
+	    Collections.sort(listValues);
+	    int threshold = listValues.get(listValues.size() - topN);
 		for(String key: map.keySet()){
-			if(map.get(key) > THRESHOLD){
-				newMap.put(key,map.get(key));
+			if(map.get(key) >= threshold){
+				newMap.put(key, map.get(key));
 			}
 		}
 		return newMap;
