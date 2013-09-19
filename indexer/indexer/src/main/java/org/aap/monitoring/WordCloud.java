@@ -70,8 +70,7 @@ public class WordCloud {
             insertString(keywordCounts, keywordsSeen, s);
         }
         List<String> phrases = new ArrayList<String>();
-        LOG.info("Content size: calling getPhrases" + content.length());
-        getPhrases(content, new ArrayList<String>(), phrases);
+        getPhrases2(content, phrases);
         for (String phrase : phrases) {        	
             insertString(keywordCounts, keywordsSeen, phrase);
             // Remove individual keywords that are part of the phrases.
@@ -150,6 +149,36 @@ public class WordCloud {
         }
     }
 
+    public void getPhrases2(String content, List<String> phrases) {
+        if (content.isEmpty()) {
+            return;
+        }
+        List<String> tempPhrase = new ArrayList();
+        while (true) {
+            String word = getWord(content);
+
+            if (isCharWord(word)) {
+                tempPhrase.add(word);
+            } else if (word.equalsIgnoreCase(" ")) {
+                // Ignore spaces.
+            } else {
+                if (tempPhrase.size() > 1) {
+                    String newPhrase = getString(tempPhrase);
+                    phrases.add(newPhrase);
+                }
+                tempPhrase.clear();
+            }
+            if (content.isEmpty()) {
+                break;
+            }
+            content = content.substring(word.length());
+        }
+        if (tempPhrase.size() > 1) {
+            String newPhrase = getString(tempPhrase);
+            phrases.add(newPhrase);
+        }
+    }
+
     public String getString(List<String> words) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String word : words) {
@@ -160,13 +189,16 @@ public class WordCloud {
     }
 
     public String getWord(String content) {
+        if (content.isEmpty())
+            return content;
         for (int i = 0; i < content.length(); i++) {
             if (!Character.isLetter(content.charAt(i))) {
                 // non letter char seen
+            	if(i==0) break;
                 return content.substring(0, i);
             }
         }
-        return content;
+        return content.substring(0, 1);
     }
 
     // true for valid keyword

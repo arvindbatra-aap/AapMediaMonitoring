@@ -46,7 +46,7 @@ public class App {
     public static void test(WordCloud wordCloud, String content) {
         System.out.println(content);
         List<String> phrases = new ArrayList<String>();
-        wordCloud.getPhrases(content, new ArrayList<String>(), phrases);
+        wordCloud.getPhrases2(content, phrases);
         for (String phrase : phrases) {
             System.out.println(phrase);
         }

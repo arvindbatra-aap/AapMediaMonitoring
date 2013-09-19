@@ -163,11 +163,15 @@ class DateExtractor():
         title_node = self.get_title_node(soup, bad_title_phrase_list)
         logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
         t.count_lap("Getting the title node")
+        if(title_node == None):
+            return None  
         
         date_node = self.dfs_find(title_node)
         logging.debug(" date_node : %s" % (date_node))
         t.count_lap("Getting the date node")
-        
+        if (date_node == None):
+            return None
+
         extracted_date = self.extract_date(date_node)
         t.count_lap("Getting the exact date")
         t_all.count_lap("Everything")

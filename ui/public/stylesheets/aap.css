@@ -6,7 +6,7 @@ body {
   padding: 40px 15px;
 }
 
-#article-count-trend {
+#article-count-trend-wrapper {
 	width: 700px;
 	margin: 0 auto;
 }
@@ -77,4 +77,10 @@ body {
 
 .view-article-btn {
 	margin: 10px;
+}
+
+#article-count-trend-control {
+	text-align: center;
+	margin-bottom: 10px;
+	display: none;
 }

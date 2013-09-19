@@ -124,21 +124,25 @@
 		</div>
 
 		<div class="row" style="margin-top:30px">
-			<!-- Trend Graph -->
-		    <div id="article-count-trend" class="col-md-4 chart-box">
-		    </div>
+		    <div class="col-md-4 chart-box" id="article-count-trend-wrapper">
+		    	<!-- Trend Graph -->
+			    <div id="article-count-trend">	
+			    </div>
+			    <div id="article-count-trend-control">
+			      <button type="button" class="btn btn-default btn-xs" id="show-all-series-btn"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Show All</button>
+				  <button type="button" class="btn btn-default btn-xs" id="hide-all-series-btn"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Hide All</button>
+			    </div>
+			   	<div id="trend-loading">
+			    	<div class="progress progress-striped active">
+					  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+					    Crunching data... Hold on..
+					  </div>
+					</div>
+				</div>
+			</div>
+
 		    <!-- Word cloud -->
 		    <div style="height:400px;margin-left:30px" class="col-md-4 chart-box" id="wordcloud">
-			</div>
-		</div>
-	    <!-- Trend Graph Ends -->
-
-	    <!-- Progressbar -->
-	    <div id="trend-loading">
-	    	<div class="progress progress-striped active">
-			  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-			    Crunching data... Hold on..
-			  </div>
 			</div>
 		</div>
 
@@ -151,7 +155,6 @@
 			  </div>
 			</div>
 		</div>
-		<!-- Progressbar Ends -->
 
 		<div id="articles-container">
 			<!--
