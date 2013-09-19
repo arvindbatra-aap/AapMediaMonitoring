@@ -47,17 +47,19 @@ public class MediaMonitoringServiceImpl
 	@Override
 	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
 		try {
+			List<Article> articles;
 			if(startDate == 0 && endDate == 0){
-				List<Article> articles =  solrManager.getArticlesForKeywords(keyword, src, start, count);
-				for(Article article: articles){
-					String content = article.getContent();
-					article.setContent(content.substring(0, Math.min(content.length(), 300)) + "...");
-				}
+				articles =  solrManager.getArticlesForKeywords(keyword, src, start, count);
 			}
 			if(endDate == 0 ){
 				endDate = new Date().getTime();
 			}
-			return solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			articles =  solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			for(Article article: articles){
+				String content = article.getContent();
+				article.setContent(content.substring(0, Math.min(content.length()-2, 300)) + "...");
+			}
+			return articles;
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles",e);
 		}
