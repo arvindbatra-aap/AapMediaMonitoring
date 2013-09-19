@@ -57,6 +57,9 @@
 		    <li class="dropdown">
 	        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
 	        <ul class="dropdown-menu">
+	        	<li>
+	        		<div class="row" style="width: 1000px;">
+                    <ul class="col-md-5" style="list-style:none; margin-left:20px">
 	        	<% console.log(candidates); %>
 	        	<% for(var i=0; i < candidates.length; i++) {
 	        		candidate = candidates[i][0];
@@ -65,14 +68,17 @@
 	        		var tokens = candidate.split("\t");
 	        		var name = tokens[1];
 	        		var constituency = tokens[0]; 
-	        		var display = name + " (" + constituency + ")" %>
-   					<li><a href="#"><%= display %></li>
+	        		var display = name + " (" + constituency + ")";
+	        		if (i%3 == 0 && i >0) { %>
+						</ul>
+                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+	        		<% } %>
+
+   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
 				<% } %>
-	          <li><a href="#">Action</a></li>
-	          <li><a href="#">Another action</a></li>
-	          <li><a href="#">Something else here</a></li>
-	          <li><a href="#">Separated link</a></li>
-	          <li><a href="#">One more separated link</a></li>
+				</ul>
+                </div>
+				</li>
 	        </ul>
 	      </li>
 	  </ul>
