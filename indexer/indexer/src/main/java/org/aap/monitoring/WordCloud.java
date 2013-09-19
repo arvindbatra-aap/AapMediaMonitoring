@@ -70,9 +70,6 @@ public class WordCloud {
             insertString(keywordCounts, keywordsSeen, s);
         }
         List<String> phrases = new ArrayList<String>();
-        if(content.length()>20000){
-        	LOG.info("Content size: calling getPhrases" + content.length());
-        }
         getPhrases2(content, phrases);
         for (String phrase : phrases) {        	
             insertString(keywordCounts, keywordsSeen, phrase);
