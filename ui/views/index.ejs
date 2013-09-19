@@ -74,11 +74,8 @@
 	        	<li>
 	        		<div class="row" style="width: 1000px;padding-top:10px">
                     <ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        	<% console.log(candidates); %>
 	        	<% for(var i=0; i < candidates.length; i++) {
 	        		candidate = candidates[i][0];
-	        		console.log(candidate);
-	        		console.log("fdsfds");
 	        		var tokens = candidate.split("\t");
 	        		var name = tokens[1];
 	        		var constituency = tokens[0]; 

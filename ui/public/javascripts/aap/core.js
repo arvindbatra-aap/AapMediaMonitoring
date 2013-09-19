@@ -100,6 +100,7 @@ _AAP.prototype.showWordCloud = function(query, start, end) {
 	// Update article list
 	$.get('/wordcloud', params, function(data, status, xhr) {
 		if(data) {
+			delete data[query];
 			self._ui.renderWordCloud(data);
 			// Hide loading spinner
 		}
