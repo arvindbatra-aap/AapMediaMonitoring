@@ -9,7 +9,7 @@ from timer import Timer
 from natty import *
 
 # Set logging level
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 class DateExtractor():
     
@@ -157,9 +157,9 @@ class DateExtractor():
         t = Timer()
         t_all = Timer()
         
-        soup = BeautifulSoup(html_text)
-        t.count_lap("Parsong into a soup")
-        
+        soup = BeautifulSoup(str(html_text))
+        t.count_lap("Parsing into a soup")
+       
         title_node = self.get_title_node(soup, bad_title_phrase_list)
         logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
         t.count_lap("Getting the title node")
@@ -174,31 +174,9 @@ class DateExtractor():
         
         return extracted_date
     
-    month_map = {
-        "jan" : 1,
-        "feb" : 2,
-        "mar" : 3,
-        "apr" : 4,
-        "may" : 5,
-        "jun" : 6,
-        "jul" : 7,
-        "aug" : 8,
-        "sep" : 9,
-        "oct" : 10,
-        "nov" : 11,
-        "dec" : 12
-    }
-
     def extract(self, datum):
-        date_str = self.get_date(datum["source"], [])
+        date_str = self.get_date(datum["raw_html"], [])
         return date_str
-
-        day, month, date, time, zone, year = date_str.strip().split()
-        try:
-            month_number = month_map[month.lower()[:3]]
-        except KeyError:
-            print >> sys.stderr, "badly formatted date : ", date_str
-        return "{0}-{1}-{2}".format (year, month_number)
 
 """test cases"""
 def test_raw():

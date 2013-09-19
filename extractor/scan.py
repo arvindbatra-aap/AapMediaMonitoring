@@ -3,7 +3,7 @@ import os.path
 import sys, traceback
 
 from extractor.manager import ExtractionManager
-from logging import info, error, getLogger, INFO, ERROR
+from logging import info, error, getLogger, INFO, ERROR, DEBUG
 import datetime
 import json
 import MySQLdb
@@ -18,6 +18,7 @@ db.autocommit(True)
 cur = db.cursor() 
 
 #EXTRACT_PATH = '/root/crawl-raw/2013-09-05/indianexpress.com'
+#EXTRACT_PATH = "/root/crawl-raw/2013-09-19/www.washingtonpost.com"
 EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
