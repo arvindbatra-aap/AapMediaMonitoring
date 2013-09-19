@@ -1,3 +1,11 @@
+body {
+  padding-top: 50px;
+}
+
+.inner-container {
+  padding: 40px 15px;
+}
+
 #article-count-trend {
 	width: 800px;
 	margin: 0 auto;
@@ -7,4 +15,47 @@
 	padding-top: 20px;
 	width: 300px;
 	margin: 0 auto;
+}
+
+#article-box {
+	text-align: left;
+}
+
+#jumbotron {
+	margin: 0 auto;
+	text-align: center;
+}
+
+@media (min-width: 1200px) {
+	.article-box {
+		width: 350px;
+		height: 400px;
+	}
+	.article-inner-row {
+		background-color: rgb(248, 245, 243);
+		height: 53px;	
+	}
+
+}
+
+.article-box {
+	margin: 10px;
+	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
+	border: 0px solid rgb(212, 212, 212);
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+}
+
+.article-inner-box {
+	padding: 5px 20px;
+}
+
+.heading {
+	font-size: 25px;
+	text-align: center;
+	margin-top: 10px;
+	color: #777;
 }

@@ -8,16 +8,19 @@ import datetime
 import json
 import MySQLdb
 import string 
+import hashlib
+
 db = MySQLdb.connect(host="localhost", # your host, usually localhost
 					 user="root", # your username
 					  passwd="aapmysql00t", # your password
 					  db="AAP") # name of the data base
+
 db.charset="utf8"
 db.autocommit(True)
 
 cur = db.cursor() 
 
-#EXTRACT_PATH = '/root/crawl-raw/2013-09-05/indianexpress.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-18/www.indianexpress.com'
 EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
@@ -90,10 +93,13 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 					else:
 						print "Date not found"
 						continue
-
+					
+					md5Obj = hashlib.md5()
+					md5Obj.update(title)	
+					titleMd5 = md5Obj.hexdigest()
 					try:
 						repl=lambda x: MySQLdb.escape_string(x)
-						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(content), repl(date1), repl(src)) 
+						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, TITLE_MD5, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(titleMd5), repl(content), repl(date1), repl(src)) 
 						cur.execute(query)
 					except UnicodeEncodeError:
 						print "Unicode encode issue in query ", file
