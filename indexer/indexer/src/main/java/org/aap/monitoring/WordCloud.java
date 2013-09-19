@@ -68,17 +68,100 @@ public class WordCloud {
         String[] split = content.split(reg);
         Set<String> keywordsSeen = new HashSet<String>();
         for (String s : split) {
-            if (keywordsSeen.contains(s)) {
-                // keyword already seen. Ignore.
+            insertString(keywordCounts, keywordsSeen, s);
+        }
+        List<String> phrases = new ArrayList<String>();
+        getPhrases(content, new ArrayList<String>(), phrases);
+        for (String phrase : phrases) {
+            insertString(keywordCounts, keywordsSeen, phrase);
+        }
+    }
+
+    private void insertString(Map<String, Integer> keywordCounts, Set<String> keywordsSeen, String s) {
+        if (ignoreKeyword(s) || keywordsSeen.contains(s)) {
+            // keyword already seen. Ignore.
+        } else {
+            // new keyword increment the count and add to the set.
+            if (keywordCounts.containsKey(s)) {
+                keywordCounts.put(s, keywordCounts.get(s) + 1);
             } else {
-                // new keyword increment the count and add to the set.
-                if (keywordCounts.containsKey(s)) {
-                    keywordCounts.put(s, keywordCounts.get(s) + 1);
-                } else {
-                    keywordCounts.put(s, 1);
-                }
-                keywordsSeen.add(s);
+                keywordCounts.put(s, 1);
+            }
+            keywordsSeen.add(s);
+        }
+    }
+
+    /**
+     *
+     * @param keyword
+     * @return true to ignore keyword
+     */
+    public boolean ignoreKeyword(String keyword) {
+        if (keyword.isEmpty()) {
+            return true;
+        } else if (keyword.trim().isEmpty()) {
+            return true;
+        } else {
+            if (stopwordSet.contains(keyword)) {
+                return true;
             }
         }
+        return false;
+    }
+
+    public void getPhrases(String content, List<String> currentPhrase, List<String> phrases) {
+        if (content.isEmpty()) {
+            if (currentPhrase.size() > 1) {
+                String newPhrase = getString(currentPhrase);
+                phrases.add(newPhrase);
+            }
+            return;
+        }
+
+        String word = getWord(content);
+        if (isCharWord(word)) {
+            currentPhrase.add(word);
+            if (content.length() > word.length())
+                getPhrases(content.substring(word.length()+1), currentPhrase, phrases);
+        } else {
+            if (currentPhrase.size() > 1) {
+                String newPhrase = getString(currentPhrase);
+                phrases.add(newPhrase);
+            }
+            if (content.length() > word.length())
+                getPhrases(content.substring(word.length()+1), new ArrayList<String>(), phrases);
+        }
+    }
+
+    public String getString(List<String> words) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String word : words) {
+            stringBuilder.append(word);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString().trim();
+    }
+
+    public String getWord(String content) {
+        for (int i = 0; i < content.length(); i++) {
+            if (!Character.isLetter(content.charAt(i))) {
+                // non letter char seen
+                return content.substring(0, i);
+            }
+        }
+        return content;
+    }
+
+    // true for valid keyword
+    public boolean isCharWord(String word) {
+        if (word.isEmpty())
+            return false;
+        if (!Character.isLetter(word.charAt(0)) || !Character.isUpperCase(word.charAt(0)))
+            return false;
+        for(int i = 0; i < word.length(); i++) {
+            if (!Character.isLetter(word.charAt(i)))
+                return false;
+        }
+        return true;
     }
 }
