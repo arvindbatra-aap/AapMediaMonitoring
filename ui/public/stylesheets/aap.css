@@ -7,7 +7,7 @@ body {
 }
 
 #article-count-trend {
-	width: 800px;
+	width: 700px;
 	margin: 0 auto;
 }
 
@@ -40,6 +40,16 @@ body {
 
 .article-box {
 	margin: 10px;
+	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
+	border: 0px solid rgb(212, 212, 212);
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+}
+
+.chart-box {
 	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
 	border: 0px solid rgb(212, 212, 212);
 	border-image-source: initial;
