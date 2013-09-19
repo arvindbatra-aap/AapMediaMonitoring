@@ -82,7 +82,6 @@ public class WordCloud {
     private void removeKeywords(String phrase, Map<String, Integer> keywordCounts) {
     	String [] keywords = phrase.split("[ ]");
     	for (int i = 0; i < keywords.length; i++) {
-    		System.out.println("REmovign : " + keywords[i]);
     		keywordCounts.remove(keywords[i]);
     	}
     }
