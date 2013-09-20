@@ -6,6 +6,7 @@ var _AAP = function() {
 
 _AAP.prototype.init = function(config) {
 	this.showArticleCountTrend(config.query, config.start, config.end);
+	this.showWordCloud(config.query, config.start, config.end);
 };
 
 _AAP.prototype.showAllTrendSeries = function() {
@@ -79,6 +80,29 @@ _AAP.prototype.showArticleCountTrend = function(query, start, end) {
 		if(data) {
 			that._ui.renderArticles(data);
 			that._ui.hideArticlesLoading();
+		}
+	});
+
+};
+
+_AAP.prototype.showWordCloud = function(query, start, end) {
+	console.log("Loading Word Cloud for query:" + query + " and start:" + start + " and end:" + end);
+	this._ui.emptyWordCloud();
+	// Add loading code here
+	
+	var params = {
+		query : query,
+		start : start,
+		end   : end
+	};
+	var self = this;
+
+	// Update article list
+	$.get('/wordcloud', params, function(data, status, xhr) {
+		if(data) {
+			delete data[query];
+			self._ui.renderWordCloud(data);
+			// Hide loading spinner
 		}
 	});
 

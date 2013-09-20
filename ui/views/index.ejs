@@ -13,6 +13,7 @@
 		<link href="/stylesheets/bootstrap.css" rel="stylesheet" />
 		<link href="/stylesheets/datepicker.css" rel="stylesheet" />
 		<link href="/stylesheets/aap.css" rel="stylesheet" />
+		<link href="/stylesheets/jqcloud.css" rel="stylesheet" />
 		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.core.css">
 		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.bootstrap.css">
 
@@ -73,11 +74,8 @@
 	        	<li>
 	        		<div class="row" style="width: 1000px;padding-top:10px">
                     <ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        	<% console.log(candidates); %>
 	        	<% for(var i=0; i < candidates.length; i++) {
 	        		candidate = candidates[i][0];
-	        		console.log(candidate);
-	        		console.log("fdsfds");
 	        		var tokens = candidate.split("\t");
 	        		var name = tokens[1];
 	        		var constituency = tokens[0]; 
@@ -141,7 +139,7 @@
 			</div>
 
 		    <!-- Word cloud -->
-		    <div style="height:400px;margin-left:30px" class="col-md-4 chart-box">
+		    <div style="height:432px;margin-left:30px" class="col-md-4 chart-box" id="wordcloud">
 			</div>
 		</div>
 
@@ -228,6 +226,6 @@
 	<script src="/javascripts/aap/ui.js"></script>
 	<script src="/javascripts/aap/core.js"></script>
 	<script src="/javascripts/aap/aap.js"></script>
-
+	<script src="http://www.lucaongaro.eu/demos/jqcloud/jqcloud-1.0.0.min.js"></script>
 	</body>
 </html>

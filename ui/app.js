@@ -6,6 +6,7 @@
 var express = require('express')
   , index = require('./routes/index')
   , articles = require('./routes/articles')
+  , wordcloud = require('./routes/wordcloud')
   , http = require('http')
   , path = require('path');
 
@@ -30,6 +31,7 @@ if ('development' == app.get('env')) {
 app.get('/', index.home);
 app.get('/articles/count', articles.getArticlesCount);
 app.get('/articles/content', articles.getArticlesContent);
+app.get('/wordcloud', wordcloud.getWordCloud);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
