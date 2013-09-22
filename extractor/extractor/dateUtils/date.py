@@ -161,7 +161,7 @@ class DateExtractor():
         t.count_lap("Parsing into a soup")
        
         title_node = self.get_title_node(soup, bad_title_phrase_list)
-        logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
+        #logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
         t.count_lap("Getting the title node")
         if(title_node == None):
             return None  

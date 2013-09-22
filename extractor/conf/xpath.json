@@ -10,6 +10,26 @@
 			"xpath" : "//div[@class='last-updated']"
 		}
 	},
+	"deccanherald.com" : {
+		"title" : {
+			"xpath" : "//title"
+		},
+		"url" : {
+      		"xpath" : "//meta[@property='og:url']/@content"
+		},
+		"keywords" : {
+			"xpath" : "//meta[@name='keywords']/@content"
+		},
+		"date" : {
+			"xpath" : "//div[@class='postedBy']"
+		},
+    	"image_url" : {
+      		"xpath" : "//meta[@property='og:image']/@content"
+   		},
+		"content" : {
+			"xpath" : "//div[@class='newsText']"
+		}
+	},
 	"hindustantimes.com" : {
 		"title" : {
 			"xpath" : "//title"

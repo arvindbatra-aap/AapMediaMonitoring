@@ -4,6 +4,7 @@ from logging import info, error
 import time
 from lxml import etree
 import datetime
+import traceback
 
 from extractor.modules.xpath import XPathExtractor
 from extractor.modules.date import DateExtractor
@@ -49,44 +50,48 @@ class ExtractionManager(object):
 		return False
 
 	def extractAll(self, content, url, source, date, html_file):
-		# Create a data object to use throughout 
-		html = etree.parse(StringIO(content), self._parser)
-		datum = {
-			'raw_html': content,
-			'content': html,
-			'url'	 : url,
-			'source' : source,
-			'date'   : date,
-			'file'   : html_file,
-			'extracted' : None
- 		}
+		try:
+				# Create a data object to use throughout 
+				html = etree.parse(StringIO(content), self._parser)
+				datum = {
+					'raw_html': content,
+					'content': html,
+					'url'	 : url,
+					'source' : source,
+					'date'   : date,
+					'file'   : html_file,
+					'extracted' : None
+				}
 
-		# First try to extract from XPath
-		extracted = self._xpath_extractor.extract(datum)
-		datum['extracted'] = extracted
+				# First try to extract from XPath
+				extracted = self._xpath_extractor.extract(datum)
+				datum['extracted'] = extracted
 
-		# If Xpath didn't work, then try the more algo-intesive extractors for each missing attribute
-		for attr in ATTR_EXTRACTORS.keys():
-			if attr not in extracted or ('date' == attr and not self._isValidDate(extracted['date'])):
-				val = ATTR_EXTRACTORS[attr].extract(datum)
-				if val:
-					extracted[attr] = self._clean(val)
+				# If Xpath didn't work, then try the more algo-intesive extractors for each missing attribute
+				for attr in ATTR_EXTRACTORS.keys():
+					if attr not in extracted or ('date' == attr and not self._isValidDate(extracted['date'])):
+						val = ATTR_EXTRACTORS[attr].extract(datum)
+						if val:
+							extracted[attr] = self._clean(val)
 
-		#Special check for date
-		if 'date' in extracted and (not self._isValidDate(extracted['date'])):
-			#try using natty
-			nattyDate = self.nat.extract_date(extracted['date'])
-			if self._isValidDate(nattyDate):
-				extracted['date'] = nattyDate
-			else:
-				#try using the datetimeparse lib
-				invalidDate = extracted['date']
-				c = pdt.Constants()
-				p = pdt.Calendar(c)
-				result,retVal = p.parse(invalidDate)
-				#http://stackoverflow.com/questions/1810432/handling-the-different-results-from-parsedatetime
-				if retVal in (1,2,3):
-					edt = datetime.datetime( *result[:6] ).strftime('%Y-%m-%d')
-					extracted['date'] = edt
-		return extracted
+				#Special check for date
+				if 'date' in extracted and (not self._isValidDate(extracted['date'])):
+					#try using natty
+					nattyDate = self.nat.extract_date(extracted['date'])
+					if self._isValidDate(nattyDate):
+						extracted['date'] = nattyDate
+					else:
+						#try using the datetimeparse lib
+						invalidDate = extracted['date']
+						c = pdt.Constants()
+						p = pdt.Calendar(c)
+						result,retVal = p.parse(invalidDate)
+						#http://stackoverflow.com/questions/1810432/handling-the-different-results-from-parsedatetime
+						if retVal in (1,2,3):
+							edt = datetime.datetime( *result[:6] ).strftime('%Y-%m-%d')
+							extracted['date'] = edt
+				return extracted
+		except:
+			print traceback.format_exc()	
+			return {}
 

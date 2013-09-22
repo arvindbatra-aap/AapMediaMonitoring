@@ -13,6 +13,7 @@ $(document).ready(function(){
 		var query = $('#trend-query-string').val();
 		if(query && query.length > 0){
 			$AAP.showArticleCountTrend(query);
+			$AAP.showWordCloud(query);
 		}
 	});
 

@@ -21,7 +21,7 @@ db.autocommit(True)
 cur = db.cursor() 
 
 #EXTRACT_PATH = "/root/crawl-raw/2013-09-19/www.washingtonpost.com"
-#EXTRACT_PATH = '/root/crawl-raw/2013-09-18/www.indianexpress.com'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-20/'
 EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
@@ -95,10 +95,10 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 						print "Date not found"
 						continue
 					
-					md5Obj = hashlib.md5()
-					md5Obj.update(title)	
-					titleMd5 = md5Obj.hexdigest()
 					try:
+						md5Obj = hashlib.md5()
+						md5Obj.update(title)	
+						titleMd5 = md5Obj.hexdigest()
 						repl=lambda x: MySQLdb.escape_string(x)
 						query="INSERT IGNORE INTO ARTICLE_TBL (URL, ID, TITLE, TITLE_MD5, CONTENT, publishedDate, src) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');" % (repl(url), repl(hashed), repl(title), repl(titleMd5), repl(content), repl(date1), repl(src)) 
 						cur.execute(query)
