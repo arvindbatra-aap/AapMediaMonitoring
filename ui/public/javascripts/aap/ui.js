@@ -127,8 +127,6 @@ _AAP_UI.prototype.renderArticlesModal = function(articles) {
 };
 
 _AAP_UI.prototype.showArticlesModalWithLoading = function(src, date) {
-    console.log(date);
-    console.log((new Date(parseInt(date))));
     var title;
     if(src == 'Total') {
         title = "All Articles Published On " + (new Date(parseInt(date))).toDateString() 

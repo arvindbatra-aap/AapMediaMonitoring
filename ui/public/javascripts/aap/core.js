@@ -7,8 +7,8 @@ var _AAP = function() {
 
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
-	this.showArticleCountTrend(config.query, config.start, config.end);
-	this.showWordCloud(config.query, config.start, config.end);
+	this.showArticleCountTrend(config.start, config.end);
+	this.showWordCloud(config.start, config.end);
 };
 
 _AAP.prototype.setQuery = function(query) {
@@ -29,8 +29,9 @@ _AAP.prototype.showArticlesForSrcDate = function(src, date) {
 		query : this._query,
 		start : date-1,
 		end   : date+1,
-		src   : src
+		src   : src != "Total" ? src : null
 	};
+	console.log(params);
 	
 	this._ui.showArticlesModalWithLoading(src, date);
 
