@@ -11,10 +11,20 @@ body {
 	margin: 0 auto;
 }
 
+#articles-loading {
+	padding-top: 20px;
+	width: 300px;
+	margin: 0 auto;
+}
+
 #trend-loading {
 	padding-top: 20px;
 	width: 300px;
 	margin: 0 auto;
+}
+
+#articles-modal .modal-dialog {
+	width: 810px;
 }
 
 #wordcloud-loading {

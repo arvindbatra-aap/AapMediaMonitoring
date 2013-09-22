@@ -24,19 +24,23 @@ _AAP.prototype.hideAllTrendSeries = function() {
 };
 
 _AAP.prototype.showArticlesForSrcDate = function(src, date) {
+	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
 	var params = {
 		query : this._query,
 		start : date-1,
 		end   : date+1,
 		src   : src
 	};
+	
+	this._ui.showArticlesModalWithLoading(src, date);
+
 	var that = this;
 
 	// Update article list
 	$.get('/articles/content', params, function(data, status, xhr) {
 		if(data) {
-			that._ui.renderArticles(data);
-			that._ui.hideArticlesLoading();
+			that._ui.hideArticlesModalLoading();
+			that._ui.renderArticlesModal(data);
 		}
 	});
 };
