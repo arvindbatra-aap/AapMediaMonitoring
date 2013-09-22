@@ -180,7 +180,6 @@ public class MediaMonitoringServiceImpl
 	}
 	
 	private String toPhrase(String keyword){
-		System.out.println("phrase to be converted:" + keyword);
 		if(candidateList.contains(keyword.toLowerCase())){
 			return "\"" + keyword + "\"";
 		}
@@ -199,6 +198,5 @@ public class MediaMonitoringServiceImpl
 		}catch(Exception e){
 			LOG.error("Failed to load candidate list", e);
 		}
-		System.out.println("Candidate List:" + candidateList);
 	}
 }
