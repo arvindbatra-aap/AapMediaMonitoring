@@ -1,6 +1,10 @@
 package webservice.api.impl;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,12 +43,14 @@ public class MediaMonitoringServiceImpl
 	private static Logger LOG = Logger.getLogger(MediaMonitoringServiceImpl.class);
 	private SolrManager solrManager;
 	private SQLManager sqlManager;
+	List<String> candidateList;
 	private int TOP_N = 20;
 	
 	public MediaMonitoringServiceImpl(){
 		solrManager = new SolrManager();
 		try {
 			sqlManager = new SQLManager(solrManager);
+			getCandidateList();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -52,6 +58,7 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
+		keyword = toPhrase(keyword);
 		try {
 			List<Article> articles;
 			if(startDate == 0 && endDate == 0){
@@ -75,6 +82,7 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src,  int start, int count){
+		keyword = toPhrase(keyword);
 		if(endDate==0){
 			endDate = new Date().getTime();
 		}
@@ -109,6 +117,7 @@ public class MediaMonitoringServiceImpl
 
 	@Override
 	public Map<String, Integer> getWordCloud(String query, String src, long startDate,  long endDate,int count) {
+		query = toPhrase(query);
 		WordCloud wc = new WordCloud(solrManager);
 		Map<String, Integer> wordCount = wc.getWordCloud(query, null, null, src,count);
 		return filterMap(wordCount, TOP_N);
@@ -168,5 +177,26 @@ public class MediaMonitoringServiceImpl
 	            return 1;
 	        } 
 	    }
+	}
+	
+	private String toPhrase(String keyword){
+		if(candidateList.contains(keyword.toLowerCase())){
+			return "\"" + keyword + "\"";
+		}
+		return keyword;
+	}
+	
+	private void getCandidateList(){
+		candidateList = new ArrayList<String>();
+		try{
+			InputStream is = this.getClass().getResourceAsStream("candidateList");
+			String line;
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			while((line=br.readLine()) != null){
+				candidateList.add(line.toLowerCase());
+			}
+		}catch(Exception e){
+			LOG.error("Failed to load candidate list", e);
+		}
 	}
 }

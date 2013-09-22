@@ -158,7 +158,6 @@ public class SolrManager {
         addSrcQuery(src, solrQuery);
         solrQuery.setFacet(true);
         solrQuery.setRows(0);
-
         solrQuery.set("facet.method", "enum");
         solrQuery.set("facet.limit", "-1");
         solrQuery.addFacetPivotField("date,src");

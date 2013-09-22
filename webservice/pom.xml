@@ -29,6 +29,14 @@
     <spring.version>3.2.0.RELEASE</spring.version>
   </properties>
 
+  <repositories>
+    <repository>
+        <id>maven-restlet</id>
+        <name>Public online Restlet repository</name>
+        <url>http://maven.restlet.org</url>
+    </repository>
+  </repositories>
+  
   <build>
     <pluginManagement>
       <plugins>
@@ -188,20 +196,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <repositories>
-    <repository>
-      <id>apache.snapshots</id>
-      <name>Apache Snapshots</name>
-      <url>https://repository.apache.org/content/groups/snapshots-group/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <pluginRepositories>
     <pluginRepository>
