@@ -26,47 +26,54 @@ public class SQLManager {
     
     //yy-mm-dd
     public void triggerIndexer(String dateString) throws SQLException {
-    	if(con == null){
-    		getConn();
+    	int currSize = -1;
+    	int start = 0;
+    	int resultSize = 200;
+    	int count=0, failedCount=0;
+    	while(currSize != 0){
+    		currSize = 0;
+	        ResultSet rs = null;
+	        Statement st = null;
+	        if(con == null){
+	    		getConn();
+	    	}
+	        try {
+	        	String query = "SELECT * from ARTICLE_TBL" ;
+	        	if(!StringUtils.isBlank(dateString)){
+	        		query += " where publishedDate > " + dateString ;
+	        	}
+	        	query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
+	        	LOG.info(query);
+	            st = con.createStatement();
+	            rs = st.executeQuery(query);
+	            while (rs.next()) {
+	            	currSize++;
+	                try {
+						this.solrManager.insertDocument(rs);
+						count++;
+					} catch (Exception e) {
+						LOG.error("Failed to index document");
+						failedCount++;
+					}
+	                count++;
+	            }
+	            start = start + currSize;
+	        } catch (SQLException ex) {
+	            LOG.error(ex.getMessage(), ex);
+	        } finally {
+	            try {
+	                if (rs != null) {
+	                    rs.close();
+	                }
+	                if (st != null) {
+	                    st.close();
+	                }
+	            } catch (SQLException ex) {
+	                LOG.info(ex.getMessage(), ex);
+	            }
+	        }
     	}
-        ResultSet rs = null;
-        Statement st = null;
-        try {
-        	int count=0, failedCount=0;
-        	String query = "SELECT * from ARTICLE_TBL" ;
-        	if(!StringUtils.isBlank(dateString)){
-        		query += " where publishedDate > " + dateString ;
-        	}
-        	query += ";";
-        	
-        	LOG.info(query);
-            st = con.createStatement();
-            rs = st.executeQuery(query);
-            while (rs.next()) {
-                try {
-					this.solrManager.insertDocument(rs);
-					count++;
-				} catch (Exception e) {
-					LOG.error("Failed to index document");
-					failedCount++;
-				}
-                count++;
-            }
-            LOG.info("Indexer trigger: indexed successfully: " + count + ", failed: " + failedCount +   " documents for trigger: " + dateString);
-        } catch (SQLException ex) {
-            LOG.error(ex.getMessage(), ex);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                LOG.info(ex.getMessage(), ex);
-            }
-        }
+    	 LOG.info("Indexer trigger: indexed successfully: " + count + ", failed: " + failedCount +   " documents for trigger: " + dateString);
     }
     
     public void getConn() throws SQLException {
