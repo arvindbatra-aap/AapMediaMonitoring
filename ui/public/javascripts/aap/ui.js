@@ -6,6 +6,7 @@ var _AAP_UI = function (context) {
     this._ARTICLES_LOADING_DIV = '#articles-loading';
     this._ARTICLES_CONTAINER_DIV = '#articles-container';
     this._WORDCLOUD_CONTAINER_DIV = '#wordcloud';
+    this._WORDCLOUD_LOADING_DIV = '#wordcloud-loading';
     this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
     this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
 
@@ -25,16 +26,30 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
             text: 'Media Trend'
         },
         xAxis: {
-            categories: chart_data.dates
+            type: 'datetime'
         },
         yAxis: {
         	allowDecimals: false,
             title: {
                 text: 'Article Count'
-            }
+            },
+            min: 0
         },
         series: chart_data.series,
-        ignoreHiddenSeries: false
+        ignoreHiddenSeries: false,
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function() {
+                            console.log("Clicked on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
+                            this._context.showArticlesForSrcDate(this.series.name, this.x);
+                        }
+                    }
+                }
+            }
+        }
 	});
     this._chart = $(this._ARTICLE_COUNT_CHART_DIV).highcharts();
     console.log(this._chart);
@@ -92,11 +107,17 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
         }
     }
     console.log(jqCloudInput);
+    $(this._WORDCLOUD_CONTAINER_DIV).show();
     $(this._WORDCLOUD_CONTAINER_DIV).jQCloud(jqCloudInput);
 };
 
-_AAP_UI.prototype.emptyWordCloud = function(histogram) {
+_AAP_UI.prototype.showWordCloudLoading = function() {
     $(this._WORDCLOUD_CONTAINER_DIV).empty();
+    $(this._WORDCLOUD_LOADING_DIV).show();
+};
+
+_AAP_UI.prototype.hideWordCloudLoading = function() {
+    $(this._WORDCLOUD_LOADING_DIV).hide();
 };
 
 _AAP_UI.prototype.hideTrendLoading = function() {

@@ -17,6 +17,12 @@ body {
 	margin: 0 auto;
 }
 
+#wordcloud-loading {
+	padding-top: 20px;
+	width: 300px;
+	margin: 0 auto;
+}
+
 #article-box {
 	text-align: left;
 }

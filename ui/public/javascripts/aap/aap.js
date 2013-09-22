@@ -9,11 +9,11 @@ $(document).ready(function(){
 	$AAP.init(AAP_INI_CONFIG);
 
 	$('#trend-update-btn').click(function(event){
-
 		var query = $('#trend-query-string').val();
 		if(query && query.length > 0){
-			$AAP.showArticleCountTrend(query);
-			$AAP.showWordCloud(query);
+			$AAP.setQuery(query);
+			$AAP.showArticleCountTrend();
+			$AAP.showWordCloud();
 		}
 	});
 
