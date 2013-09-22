@@ -43,7 +43,6 @@ public class SQLManager {
 	        		query += " where publishedDate > " + dateString ;
 	        	}
 	        	query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
-	        	LOG.info(query);
 	            st = con.createStatement();
 	            rs = st.executeQuery(query);
 	            while (rs.next()) {
