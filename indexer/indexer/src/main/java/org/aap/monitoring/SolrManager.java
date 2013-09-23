@@ -101,8 +101,8 @@ public class SolrManager {
     private void addSrcQuery(String src ,  SolrQuery solrQuery){
     	if(StringUtils.isBlank(src)) return;
     	String queryString = "src:" + src ;
-    	if(StringUtils.isBlank(solrQuery.getQuery())){
-    		queryString = solrQuery.getQuery() + " AND " + queryString;
+    	if(!StringUtils.isBlank(solrQuery.getQuery())){
+    		queryString = "(" + solrQuery.getQuery() + ") AND " + queryString;
     	}
     	solrQuery.setQuery(queryString);
     }

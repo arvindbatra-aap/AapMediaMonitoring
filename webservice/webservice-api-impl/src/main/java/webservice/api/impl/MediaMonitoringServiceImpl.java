@@ -70,7 +70,9 @@ public class MediaMonitoringServiceImpl
 			articles =  solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
 			for(Article article: articles){
 				String content = article.getContent();
-				article.setContent(content.substring(0, Math.min(content.length()-2, 300)) + "...");
+				if(content.length() > 0){
+					article.setContent(content.substring(0, Math.min(content.length()-1, 300)) + "...");
+				}
 			}
 			return articles;
 		} catch (SolrServerException e) {
