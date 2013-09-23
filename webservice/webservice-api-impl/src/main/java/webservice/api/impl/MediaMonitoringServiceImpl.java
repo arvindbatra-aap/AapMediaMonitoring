@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,8 +31,10 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.base.Function;
 
 import webservice.api.MediaMonitoringService;
 
@@ -58,10 +61,9 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public Collection<Article> getArticles(String keyword, String startDate, String endDate, String src,  int start, int count) {
-		keyword = toPhrase(keyword);
 		try {
 			List<Article> articles;
-			articles =  solrManager.getArticlesForKeywords(keyword, startDate, endDate, src, start, count);
+			articles =  solrManager.getArticlesForKeywords(appendSynonyms(keyword), startDate, endDate, src, start, count);
 			for(Article article: articles){
 				String content = article.getContent();
 				if(content.length() > 0){
@@ -78,9 +80,8 @@ public class MediaMonitoringServiceImpl
 	
 	@Override
 	public ArticleCount getNumArticles(String keyword, String startDate, String endDate, String src,  int start, int count){
-		keyword = toPhrase(keyword);
 		try {
-			return solrManager.getNumArticlesForKeywordsAndDate(keyword, startDate, endDate, src, start, count);
+			return solrManager.getNumArticlesForKeywordsAndDate(appendSynonyms(keyword), startDate, endDate, src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles count",e);
 		}
@@ -110,7 +111,6 @@ public class MediaMonitoringServiceImpl
 
 	@Override
 	public Map<String, Integer> getWordCloud(String query, String src, String startDate,  String endDate,int count) {
-		query = toPhrase(query);
 		WordCloud wc = new WordCloud(solrManager);
 		Map<String, Integer> wordCount = wc.getWordCloud(query, startDate, endDate, src,count);
 		return filterMap(wordCount, TOP_N);
@@ -133,26 +133,6 @@ public class MediaMonitoringServiceImpl
 		}
 		return newMap;
 				
-//		ValueComparator vc = new ValueComparator(map);
-//		Map<String,Integer> sortedMap  = new TreeMap<String, Integer>(vc);
-//		sortedMap.putAll(map);
-//		System.out.println("Before printing >." + sortedMap.size());
-//		if(sortedMap.size() > topN){
-//			int count = 0;
-//			Map<String,Integer> prunedMap = new HashMap<String, Integer>();
-//			System.out.println("key set size: " + map.keySet().size());
-//			for(String key: sortedMap.keySet()){
-//				System.out.println(" key checking : " + key);
-//				if(count<=topN && sortedMap.get(key) != null){
-//					System.out.println("map vlaue : " + sortedMap.get(key));
-//					prunedMap.put(key, sortedMap.get(key));
-//					count++;
-//				}
-//			}
-//			return prunedMap;
-//		}else{
-//			return sortedMap;
-//		}
 	}
 	
 	class ValueComparator implements Comparator<String> {
@@ -172,13 +152,6 @@ public class MediaMonitoringServiceImpl
 	    }
 	}
 	
-	private String toPhrase(String keyword){
-		if(candidateList.contains(keyword.toLowerCase())){
-			return "\"" + keyword + "\"";
-		}
-		return keyword;
-	}
-	
 	private void getCandidateList(){
 		candidateList = new ArrayList<String>();
 		try{
@@ -192,4 +165,39 @@ public class MediaMonitoringServiceImpl
 			LOG.error("Failed to load candidate list", e);
 		}
 	}
+	
+	private List<String> appendSynonyms(String keywords){
+		try {
+			List<String> keywordList =  sqlManager.getSynonyms(keywords);
+			if(candidateList.contains(keywords.toLowerCase())){
+				return Lists.transform(keywordList, new Function<String,String>() { 
+			        public String apply(String value){ return "\"" + value + "\""; }});
+			}
+			return keywordList;
+		} catch (SQLException e) {
+			LOG.error("Failed to get synonym list", e);
+		}
+		return null;
+	}
 }
+	
+//ValueComparator vc = new ValueComparator(map);
+//Map<String,Integer> sortedMap  = new TreeMap<String, Integer>(vc);
+//sortedMap.putAll(map);
+//System.out.println("Before printing >." + sortedMap.size());
+//if(sortedMap.size() > topN){
+//	int count = 0;
+//	Map<String,Integer> prunedMap = new HashMap<String, Integer>();
+//	System.out.println("key set size: " + map.keySet().size());
+//	for(String key: sortedMap.keySet()){
+//		System.out.println(" key checking : " + key);
+//		if(count<=topN && sortedMap.get(key) != null){
+//			System.out.println("map vlaue : " + sortedMap.get(key));
+//			prunedMap.put(key, sortedMap.get(key));
+//			count++;
+//		}
+//	}
+//	return prunedMap;
+//}else{
+//	return sortedMap;
+//}
