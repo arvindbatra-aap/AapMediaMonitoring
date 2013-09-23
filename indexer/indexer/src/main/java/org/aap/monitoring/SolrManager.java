@@ -107,11 +107,18 @@ public class SolrManager {
     	solrQuery.setQuery(queryString);
     }
     
-    private void createDateFilter(SolrQuery solrQuery, Date startDate, Date endDate){
-    	if(startDate == null || endDate == null) return;
-    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
-        String dateQuery = "date:" + "[" + df.format(startDate) + " TO " + df.format(endDate) + "]";
+    private void createDateFilter(SolrQuery solrQuery, String startDate, String endDate){
+    	String dateQuery = null;
+    	if(endDate ==null && startDate == null){
+    		LOG.info("No date search specified");
+    		return;
+    	}
+    	if(endDate == null && startDate !=null ){
+    		dateQuery = "date:" + "[" + startDate + "T00:00:00Z  TO *]";
+    	}
+    	if(endDate != null && startDate !=null ){
+    		dateQuery = "date:" + "[" + startDate + "T00:00:00Z  TO " + endDate + "T00:00:00Z]";
+    	}	
         solrQuery.addFilterQuery(dateQuery);
     }
 
@@ -134,7 +141,7 @@ public class SolrManager {
         return getArticles(response);
     }
 
-    public List<Article> getArticlesForKeywords(String keywords, Date startDate, Date endDate, String src,  int start, int count) throws SolrServerException {
+    public List<Article> getArticlesForKeywords(String keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
     	SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
     	createDateFilter(solrQuery,startDate,endDate);
     	addSrcQuery(src, solrQuery);
@@ -152,7 +159,7 @@ public class SolrManager {
         return result;
     }
 
-    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, Date startDate, Date endDate, String src,  int start, int count) throws SolrServerException {
+    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
         SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
         createDateFilter(solrQuery,startDate,endDate);
         addSrcQuery(src, solrQuery);

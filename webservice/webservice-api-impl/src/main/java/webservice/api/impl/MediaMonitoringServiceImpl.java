@@ -57,17 +57,11 @@ public class MediaMonitoringServiceImpl
 	}
 	
 	@Override
-	public Collection<Article> getArticles(String keyword, long startDate, long endDate, String src,  int start, int count) {
+	public Collection<Article> getArticles(String keyword, String startDate, String endDate, String src,  int start, int count) {
 		keyword = toPhrase(keyword);
 		try {
 			List<Article> articles;
-			if(startDate == 0 && endDate == 0){
-				articles =  solrManager.getArticlesForKeywords(keyword, src, start, count);
-			}
-			if(endDate == 0 ){
-				endDate = new Date().getTime();
-			}
-			articles =  solrManager.getArticlesForKeywords(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			articles =  solrManager.getArticlesForKeywords(keyword, startDate, endDate, src, start, count);
 			for(Article article: articles){
 				String content = article.getContent();
 				if(content.length() > 0){
@@ -83,13 +77,10 @@ public class MediaMonitoringServiceImpl
 	
 	
 	@Override
-	public ArticleCount getNumArticles(String keyword, long startDate, long endDate, String src,  int start, int count){
+	public ArticleCount getNumArticles(String keyword, String startDate, String endDate, String src,  int start, int count){
 		keyword = toPhrase(keyword);
-		if(endDate==0){
-			endDate = new Date().getTime();
-		}
 		try {
-			return solrManager.getNumArticlesForKeywordsAndDate(keyword, new Date(startDate), new Date(endDate), src, start, count);
+			return solrManager.getNumArticlesForKeywordsAndDate(keyword, startDate, endDate, src, start, count);
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles count",e);
 		}
@@ -118,10 +109,10 @@ public class MediaMonitoringServiceImpl
 	}
 
 	@Override
-	public Map<String, Integer> getWordCloud(String query, String src, long startDate,  long endDate,int count) {
+	public Map<String, Integer> getWordCloud(String query, String src, String startDate,  String endDate,int count) {
 		query = toPhrase(query);
 		WordCloud wc = new WordCloud(solrManager);
-		Map<String, Integer> wordCount = wc.getWordCloud(query, null, null, src,count);
+		Map<String, Integer> wordCount = wc.getWordCloud(query, startDate, endDate, src,count);
 		return filterMap(wordCount, TOP_N);
 	}
 	

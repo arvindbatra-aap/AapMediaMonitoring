@@ -30,7 +30,7 @@ public class WordCloud {
      * @return map - <keyword, count> for all keywords that occur along with the query.
      * Counts one keyword only once in a document
      */
-    public Map<String, Integer> getWordCloud(String query, Date startDate, Date endDate, String src, int count) {
+    public Map<String, Integer> getWordCloud(String query, String startDate, String endDate, String src, int count) {
         Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
         try {
             List<Article> articlesForKeyword = solrManager.getArticlesForKeywords(query, startDate, endDate, src, 0, count);
