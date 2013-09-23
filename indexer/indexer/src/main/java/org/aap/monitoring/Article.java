@@ -1,5 +1,6 @@
 package org.aap.monitoring;
 
+
 import java.util.Date;
 
 import org.apache.solr.common.SolrDocument;
@@ -8,7 +9,7 @@ public class Article {
     String src;
     String url;
     String title;
-    Date date;
+    String date;
     String image_url;
     String content;
     String author;
@@ -26,7 +27,7 @@ public class Article {
         article.setUrl(doc.get("url").toString());
         article.setTitle(doc.get("title").toString());
         if(doc.get("date") != null){
-        	article.setDate((Date) doc.get("date"));
+        	article.setDate(((Date) doc.get("date")).toString());
         }
         if(doc.get("image_url") != null){
         	article.setImage_url(doc.get("image_url").toString());
@@ -71,10 +72,10 @@ public class Article {
     public void setTitle(String title) {
         this.title = title;
     }
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
     public String getImage_url() {
