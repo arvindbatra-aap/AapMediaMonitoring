@@ -116,9 +116,12 @@ public class SolrManager {
     	if(endDate == null && startDate !=null ){
     		dateQuery = "date:" + "[" + startDate + "T00:00:00Z  TO *]";
     	}
+    	if(endDate != null && startDate ==null ){
+    		dateQuery = "date:" + "[* TO " + endDate + "T00:00:00Z]";
+    	}
     	if(endDate != null && startDate !=null ){
     		dateQuery = "date:" + "[" + startDate + "T00:00:00Z  TO " + endDate + "T00:00:00Z]";
-    	}	
+    	}
         solrQuery.addFilterQuery(dateQuery);
     }
 

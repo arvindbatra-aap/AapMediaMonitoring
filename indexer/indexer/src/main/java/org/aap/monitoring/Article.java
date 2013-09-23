@@ -9,7 +9,7 @@ public class Article {
     String src;
     String url;
     String title;
-    String date;
+    long date;
     String image_url;
     String content;
     String author;
@@ -27,7 +27,7 @@ public class Article {
         article.setUrl(doc.get("url").toString());
         article.setTitle(doc.get("title").toString());
         if(doc.get("date") != null){
-        	article.setDate(((Date) doc.get("date")).toString());
+        	article.setDate(((Date) doc.get("date")).getTime());
         }
         if(doc.get("image_url") != null){
         	article.setImage_url(doc.get("image_url").toString());
@@ -72,10 +72,10 @@ public class Article {
     public void setTitle(String title) {
         this.title = title;
     }
-    public String getDate() {
+    public long getDate() {
         return date;
     }
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
     public String getImage_url() {
