@@ -6,8 +6,11 @@ var _AAP_UI = function (context) {
     this._ARTICLES_LOADING_DIV = '#articles-loading';
     this._ARTICLES_CONTAINER_DIV = '#articles-container';
     this._WORDCLOUD_CONTAINER_DIV = '#wordcloud';
+    this._WORDCLOUD_LOADING_DIV = '#wordcloud-loading';
     this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
     this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
+    this._ARTICLES_MODAL_DIV = '#articles-modal';
+    this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 
     this._chart = null;
 };
@@ -15,6 +18,7 @@ var _AAP_UI = function (context) {
 _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	console.log("Rendering Article Count Chart in div:" + this._ARTICLE_COUNT_CHART_DIV + " with data:");
 	console.log(chart_data);
+    var that = this;
 	$(this._ARTICLE_COUNT_CHART_DIV).empty();
 	$(this._ARTICLE_COUNT_CHART_DIV).highcharts({
 		chart: {
@@ -25,16 +29,30 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
             text: 'Media Trend'
         },
         xAxis: {
-            categories: chart_data.dates
+            type: 'datetime'
         },
         yAxis: {
         	allowDecimals: false,
             title: {
                 text: 'Article Count'
-            }
+            },
+            min: 0
         },
         series: chart_data.series,
-        ignoreHiddenSeries: false
+        ignoreHiddenSeries: false,
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function() {
+                            console.log("Clicked on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
+                            that._context.showArticlesForSrcDate(this.series.name, this.x);
+                        }
+                    }
+                }
+            }
+        }
 	});
     this._chart = $(this._ARTICLE_COUNT_CHART_DIV).highcharts();
     console.log(this._chart);
@@ -92,11 +110,46 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
         }
     }
     console.log(jqCloudInput);
+    $(this._WORDCLOUD_CONTAINER_DIV).show();
     $(this._WORDCLOUD_CONTAINER_DIV).jQCloud(jqCloudInput);
 };
 
-_AAP_UI.prototype.emptyWordCloud = function(histogram) {
+_AAP_UI.prototype.renderArticlesModal = function(articles) {
+    console.log("Rendering Articles in modal div:" + this._ARTICLES_MODAL_DIV + " with data:");
+    console.log(articles);
+    var modalbody = $(this._ARTICLES_MODAL_DIV).find('.modal-body');
+    for(var i = 0; i < articles.length; i++) {
+        articles[i].date = (new Date(articles[i].date)).toDateString();
+        modalbody.append(this._ARTICLE_BOX_TEMPLATE(articles[i]));
+    }
+
+    modalbody.append("<div class='clearfix'></div>");
+};
+
+_AAP_UI.prototype.showArticlesModalWithLoading = function(src, date) {
+    var title;
+    if(src == 'Total') {
+        title = "All Articles Published On " + (new Date(parseInt(date))).toDateString() 
+    }
+    else {
+        title = "Articles From " + src + " Published On " + (new Date(parseInt(date))).toDateString()
+    }
+    $(this._ARTICLES_MODAL_DIV).find('.modal-title').text(title);
+    $(this._ARTICLES_MODAL_LOADING_DIV).show();
+    $(this._ARTICLES_MODAL_DIV).modal();
+};
+
+_AAP_UI.prototype.hideArticlesModalLoading = function() {
+    $(this._ARTICLES_MODAL_LOADING_DIV).hide();
+};
+
+_AAP_UI.prototype.showWordCloudLoading = function() {
     $(this._WORDCLOUD_CONTAINER_DIV).empty();
+    $(this._WORDCLOUD_LOADING_DIV).show();
+};
+
+_AAP_UI.prototype.hideWordCloudLoading = function() {
+    $(this._WORDCLOUD_LOADING_DIV).hide();
 };
 
 _AAP_UI.prototype.hideTrendLoading = function() {
