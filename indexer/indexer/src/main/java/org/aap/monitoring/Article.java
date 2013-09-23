@@ -18,6 +18,7 @@ public class Article {
     String country;
     String city;
     int commentcount;
+    String keywords;
 
     private Article() {}
 
@@ -50,6 +51,9 @@ public class Article {
         }
         if(doc.get("commentcount") != null){
         	article.setCommentcount((Integer)doc.get("commentcount"));
+        }
+        if(doc.get("keywords") != null){
+        	article.setKeywords(doc.get("keywords").toString());
         }
         return article;
     }
@@ -126,5 +130,13 @@ public class Article {
     public void setCommentcount(int commentcount) {
         this.commentcount = commentcount;
     }
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
 
 }
