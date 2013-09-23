@@ -90,6 +90,7 @@ public class SQLManager {
         if(con == null){
             getConn();
         }
+
         String sqlQuery = "select * from AAP_LIST;";
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -126,7 +127,8 @@ public class SQLManager {
     public void getConn() throws SQLException {
         con = DriverManager.getConnection(url, user, password);
     }
-    public void closeConn() throws SQLException{
+
+    public void closeConn() throws SQLException {
         if (con != null) {
             con.close();
         }
