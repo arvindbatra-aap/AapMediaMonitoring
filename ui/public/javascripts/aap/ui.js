@@ -1,19 +1,68 @@
 var _AAP_UI = function (context) {
 	console.log("Initializing UI engine...");
-	this._context = context;
-	this._ARTICLE_COUNT_CHART_DIV = '#article-count-trend';
-	this._TREND_LOADING_DIV = '#trend-loading';
-    this._ARTICLES_LOADING_DIV = '#articles-loading';
-    this._ARTICLES_CONTAINER_DIV = '#articles-container';
-    this._WORDCLOUD_CONTAINER_DIV = '#wordcloud';
-    this._WORDCLOUD_LOADING_DIV = '#wordcloud-loading';
-    this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
-    this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
-    this._ARTICLES_MODAL_DIV = '#articles-modal';
-    this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 
     this._chart = null;
+	this._context = context;
+
+    this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
+	
+    this._ARTICLE_COUNT_CHART_DIV = '#article-count-trend';
+	this._ARTICLE_COUNT_LOADING_DIV = '#trend-loading';
+    this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
+
+    this._TREND_BREAKDOWN_DIV = "#trend-breakdown";
+    this._TREND_BREAKDOWN_LOADING_DIV = "#trend-breakdown-loading";
+
+    this._ARTICLES_LOADING_DIV = '#articles-loading';
+    this._ARTICLES_CONTAINER_DIV = '#articles-container';
+
+    this._WORDCLOUD_CONTAINER_DIV = '#wordcloud';
+    this._WORDCLOUD_LOADING_DIV = '#wordcloud-loading';
+
+    this._ARTICLES_MODAL_DIV = '#articles-modal';
+    this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 };
+
+_AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
+    console.log("Rendering Trend Breakdown Chart in div:" + this._TREND_BREAKDOWN_DIV + " with data:");
+    console.log(chart_data);
+    var that = this;
+    $(this._TREND_BREAKDOWN_DIV).empty().show();
+    $(this._TREND_BREAKDOWN_DIV).highcharts({
+        chart: {
+            type: 'bar'
+        },
+        legend: {
+            enabled: false
+        },
+        title: {
+            text: 'Breakdown by Source'
+        },
+        subtitle: {
+            text: chart_data.date
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Article Count'
+            },
+            min: 0
+        },
+        xAxis: {
+            type: 'category'
+        },
+        series: [{
+            data: chart_data.series,
+        }],
+        plotOptions: {
+            bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+        }
+    });
+}
 
 _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	console.log("Rendering Article Count Chart in div:" + this._ARTICLE_COUNT_CHART_DIV + " with data:");
@@ -37,6 +86,9 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
                 text: 'Article Count'
             },
             min: 0
+        },
+        legend: {
+            maxHeight: 100
         },
         series: chart_data.series,
         ignoreHiddenSeries: false,
@@ -154,20 +206,28 @@ _AAP_UI.prototype.hideWordCloudLoading = function() {
 };
 
 _AAP_UI.prototype.hideTrendLoading = function() {
-	$(this._TREND_LOADING_DIV).hide();
+	$(this._ARTICLE_COUNT_LOADING_DIV).hide();
     $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).show();
 };
 
 _AAP_UI.prototype.showTrendLoading = function() {
 	$(this._ARTICLE_COUNT_CHART_DIV).empty();
     $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).hide();
-	$(this._TREND_LOADING_DIV).show();
+	$(this._ARTICLE_COUNT_LOADING_DIV).show();
+};
+
+_AAP_UI.prototype.hideTrendBreakdownLoading = function() {
+    $(this._TREND_BREAKDOWN_LOADING_DIV).hide();};
+
+_AAP_UI.prototype.showTrendBreakdownLoading = function() {
+    $(this._TREND_BREAKDOWN_DIV).empty();
+    $(this._TREND_BREAKDOWN_LOADING_DIV).show();
 };
 
 _AAP_UI.prototype.hideArticlesLoading = function() {
     $(this._ARTICLES_LOADING_DIV).hide();
 };
 _AAP_UI.prototype.showArticlesLoading = function() {
-    $(this._ARTICLES_CONTAINER_DIV).empty();
+    $(this._ARTICLES_CONTAINER_DIV).find('.article-box').remove();
     $(this._ARTICLES_LOADING_DIV).show();
 };

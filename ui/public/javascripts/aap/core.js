@@ -1,7 +1,7 @@
 var _AAP = function() {
 	console.log("Initializing AAP Media Monitoring Service...");
 	this._ui = new _AAP_UI(this);
-	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com"];
+	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
 	this._query = "";
 };
 
@@ -50,6 +50,7 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 	console.log("Loading Articles for query:" + this._query + " and start:" + start + " and end:" + end);
 
 	this._ui.showTrendLoading();
+	this._ui.showTrendBreakdownLoading();
 	this._ui.showArticlesLoading();
 	
 	var params = {
@@ -71,6 +72,15 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 				chart_data.dates.push(date);
 			}
 
+			var epochLatest = chart_data.dates[chart_data.dates.length-1];
+			var breakdown_chart_data = {
+				date: (new Date(parseInt(epochLatest))).toISOString().substr(0,10),
+				series: []
+			};		
+			
+			var count = 0;
+			var colors = Highcharts.getOptions().colors;
+
 			var total_data = new Array(chart_data.dates.length);
 
 			for(var source in data.countBySrc) {
@@ -89,6 +99,15 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 						blob.data.push([parseInt(chart_data.dates[i]), 0]);	
 						total_data[i] = total_data[i] + 0 || 0;
 					}
+
+					if(chart_data.dates[i] == epochLatest && data.countBySrc[source][chart_data.dates[i]] > 0) {
+						breakdown_chart_data.series.push({
+							name: source,
+							y: data.countBySrc[source][chart_data.dates[i]],
+							color: colors[count++]
+						})
+					}
+ 
 				}
 				chart_data.series.push(blob);
 			}
@@ -103,6 +122,19 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 
 			that._ui.hideTrendLoading();
 			that._ui.renderArticleCountChart(chart_data);
+
+
+			// Update Trend Breakdown
+			/*var colors = Highcharts.getOptions().colors
+			breakdown_chart_data = {
+				date: '2013-09-23',
+				series: [{name:'X',y:10,color:colors[0]},{name:'D',y:40,color:colors[1]},{name:'S',y:50,color:colors[2]}]
+			};*/
+
+			that._ui.hideTrendBreakdownLoading();
+			that._ui.renderTrendBreakdownChart(breakdown_chart_data);
+
+
 		}
 	});
 

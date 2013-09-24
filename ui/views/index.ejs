@@ -121,15 +121,15 @@
 		</div>
 
 		<div class="row" style="margin-top:30px">
+			<!-- Trend Graph -->
 		    <div class="col-md-4 chart-box" id="article-count-trend-wrapper">
-		    	<!-- Trend Graph -->
 			    <div id="article-count-trend">	
 			    </div>
 			    <div id="article-count-trend-control">
 			      <button type="button" class="btn btn-default btn-xs" id="show-all-series-btn"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Show All</button>
 				  <button type="button" class="btn btn-default btn-xs" id="hide-all-series-btn"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Hide All</button>
 			    </div>
-			   	<div id="trend-loading">
+			   	<div id="trend-loading" class="loading-bar">
 			    	<div class="progress progress-striped active">
 					  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
 					    Crunching data... Hold on..
@@ -138,14 +138,14 @@
 				</div>
 			</div>
 
-		    <!-- Word cloud -->
-		    <div id="wordcloud-wrapper" style="margin-left:30px" class="col-md-4 chart-box">
-			    <div id="wordcloud" style="height:432px;display:none;">
+  			<!-- Trend Breakdown -->
+		    <div id="trend-breakdown-wrapper" style="margin-left:30px" class="col-md-4 chart-box">
+			    <div id="trend-breakdown">
 				</div>
-				<div id="wordcloud-loading">
+				<div id="trend-breakdown-loading" class="loading-bar">
 				    	<div class="progress progress-striped active">
 						  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						    Fetching keywords... Just a second..
+						    Breaking data... Sit tight...
 						  </div>
 						</div>
 				</div>
@@ -155,8 +155,8 @@
 
 		<div style="margin-top:50px" class="lead heading">Related Articles</div><hr/>
 
-		<div id="articles-loading">
-	    	<div class="progress progress-striped active">
+		<div id="articles-loading" class="loading-bar">
+	    	<div class="progress progress-striped active" >
 			  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
 			    Getting articles... Hang on..
 			  </div>
@@ -164,6 +164,18 @@
 		</div>
 
 		<div id="articles-container">
+			<!-- Word cloud -->
+		    <div id="wordcloud-wrapper" class="col-lg-4 chart-box">
+			    <div id="wordcloud">
+				</div>
+				<div id="wordcloud-loading" class="loading-bar">
+				    	<div class="progress progress-striped active">
+						  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						    Fetching keywords... Just a second..
+						  </div>
+						</div>
+				</div>
+			</div>
 		</div>
 
 	  </div>
@@ -180,7 +192,7 @@
           <h4 class="modal-title"></h4>
         </div>
         <div class="modal-body">
-        	<div id="articles-modal-loading">
+        	<div id="articles-modal-loading" class="loading-bar">
 			    	<div class="progress progress-striped active">
 					  <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
 					    Getting articles... Please wait...

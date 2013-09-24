@@ -11,13 +11,12 @@ body {
 	margin: 0 auto;
 }
 
-#articles-loading {
-	padding-top: 20px;
-	width: 300px;
-	margin: 0 auto;
+#trend-breakdown {
+	height: 432px;
+	display: none;
 }
 
-#trend-loading {
+.loading-bar {
 	padding-top: 20px;
 	width: 300px;
 	margin: 0 auto;
@@ -27,14 +26,21 @@ body {
 	width: 810px;
 }
 
-#wordcloud-loading {
-	padding-top: 20px;
-	width: 300px;
-	margin: 0 auto;
-}
-
 #article-box {
 	text-align: left;
+}
+
+#wordcloud-wrapper {
+	padding-left: 0px;
+	padding-right: 0px;
+	margin: 10px;
+	width: 350px;
+}
+
+#wordcloud {
+	height: 400px;
+	width: 350px;
+	display: none;
 }
 
 #jumbotron {
