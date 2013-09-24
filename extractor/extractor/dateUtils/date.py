@@ -9,7 +9,7 @@ from timer import Timer
 from natty import *
 
 # Set logging level
-#logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 class DateExtractor():
     
@@ -19,7 +19,7 @@ class DateExtractor():
         "noscript" : None
     }    
     one_digit_regex = re.compile('.*\d.*')
-    month_regex = re.compile('.*[\s^](jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*')
+    month_regex = re.compile('.*(?:\s|^)(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*')
 
     def __init__(self):
         self.natty = Natty()
@@ -30,6 +30,21 @@ class DateExtractor():
         """ hard-coded rules to counter false positives from natty"""
         if re.match(self.month_regex, txt.lower()) == None or re.match(self.one_digit_regex, txt) == None:
            return None
+        
+        month = re.match(self.month_regex, txt.lower()).group(1)
+        month_index = txt.lower().index(month)
+        month_end_index = month_index + len(re.split("\s", txt[month_index:])[0])
+        
+        numbers = re.findall("\d+", txt)
+        good_number = False
+        for n in numbers:
+            n_index = txt.index(n)
+            if n_index < month_end_index + 7 and n_index > month_index - 7:
+                good_number = True
+        
+        if (good_number == False):
+            logging.debug("good_number test failed for txt : " + txt)
+            return None
         
         """making a call to natty"""
         return self.natty.extract_date(txt)
@@ -115,10 +130,20 @@ class DateExtractor():
         stack = deque([root])
         while(len(stack) > 0):
             node = stack.pop()
+            
             if visited.has_key(node):
                 continue
             else:
                 visited[node] = True
+            
+#             debug = False
+#             try:
+#                 for attr in node.parent.parent.attrs:
+#                     if attr == ("id", "mod-article-byline"):
+#                         print "-----> good node : ", node
+#                         debug = True
+#             except:
+#                 pass
             
             try:
                 if node.parent.name != "body":
@@ -127,6 +152,8 @@ class DateExtractor():
                 traceback.print_exc()
                 pass
             
+#             if debug:
+#                 print "---- debugging node : ", node
             if self.is_leaf(node) or str(type(node)) == "<class 'BeautifulSoup.NavigableString'>":
                 if str(type(node)) == "<class 'BeautifulSoup.NavigableString'>":
                     txt = node
@@ -161,7 +188,7 @@ class DateExtractor():
         t.count_lap("Parsing into a soup")
        
         title_node = self.get_title_node(soup, bad_title_phrase_list)
-        #logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
+        logging.debug(" title_node : %s, par : %s" % (str(title_node), str(title_node.parent)))     #, ', pp : ', title_node.parent.parent, title_node.parent.name, title_node.parent.parent.name
         t.count_lap("Getting the title node")
         if(title_node == None):
             return None  
