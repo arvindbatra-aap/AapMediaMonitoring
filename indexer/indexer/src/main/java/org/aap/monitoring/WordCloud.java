@@ -63,14 +63,14 @@ public class WordCloud {
      */
     public Map<String, Integer> processArticle(Article article) {
     	Map<String, Integer> keywordCounts = new HashMap<String, Integer>();
-        String content = article.getContent();
+        String content = getContent(article);
         String[] split = content.split(reg);
         Set<String> keywordsSeen = new HashSet<String>();
         for (String s : split) {
             insertString(keywordCounts, keywordsSeen, s);
         }
         List<String> phrases = new ArrayList<String>();
-        getPhrases2(content, phrases);
+        getPhrases(content, phrases);
         for (String phrase : phrases) {        	
             insertString(keywordCounts, keywordsSeen, phrase);
             // Remove individual keywords that are part of the phrases.
@@ -78,6 +78,17 @@ public class WordCloud {
         }
         return keywordCounts;
     }
+
+    private String getContent(Article article) {
+        if (article.getKeywords() != null && !article.getKeywords().isEmpty()
+                && article.getKeywords().length() > 20) {
+            // kewords not empty
+            return article.getKeywords();
+        } else {
+            return article.getTitle() + " . " + article.getContent();
+        }
+    }
+
     
     private void removeKeywords(String phrase, Map<String, Integer> keywordCounts) {
     	String [] keywords = phrase.split("[ ]");
@@ -88,7 +99,7 @@ public class WordCloud {
     
     private void insertString(Map<String, Integer> keywordCounts, Set<String> keywordsSeen, String s) {
     	// clean the string before s is inserted.
-    	s = removeSpecialCharacters(s.trim());
+    	s = removeSpecialCharacters(s).trim();
     	
         if (ignoreKeyword(s) || keywordsSeen.contains(s)) {
             // keyword already seen. Ignore.
@@ -125,31 +136,7 @@ public class WordCloud {
         return false;
     }
 
-    public void getPhrases(String content, List<String> currentPhrase, List<String> phrases) {
-        if (content.isEmpty()) {
-            if (currentPhrase.size() > 1) {
-                String newPhrase = getString(currentPhrase);
-                phrases.add(newPhrase);
-            }
-            return;
-        }
-
-        String word = getWord(content);
-        if (isCharWord(word)) {
-            currentPhrase.add(word);
-            if (content.length() > word.length())
-                getPhrases(content.substring(word.length()+1), currentPhrase, phrases);
-        } else {
-            if (currentPhrase.size() > 1) {
-                String newPhrase = getString(currentPhrase);
-                phrases.add(newPhrase);
-            }
-            if (content.length() > word.length())
-                getPhrases(content.substring(word.length()+1), new ArrayList<String>(), phrases);
-        }
-    }
-
-    public void getPhrases2(String content, List<String> phrases) {
+    public void getPhrases(String content, List<String> phrases) {
         if (content.isEmpty()) {
             return;
         }
