@@ -1,13 +1,11 @@
 package org.aap.monitoring;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -22,10 +20,6 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-import java.text.DateFormat;
-import java.util.*;
 
 public class SolrManager {
 	
@@ -85,10 +79,14 @@ public class SolrManager {
     }
 
 
-    private SolrQuery getQueryForKeywords(String keywords, int start, int count) {
+    private SolrQuery getQueryForKeywords(List<String> keywords, int start, int count) {
     	SolrQuery solrQuery =  new SolrQuery();
-    	if(!StringUtils.isBlank(keywords)){
-    		solrQuery.setQuery("content:" + keywords + " OR title:" + keywords + " OR keywords:" + keywords);
+    	if(keywords != null && keywords.size() > 0){
+    		List<String> keywordQuery = new ArrayList<String>();
+    		for(String keyword: keywords){
+    			keywordQuery.add(createQuery(keyword));
+    		}
+    		solrQuery.setQuery(StringUtils.join(keywordQuery," OR "));
     	}
     	solrQuery.setStart(start);
     	if(count == 0){
@@ -97,8 +95,23 @@ public class SolrManager {
     	solrQuery.setRows(count);
     	return solrQuery;
     }
+   
+    private String createQuery(String keyword){
+    	if(isPhraseQuery(keyword)){
+    		return "content:" + keyword + " OR " + "title:" + keyword + " OR " + "keywords:" + keyword;
+    	}else{
+    		String[] keywordArr = StringUtils.split(keyword);
+    		return "(" +  createAndQuery("content",keywordArr) + ") OR (" + createAndQuery("title",keywordArr) + ") OR (" + createAndQuery("keywords",keywordArr) + ")";
+    	}
+    }
+    private boolean isPhraseQuery(String keyword){
+    	return StringUtils.startsWithIgnoreCase(keyword, "\"");
+    }
+    private String createAndQuery(String fieldName, String[] values){
+    	return fieldName + ":" + StringUtils.join(values, " AND " + fieldName + ":");
+    }
 
-    private void addSrcQuery(String src ,  SolrQuery solrQuery){
+    private void addSrcQuery(String src , SolrQuery solrQuery){
     	if(StringUtils.isBlank(src)) return;
     	String queryString = "src:" + src ;
     	if(!StringUtils.isBlank(solrQuery.getQuery())){
@@ -110,7 +123,6 @@ public class SolrManager {
     private void createDateFilter(SolrQuery solrQuery, String startDate, String endDate){
     	String dateQuery = null;
     	if(endDate ==null && startDate == null){
-    		LOG.info("No date search specified");
     		return;
     	}
     	if(endDate == null && startDate !=null ){
@@ -137,14 +149,14 @@ public class SolrManager {
         return getArticles(response);
     }
     
-    public List<Article> getArticlesForKeywords(String keywords, String src, int start, int count) throws SolrServerException {
+    public List<Article> getArticlesForKeywords(List<String> keywords, String src, int start, int count) throws SolrServerException {
     	SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
     	addSrcQuery(src, solrQuery);
         QueryResponse response = solrServer.query(solrQuery);
         return getArticles(response);
     }
 
-    public List<Article> getArticlesForKeywords(String keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
+    public List<Article> getArticlesForKeywords(List<String> keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
     	SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
     	createDateFilter(solrQuery,startDate,endDate);
     	addSrcQuery(src, solrQuery);
@@ -162,7 +174,7 @@ public class SolrManager {
         return result;
     }
 
-    public ArticleCount getNumArticlesForKeywordsAndDate(String keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
+    public ArticleCount getNumArticlesForKeywordsAndDate(List<String> keywords, String startDate, String endDate, String src,  int start, int count) throws SolrServerException {
         SolrQuery solrQuery = getQueryForKeywords(keywords, start, count);
         createDateFilter(solrQuery,startDate,endDate);
         addSrcQuery(src, solrQuery);

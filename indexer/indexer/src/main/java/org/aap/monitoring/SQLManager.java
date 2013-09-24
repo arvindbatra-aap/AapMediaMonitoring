@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +85,6 @@ public class SQLManager {
 
     /** Gives list of synonyms including the query itself**/
     public List<String> getSynonyms(final String query) throws SQLException {
-        Map<String, String> synonymsMap = Maps.newHashMap();
         ResultSet rs = null;
         Statement st = null;
         if(con == null){
@@ -93,32 +93,32 @@ public class SQLManager {
 
         String sqlQuery = "select * from AAP_LIST;";
         st = con.createStatement();
-        rs = st.executeQuery(query);
+        rs = st.executeQuery(sqlQuery);
         while (rs.next()) {
             try {
                 String name = rs.getString("name");
                 String synonymString = rs.getString("synonyms");
-                if (!synonymString.equals("NULL")) {
+                if (!StringUtils.isBlank(synonymString)) {
                     String[] synonymsArray = synonymString.split(",");
                     List<String> synonyms = Lists.newArrayList(synonymsArray);
-                    if (query.equals(name)) {
-                        synonyms.add(name);
+                    if (query.equalsIgnoreCase(name)) {
+                        synonyms.add(query);
                         return synonyms;
                     } else {
                         int count = synonyms.size();
                         Iterables.filter(synonyms, new Predicate<String>() {
                             public boolean apply(String arg0) {
-                                return !arg0.equals(query);
+                                return !arg0.equalsIgnoreCase(query);
                             }
                         });
                         if (count != synonyms.size()) {
-                            synonyms.add(name);
+                            synonyms.add(query);
                             return synonyms;
                         }
                     }
                 }
             } catch (Exception e) {
-                LOG.error("Failed to find synonyms");
+                LOG.error("Failed to find synonyms",e);
             }
         }
         return Lists.newArrayList(query);
