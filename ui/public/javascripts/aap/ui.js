@@ -88,7 +88,12 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
             min: 0
         },
         legend: {
-            maxHeight: 100
+            maxHeight: 100,
+            itemWidth: 200,
+            itemDistance: 10,
+            labelFormatter: function() {
+                return this.name.length > 25 ? this.name.substr(0,25) + '...' : this.name;
+            }
         },
         series: chart_data.series,
         ignoreHiddenSeries: false,
