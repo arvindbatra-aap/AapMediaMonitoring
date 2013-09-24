@@ -3,11 +3,16 @@ var _AAP = function() {
 	this._ui = new _AAP_UI(this);
 	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
 	this._query = "";
+
+	this._wordcloud_cache = {};
+	this._articles_cache = {};
+	this._breakdown_cache = {};
 };
 
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
 	this.showArticleCountTrend(config.start, config.end);
+	this.showArticles(config.start, config.end);
 	this.showWordCloud(config.start, config.end);
 };
 
@@ -29,7 +34,7 @@ _AAP.prototype.showArticlesForSrcDate = function(src, date) {
 		query : this._query,
 		start : date,
 		end   : date,
-		src   : src != "Total" ? src : null
+		src   : src
 	};
 	console.log(params);
 	
@@ -46,12 +51,18 @@ _AAP.prototype.showArticlesForSrcDate = function(src, date) {
 	});
 };
 
+_AAP.prototype.updateContentForSrcDate = function(src, date) {
+	console.log("Updating all UI components for query:" + this._query + " and source:" + src + " and date:" + date);
+	this.showTrendBreakdown(date, date);
+	this.showWordCloud(date, date, src);
+	this.showArticles(date, date, src);
+};
+
 _AAP.prototype.showArticleCountTrend = function(start, end) {
 	console.log("Loading Articles for query:" + this._query + " and start:" + start + " and end:" + end);
 
 	this._ui.showTrendLoading();
 	this._ui.showTrendBreakdownLoading();
-	this._ui.showArticlesLoading();
 	
 	var params = {
 		query : this._query,
@@ -123,20 +134,77 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 			that._ui.hideTrendLoading();
 			that._ui.renderArticleCountChart(chart_data);
 
-
-			// Update Trend Breakdown
-			/*var colors = Highcharts.getOptions().colors
-			breakdown_chart_data = {
-				date: '2013-09-23',
-				series: [{name:'X',y:10,color:colors[0]},{name:'D',y:40,color:colors[1]},{name:'S',y:50,color:colors[2]}]
-			};*/
-
 			that._ui.hideTrendBreakdownLoading();
 			that._ui.renderTrendBreakdownChart(breakdown_chart_data);
 
 
 		}
 	});
+};
+
+_AAP.prototype.showTrendBreakdown = function(start, end) {
+	console.log("Loading Trend Breakdown for query:" + this._query + " and start:" + start + " and end:" + end);
+	var params = {
+		query : this._query,
+		start : start,
+		end   : end
+	};
+	var that = this;
+
+	this._ui.showTrendBreakdownLoading();
+
+	// Update article list
+	$.get('/articles/count', params, function(data, status, xhr) {
+		if(data) {
+
+			var dates = [];
+
+			for(var date in data.countByDate) {
+				dates.push(date);
+			}
+
+			var epochLatest = dates[dates.length-1];
+
+			var breakdown_chart_data = {
+				date: (new Date(parseInt(epochLatest))).toISOString().substr(0,10),
+				series: []
+			};		
+			
+			var count = 0;
+			var colors = Highcharts.getOptions().colors;
+
+			for(var source in data.countBySrc) {
+				for(var i=0; i<dates.length; i++) {
+
+					if(dates[i] == epochLatest && data.countBySrc[source][dates[i]] > 0) {
+						breakdown_chart_data.series.push({
+							name: source,
+							y: data.countBySrc[source][dates[i]],
+							color: colors[count++]
+						})
+					}
+ 
+				}
+			}
+
+			that._ui.renderTrendBreakdownChart(breakdown_chart_data);
+			that._ui.hideTrendBreakdownLoading();
+
+		}
+	});	
+};
+
+_AAP.prototype.showArticles = function(start, end, src) {
+	console.log("Loading Articles for query:" + this._query + " and start:" + start + " and end:" + end + " and src:" + src);
+	var params = {
+		query : this._query,
+		start : start,
+		end   : end,
+		src   : src
+	};
+	var that = this;
+
+	this._ui.showArticlesLoading();
 
 	// Update article list
 	$.get('/articles/content', params, function(data, status, xhr) {
@@ -145,18 +213,18 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 			that._ui.hideArticlesLoading();
 		}
 	});
-
 };
 
-_AAP.prototype.showWordCloud = function(start, end) {
-	console.log("Loading Word Cloud for query:" + this._query + " and start:" + start + " and end:" + end);
+_AAP.prototype.showWordCloud = function(start, end, src) {
+	console.log("Loading Word Cloud for query:" + this._query + " and start:" + start + " and end:" + end + " and src:" + src);
 	this._ui.showWordCloudLoading();
 	// Add loading code here
 	
 	var params = {
 		query : this._query,
 		start : start,
-		end   : end
+		end   : end,
+		src   : src
 	};
 	var self = this;
 
