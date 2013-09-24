@@ -135,6 +135,7 @@ _AAP_UI.prototype.showArticlesModalWithLoading = function(src, date) {
         title = "Articles From " + src + " Published On " + (new Date(parseInt(date))).toDateString()
     }
     $(this._ARTICLES_MODAL_DIV).find('.modal-title').text(title);
+    $(this._ARTICLES_MODAL_DIV).find('.article-box').remove();
     $(this._ARTICLES_MODAL_LOADING_DIV).show();
     $(this._ARTICLES_MODAL_DIV).modal();
 };

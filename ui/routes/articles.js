@@ -1,20 +1,23 @@
 var request = require('request');
 
 var API_HOST = "http://66.175.223.5:9090/restServices/media";
-var START_DATE = "2013/09/01";
+var START_DATE = "2013-09-01";
 
 function constructFiltersFromReq(req) {
     var filter = "";
 
     if(req.param("start")) {  
-        filter += "&startDate=" + (new Date(parseInt(req.param("start")))).getTime();
+        filter += "&startDate=" + (new Date(parseInt(req.param("start")))).toISOString().substr(0,10);
     }
     else {
-         filter += "&startDate=" + (new Date(START_DATE)).getTime();
+         filter += "&startDate=" + START_DATE;
     }
 
     if(req.param("end")) {
-        filter += "&endDate=" + (new Date(parseInt(req.param("end")))).getTime();
+        filter += "&endDate=" + (new Date(parseInt(req.param("end")))).toISOString().substr(0,10);
+    }
+    else {
+        filter += "&endDate=" + (new Date()).toISOString().substr(0,10)
     }
 
     if(req.param("src")) {

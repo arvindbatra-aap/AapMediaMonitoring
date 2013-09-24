@@ -27,8 +27,8 @@ _AAP.prototype.showArticlesForSrcDate = function(src, date) {
 	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
 	var params = {
 		query : this._query,
-		start : date-1,
-		end   : date+1,
+		start : date,
+		end   : date,
 		src   : src != "Total" ? src : null
 	};
 	console.log(params);
