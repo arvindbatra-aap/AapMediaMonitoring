@@ -35,15 +35,17 @@ import org.aap.monitoring.ArticleCount;
 @Path( "media" )
 public interface MediaMonitoringService
 {
+	
+	//yyyy-mm-dd
     @Path( "getArticles" )
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    Collection<Article> getArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "src") String src, @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
+    Collection<Article> getArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate, @QueryParam(value = "src") String src, @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
     @Path("getArticlesCount")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "src") String src,  @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
+    ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate, @QueryParam(value = "src") String src,  @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
     @Path("triggerIndexer")
     @GET
@@ -59,5 +61,5 @@ public interface MediaMonitoringService
     @Path("getWordCloud")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
-    Map<String,Integer> getWordCloud(@QueryParam(value = "query")String query,@QueryParam(value = "src")String src, @QueryParam(value = "startDate") long startDate, @QueryParam(value = "endDate") long endDate, @QueryParam(value = "count") int count);
+    Map<String,Integer> getWordCloud(@QueryParam(value = "query")String query,@QueryParam(value = "src")String src, @QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate, @QueryParam(value = "count") int count);
 }

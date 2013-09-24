@@ -1,5 +1,6 @@
 package org.aap.monitoring;
 
+
 import java.util.Date;
 
 import org.apache.solr.common.SolrDocument;
@@ -8,7 +9,7 @@ public class Article {
     String src;
     String url;
     String title;
-    Date date;
+    long date;
     String image_url;
     String content;
     String author;
@@ -17,6 +18,7 @@ public class Article {
     String country;
     String city;
     int commentcount;
+    String keywords;
 
     private Article() {}
 
@@ -26,7 +28,7 @@ public class Article {
         article.setUrl(doc.get("url").toString());
         article.setTitle(doc.get("title").toString());
         if(doc.get("date") != null){
-        	article.setDate((Date) doc.get("date"));
+        	article.setDate(((Date) doc.get("date")).getTime());
         }
         if(doc.get("image_url") != null){
         	article.setImage_url(doc.get("image_url").toString());
@@ -50,6 +52,9 @@ public class Article {
         if(doc.get("commentcount") != null){
         	article.setCommentcount((Integer)doc.get("commentcount"));
         }
+        if(doc.get("keywords") != null){
+        	article.setKeywords(doc.get("keywords").toString());
+        }
         return article;
     }
 
@@ -71,10 +76,10 @@ public class Article {
     public void setTitle(String title) {
         this.title = title;
     }
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
     public String getImage_url() {
@@ -125,5 +130,13 @@ public class Article {
     public void setCommentcount(int commentcount) {
         this.commentcount = commentcount;
     }
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
 
 }
