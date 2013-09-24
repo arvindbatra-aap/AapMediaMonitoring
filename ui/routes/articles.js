@@ -40,7 +40,7 @@ exports.getArticlesCount = function(req, res) {
 };
 
 exports.getArticlesContent = function(req, res) {
-    var uri = API_HOST + '/getArticles?start=0&count=9&query=' + req.param("query") + constructFiltersFromReq(req);
+    var uri = API_HOST + '/getArticles?start=0&count=11&query=' + req.param("query") + constructFiltersFromReq(req);
     console.log("Querying article content API with URI:" + uri);
 
     request(uri, function(error, response, body) {
