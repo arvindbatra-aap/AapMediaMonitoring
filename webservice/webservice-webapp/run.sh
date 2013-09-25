@@ -1,4 +1,4 @@
-cp $1 /usr/share/tomcat6/webapps/ROOT.war 
+cp target/ROOT.war /usr/share/tomcat6/webapps/
 # Stop tomcat6.
 /etc/init.d/tomcat6 stop
 
