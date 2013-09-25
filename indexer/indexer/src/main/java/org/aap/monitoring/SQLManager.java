@@ -22,7 +22,6 @@ import com.google.common.collect.Maps;
 public class SQLManager {
 
     private static Logger LOG = LoggerFactory.getLogger(SQLManager.class);
-    Connection con = null;
     SolrManager solrManager;
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";
     String user = "root";
@@ -36,15 +35,14 @@ public class SQLManager {
     public void triggerIndexer(String dateString) throws SQLException {
         int currSize = -1;
         int start = 0;
-        int resultSize = 1000;
+        int resultSize = 1500;
         int count=0, failedCount=0;
+        
         while(currSize != 0){
             currSize = 0;
             ResultSet rs = null;
             Statement st = null;
-            if(con == null){
-                getConn();
-            }
+            Connection con = getConn();
             try {
                 String query = "SELECT * from ARTICLE_TBL" ;
                 if(!StringUtils.isBlank(dateString)){
@@ -52,15 +50,17 @@ public class SQLManager {
                 }
                 query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
                 st = con.createStatement();
+                long currTS = System.currentTimeMillis();
+                LOG.info("DB query " + query + " started ...");
                 rs = st.executeQuery(query);
-                
+                long endTS = System.currentTimeMillis();
+                LOG.info("DB query completed in time:  " + (endTS-currTS));
                 List<SolrInputDocument> inputDocuments = new ArrayList<SolrInputDocument>();
                 while (rs.next()) {
                     currSize++;
                     try {
                     	SolrInputDocument solrDoc = solrManager.toSolrDocument(rs);
                     	inputDocuments.add(solrDoc);
-                        solrManager.insertDocuments(inputDocuments);
                         count++;
                     } catch (Exception e) {
                         LOG.error("Failed to create document", e);
@@ -68,6 +68,11 @@ public class SQLManager {
                     }
                     count++;
                 }
+               try {
+				solrManager.insertDocuments(inputDocuments);
+               } catch (Exception e) {
+				LOG.error("Failed in inserting documents to solr",e);
+               }
                 start = start + currSize;
             } catch (SQLException ex) {
                 LOG.error(ex.getMessage(), ex);
@@ -78,6 +83,9 @@ public class SQLManager {
                     }
                     if (st != null) {
                         st.close();
+                    }
+                    if(con != null){
+                    	con.close();
                     }
                 } catch (SQLException ex) {
                     LOG.error(ex.getMessage(), ex);
@@ -91,11 +99,8 @@ public class SQLManager {
     public List<String> getSynonyms(final String query) throws SQLException {
         ResultSet rs = null;
         Statement st = null;
-        if(con == null){
-            getConn();
-        }
-
         String sqlQuery = "select * from AAP_LIST;";
+        Connection con = getConn();
         st = con.createStatement();
         rs = st.executeQuery(sqlQuery);
         while (rs.next()) {
@@ -128,13 +133,8 @@ public class SQLManager {
         return Lists.newArrayList(query);
     }
 
-    public void getConn() throws SQLException {
-        con = DriverManager.getConnection(url, user, password);
+    public Connection getConn() throws SQLException {
+        return DriverManager.getConnection(url, user, password);
     }
 
-    public void closeConn() throws SQLException {
-        if (con != null) {
-            con.close();
-        }
-    }
 }

@@ -11,6 +11,7 @@
   <packaging>war</packaging>
 
   <build>
+    <finalName>ROOT</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
