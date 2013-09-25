@@ -18,6 +18,12 @@ $(document).ready(function(){
 		}
 	});
 
+	$('#trend-query-string').keyup(function(event){
+		if(event.which == 13) {
+			$('#trend-update-btn').click();
+		}
+	});
+
 	$('#about-btn').click(function(){
 		$('#about-modal').modal();
 	});

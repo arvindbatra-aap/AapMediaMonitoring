@@ -14,6 +14,7 @@ _AAP.prototype.init = function(config) {
 };
 
 _AAP.prototype.setQuery = function(query) {
+	console.log("Got new query:" + query);
 	this._query = query;
 };
 

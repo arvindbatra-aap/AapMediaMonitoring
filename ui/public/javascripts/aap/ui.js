@@ -114,6 +114,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
             min: 0
         },
         legend: {
+            reversed: true,
             maxHeight: 100,
             itemWidth: 200,
             itemDistance: 10,
@@ -142,7 +143,6 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
         }
 	});
     this._chart = $(this._ARTICLE_COUNT_CHART_DIV).highcharts();
-    console.log(this._chart);
 };
 
 _AAP_UI.prototype.showAllTrendSeries = function() {
@@ -152,6 +152,7 @@ _AAP_UI.prototype.showAllTrendSeries = function() {
             this._chart.series[i].setVisible(true, false);
         }
     }
+    this._chart.redraw();
 };
 
 _AAP_UI.prototype.hideAllTrendSeries = function() {
@@ -162,6 +163,7 @@ _AAP_UI.prototype.hideAllTrendSeries = function() {
             this._chart.series[i].setVisible(false, false);
         }
     }
+    this._chart.redraw();
 };
 
 _AAP_UI.prototype.renderArticles = function(articles) {
@@ -186,7 +188,7 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
         max = Math.max(max, histogram[tag]);
         min = Math.min(min, histogram[tag]);
     }
-    console.log(max);
+   
     if (max > 20) {
         for (var tag in histogram) {
             jqCloudInput.push({text: tag, weight: (20.0 * (histogram[tag] - min))/((max - min) * 1.0), link:"/?q=" + tag});
@@ -196,7 +198,7 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
             jqCloudInput.push({text: tag, weight: histogram[tag], link:"/?q=" + tag});
         }
     }
-    console.log(jqCloudInput);
+   
     $(this._WORDCLOUD_CONTAINER_DIV).show();
     $(this._WORDCLOUD_CONTAINER_DIV).jQCloud(jqCloudInput);
 };
