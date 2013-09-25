@@ -17,6 +17,10 @@ function empty(data)
       return false;
     }
   }
-  
+
   return true;
+}
+
+function removeHC() {
+  $('.highcharts-container > svg > text:last-child').last().remove();
 }

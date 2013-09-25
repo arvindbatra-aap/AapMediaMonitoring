@@ -14,6 +14,7 @@ $(document).ready(function(){
 		if(query && query.length > 0){
 			$AAP.setQuery(query);
 			$AAP.showArticleCountTrend();
+			$AAP.showArticles();
 			$AAP.showWordCloud();
 		}
 	});

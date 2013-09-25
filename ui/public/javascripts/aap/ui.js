@@ -88,6 +88,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
             }
         }
     });
+    setTimeout(removeHC, 500);
 }
 
 _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
@@ -143,6 +144,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
         }
 	});
     this._chart = $(this._ARTICLE_COUNT_CHART_DIV).highcharts();
+    setTimeout(removeHC, 500);
 };
 
 _AAP_UI.prototype.showAllTrendSeries = function() {
