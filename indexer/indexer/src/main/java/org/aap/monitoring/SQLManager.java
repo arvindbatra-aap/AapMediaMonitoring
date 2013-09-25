@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +28,15 @@ public class SQLManager {
     String user = "root";
     String password = "aapmysql00t";
 
-    public SQLManager(SolrManager solrManager) throws SQLException {
-        this.solrManager = solrManager;
+    public SQLManager() throws SQLException {
+        this.solrManager = new SolrManager();
     }
-
 
     //yy-mm-dd
     public void triggerIndexer(String dateString) throws SQLException {
         int currSize = -1;
         int start = 0;
-        int resultSize = 200;
+        int resultSize = 1000;
         int count=0, failedCount=0;
         while(currSize != 0){
             currSize = 0;
@@ -53,13 +53,17 @@ public class SQLManager {
                 query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
                 st = con.createStatement();
                 rs = st.executeQuery(query);
+                
+                List<SolrInputDocument> inputDocuments = new ArrayList<SolrInputDocument>();
                 while (rs.next()) {
                     currSize++;
                     try {
-                        this.solrManager.insertDocument(rs);
+                    	SolrInputDocument solrDoc = solrManager.toSolrDocument(rs);
+                    	inputDocuments.add(solrDoc);
+                        solrManager.insertDocuments(inputDocuments);
                         count++;
                     } catch (Exception e) {
-                        LOG.error("Failed to index document");
+                        LOG.error("Failed to create document", e);
                         failedCount++;
                     }
                     count++;
@@ -76,7 +80,7 @@ public class SQLManager {
                         st.close();
                     }
                 } catch (SQLException ex) {
-                    LOG.info(ex.getMessage(), ex);
+                    LOG.error(ex.getMessage(), ex);
                 }
             }
         }

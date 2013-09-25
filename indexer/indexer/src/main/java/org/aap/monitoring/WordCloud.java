@@ -11,8 +11,8 @@ public class WordCloud {
     SolrManager solrManager;
     private static Logger LOG = Logger.getLogger(WordCloud.class);
 
-    public WordCloud(SolrManager solrManager) {
-        this.solrManager = solrManager;
+    public WordCloud() {
+        this.solrManager = new SolrManager();
     }
 
     static {

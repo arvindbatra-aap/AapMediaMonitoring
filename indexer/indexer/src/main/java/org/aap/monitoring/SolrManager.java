@@ -1,6 +1,7 @@
 package org.aap.monitoring;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +25,48 @@ import org.slf4j.LoggerFactory;
 public class SolrManager {
 	
 	private static Logger LOG = LoggerFactory.getLogger(SolrManager.class);
-    public static SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
+    public SolrServer solrServer = new HttpSolrServer("http://localhost:8983/solr");
     public static int minCount = 100;
+    
+    public SolrInputDocument toSolrDocument(ResultSet result) throws SQLException{
+    	try{
+	    	SolrInputDocument inputDocument = new SolrInputDocument();
+	        inputDocument.addField("src", result.getString("src"));
+	        inputDocument.addField("url", result.getString("url"));
+	        inputDocument.addField("id", result.getString("id"));
+	        inputDocument.addField("title_md5", result.getString("title_md5"));
+	        inputDocument.addField("title", result.getString("title"));
+	        inputDocument.addField("date", result.getDate("publishedDate"));
+	        inputDocument.addField("image_url", result.getString("imageUrl"));
+	        inputDocument.addField("content", result.getString("content"));
+	        inputDocument.addField("author", result.getString("author"));
+	        inputDocument.addField("category", result.getString("category"));
+	        inputDocument.addField("comments", result.getString("comments"));
+	        inputDocument.addField("country", result.getString("country"));
+	        inputDocument.addField("city", result.getString("city"));
+	        inputDocument.addField("commentcount", result.getInt("commentCount"));
+	        inputDocument.addField("keywords", result.getString("keywords"));
+	        return inputDocument;
+    	}catch(Exception e){
+    		LOG.error("Failed to convert the result to solr document: " + (String)result.getString("url"), e);
+    	}
+    	return null;
+    }
+    
+    public void insertDocuments(List<SolrInputDocument> inputDocuments) throws Exception {
+        try {
+        	long currTS = System.currentTimeMillis();
+        	LOG.info("Inserting " + inputDocuments.size() + " documents to solr ");
+            solrServer.add(inputDocuments);
+            solrServer.commit();
+            long endTS = System.currentTimeMillis();
+            LOG.info("Inserted " + inputDocuments.size() + " documents in " + (endTS-currTS));
+        } catch (Exception e) {
+           LOG.error("Exception in adding document", e);
+           throw e;
+        }
+    }
+    
     public void insertDocument(ResultSet result) throws Exception {
         try {
             SolrInputDocument inputDocument = new SolrInputDocument();

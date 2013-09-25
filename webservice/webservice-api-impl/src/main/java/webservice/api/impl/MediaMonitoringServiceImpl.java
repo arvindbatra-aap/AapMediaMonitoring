@@ -52,7 +52,7 @@ public class MediaMonitoringServiceImpl
 	public MediaMonitoringServiceImpl(){
 		solrManager = new SolrManager();
 		try {
-			sqlManager = new SQLManager(new SolrManager());
+			sqlManager = new SQLManager();
 			getCandidateList();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -120,7 +120,7 @@ public class MediaMonitoringServiceImpl
 
 	@Override
 	public Map<String, Integer> getWordCloud(String query, String src, String startDate,  String endDate,int count) {
-		WordCloud wc = new WordCloud(new SolrManager());
+		WordCloud wc = new WordCloud();
 		Map<String, Integer> wordCount = wc.getWordCloud(query, startDate, endDate, src,count);
 		return filterMap(wordCount, TOP_N);
 	}
@@ -189,24 +189,3 @@ public class MediaMonitoringServiceImpl
 		return null;
 	}
 }
-	
-//ValueComparator vc = new ValueComparator(map);
-//Map<String,Integer> sortedMap  = new TreeMap<String, Integer>(vc);
-//sortedMap.putAll(map);
-//System.out.println("Before printing >." + sortedMap.size());
-//if(sortedMap.size() > topN){
-//	int count = 0;
-//	Map<String,Integer> prunedMap = new HashMap<String, Integer>();
-//	System.out.println("key set size: " + map.keySet().size());
-//	for(String key: sortedMap.keySet()){
-//		System.out.println(" key checking : " + key);
-//		if(count<=topN && sortedMap.get(key) != null){
-//			System.out.println("map vlaue : " + sortedMap.get(key));
-//			prunedMap.put(key, sortedMap.get(key));
-//			count++;
-//		}
-//	}
-//	return prunedMap;
-//}else{
-//	return sortedMap;
-//}
