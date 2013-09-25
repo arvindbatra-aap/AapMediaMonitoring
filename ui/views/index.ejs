@@ -74,19 +74,19 @@
 	        	<li>
 	        		<div class="row" style="width: 1000px;padding-top:10px">
                     <ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        	<% for(var i=0; i < candidates.length; i++) {
-	        		candidate = candidates[i][0];
-	        		var tokens = candidate.split("\t");
-	        		var name = tokens[1];
-	        		var constituency = tokens[0]; 
-	        		var display = name + " (" + constituency + ")";
-	        		if (i%3 == 0 && i >0) { %>
-						</ul>
-                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        		<% } %>
+		        	<% for(var i=0; i < candidates.length; i++) {
+		        		candidate = candidates[i][0];
+		        		var tokens = candidate.split("\t");
+		        		var name = tokens[1];
+		        		var constituency = tokens[0]; 
+		        		var display = name + " (" + constituency + ")";
+		        		if (i%3 == 0 && i >0) { %>
+							</ul>
+	                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+		        		<% } %>
 
-   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
-				<% } %>
+	   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
+					<% } %>
 				</ul>
                 </div>
 				</li>
@@ -106,15 +106,14 @@
 	  <div class="inner-container">
 
 	  	<div id="jumbotron">
-		    <h1>Welcome to AAP Media Monitoring Service</h1>
-		    <p class="lead">Here is the latest related media trend across different Indian sources...</p>
+		    <p class="lead">Enter a keyword below to track its media activity</p>
 
 		    <!-- Update Button -->
 			<div class="form-inline">
 			  <div class="form-group">
 			    <input type="text" class="form-control" id="trend-query-string" placeholder="<%= user_query %>" value="<%= user_query %>">
 			  </div>
-			  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Update</button>
+			  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span>&nbsp;Track</button>
 			</div>
 	
 			<!-- Update Button Ends -->
