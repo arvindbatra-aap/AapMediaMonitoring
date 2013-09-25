@@ -82,6 +82,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
                             console.log("Clicked within Trend Breakdown Chart on Source: " + this.name + " for date:" + date);
                             date = (new Date(date)).getTime();
                             that._context.showArticles(date, date, this.name);
+                            that._context.showWordCloud(date, date, this.name);
                         }
                     }
                 }
