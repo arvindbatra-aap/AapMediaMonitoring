@@ -15,13 +15,18 @@ hr {
   padding: 40px 15px;
 }
 
-#article-count-trend-wrapper {
-	width: 700px;
-	margin: 0 auto;
-}
-
 #trend-breakdown {
 	height: 432px;
+	display: none;
+}
+
+#trend-breakdown-wrapper {
+	margin-top: 10px;
+}
+
+#article-count-trend-control {
+	text-align: center;
+	margin-bottom: 10px;
 	display: none;
 }
 
@@ -61,6 +66,7 @@ hr {
 	text-align: center;
 }
 
+
 @media (min-width: 1200px) {
 	.article-box {
 		width: 350px;
@@ -72,6 +78,11 @@ hr {
 		position: absolute;
 		bottom: 0px;
 		width: 100%;
+	}
+
+	#trend-breakdown-wrapper {
+		margin-left: 30px;
+		margin-top: 0px;
 	}
 
 }
@@ -114,8 +125,3 @@ hr {
 	margin: 10px;
 }
 
-#article-count-trend-control {
-	text-align: center;
-	margin-bottom: 10px;
-	display: none;
-}
