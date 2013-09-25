@@ -8,9 +8,9 @@ var _AAP = function() {
 
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
-	this.showArticleCountTrend(config.start, config.end);
-	this.showArticles(config.start, config.end);
-	this.showWordCloud(config.start, config.end);
+	//this.showArticleCountTrend(config.start, config.end);
+	//this.showArticles(config.start, config.end);
+	//this.showWordCloud(config.start, config.end);
 };
 
 _AAP.prototype.setQuery = function(query) {

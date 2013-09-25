@@ -7,6 +7,10 @@ hr {
 	margin-bottom: 5px;
 }
 
+.font19 {
+	font-size: 19px;
+}
+
 .inner-container {
   padding: 40px 15px;
 }
@@ -29,6 +33,10 @@ hr {
 
 #articles-modal .modal-dialog {
 	width: 810px;
+}
+
+#about-modal .modal-dialog {
+	width: 930px;
 }
 
 #article-box {
