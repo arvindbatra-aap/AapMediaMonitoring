@@ -2,6 +2,11 @@ body {
   padding-top: 50px;
 }
 
+hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 .inner-container {
   padding: 40px 15px;
 }

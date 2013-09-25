@@ -1,7 +1,7 @@
 var request = require('request');
 
 var API_HOST = "http://66.175.223.5:9090/restServices/media";
-var START_DATE = "2013-09-19";
+var START_DATE = "2013-09-20";
 
 function constructFiltersFromReq(req) {
     var filter = "";

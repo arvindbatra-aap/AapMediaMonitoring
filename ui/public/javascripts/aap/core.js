@@ -3,10 +3,7 @@ var _AAP = function() {
 	this._ui = new _AAP_UI(this);
 	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
 	this._query = "";
-
-	this._wordcloud_cache = {};
-	this._articles_cache = {};
-	this._breakdown_cache = {};
+	this._trend_breakdown_date = "";
 };
 
 _AAP.prototype.init = function(config) {
@@ -18,7 +15,15 @@ _AAP.prototype.init = function(config) {
 
 _AAP.prototype.setQuery = function(query) {
 	this._query = query;
-}
+};
+
+_AAP.prototype.setTrendBreakdownDate = function(date) {
+	this._trend_breakdown_date = date;
+};
+
+_AAP.prototype.getTrendBreakdownDate = function() {
+	return this._trend_breakdown_date;
+};
 
 _AAP.prototype.showAllTrendSeries = function() {
 	this._ui.showAllTrendSeries();
@@ -28,7 +33,7 @@ _AAP.prototype.hideAllTrendSeries = function() {
 	this._ui.hideAllTrendSeries();
 };
 
-_AAP.prototype.showArticlesForSrcDate = function(src, date) {
+_AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {
 	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
 	var params = {
 		query : this._query,
