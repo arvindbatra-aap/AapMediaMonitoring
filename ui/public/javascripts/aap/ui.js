@@ -233,6 +233,7 @@ _AAP_UI.prototype.hideArticlesModalLoading = function() {
     $(this._ARTICLES_MODAL_LOADING_DIV).hide();
 };
 
+/* Word Cloud */
 _AAP_UI.prototype.showWordCloudLoading = function() {
     $(this._WORDCLOUD_CONTAINER_DIV).empty().hide();
     $(this._WORDCLOUD_LOADING_DIV).show();
@@ -242,6 +243,11 @@ _AAP_UI.prototype.hideWordCloudLoading = function() {
     $(this._WORDCLOUD_LOADING_DIV).hide();
 };
 
+_AAP_UI.prototype.showNoResponseErrorWordCloud = function() {
+    $(this._WORDCLOUD_CONTAINER_DIV).text("Sorry! Not enough data to generate a word cloud.").show();
+};
+
+/* Overall Trend Chart */
 _AAP_UI.prototype.hideTrendLoading = function() {
 	$(this._ARTICLE_COUNT_LOADING_DIV).hide();
     $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).show();
@@ -253,6 +259,12 @@ _AAP_UI.prototype.showTrendLoading = function() {
 	$(this._ARTICLE_COUNT_LOADING_DIV).show();
 };
 
+_AAP_UI.prototype.showNoResponseErrorTrendChart = function() {
+    $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).hide();
+    $(this._ARTICLE_COUNT_CHART_DIV).text("Sorry! Not enough data to generate a trend chart!").show();
+};
+
+/* Trend Breakdown Chart */
 _AAP_UI.prototype.hideTrendBreakdownLoading = function() {
     $(this._TREND_BREAKDOWN_LOADING_DIV).hide();};
 
@@ -261,10 +273,20 @@ _AAP_UI.prototype.showTrendBreakdownLoading = function() {
     $(this._TREND_BREAKDOWN_LOADING_DIV).show();
 };
 
+_AAP_UI.prototype.showNoResponseErrorTrendBreakdown = function() {
+    $(this._TREND_BREAKDOWN_DIV).text("Sorry! Not enough data to generate a breakdown chart!").show();
+};
+
+/* Articles */
 _AAP_UI.prototype.hideArticlesLoading = function() {
     $(this._ARTICLES_LOADING_DIV).hide();
 };
+
 _AAP_UI.prototype.showArticlesLoading = function() {
     $(this._ARTICLES_CONTAINER_DIV).find('.article-box, .clearfix').remove();
     $(this._ARTICLES_LOADING_DIV).show();
+};
+
+_AAP_UI.prototype.showNoResponseErrorArticles = function() {
+    $(this._ARTICLES_LOADING_DIV).text("Sorry! There are no articles for the given query!").show();
 };
