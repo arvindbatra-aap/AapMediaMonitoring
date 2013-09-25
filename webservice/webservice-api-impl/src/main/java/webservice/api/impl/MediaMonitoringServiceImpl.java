@@ -52,7 +52,7 @@ public class MediaMonitoringServiceImpl
 	public MediaMonitoringServiceImpl(){
 		solrManager = new SolrManager();
 		try {
-			sqlManager = new SQLManager(solrManager);
+			sqlManager = new SQLManager();
 			getCandidateList();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -63,6 +63,8 @@ public class MediaMonitoringServiceImpl
 	public Collection<Article> getArticles(String keyword, String startDate, String endDate, String src,  int start, int count) {
 		try {
 			List<Article> articles;
+			LOG.info("Get Articles request with keyword: " + keyword + " ,startDate: " + startDate + " ,endDate: " + endDate + " , src: " + src + " start: " + start +  " , count : " + count);
+			long currTS = System.currentTimeMillis();
 			articles =  solrManager.getArticlesForKeywords(appendSynonyms(keyword), startDate, endDate, src, start, count);
 			for(Article article: articles){
 				String content = article.getContent();
@@ -70,6 +72,8 @@ public class MediaMonitoringServiceImpl
 					article.setContent(content.substring(0, Math.min(content.length()-1, 300)) + "...");
 				}
 			}
+			long endTS = System.currentTimeMillis();;
+			LOG.info("Get Articles Request completed in time: " + (endTS-currTS));
 			return articles;
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles",e);
@@ -81,7 +85,12 @@ public class MediaMonitoringServiceImpl
 	@Override
 	public ArticleCount getNumArticles(String keyword, String startDate, String endDate, String src,  int start, int count){
 		try {
-			return solrManager.getNumArticlesForKeywordsAndDate(appendSynonyms(keyword), startDate, endDate, src, start, count);
+			LOG.info("Get Articles Count request with keyword: " + keyword + " ,startDate: " + startDate + " ,endDate: " + endDate + " , src: " + src + " start: " + start +  " , count : " + count);
+			long currTS = System.currentTimeMillis();
+			ArticleCount articleCount = solrManager.getNumArticlesForKeywordsAndDate(appendSynonyms(keyword), startDate, endDate, src, start, count);
+			long endTS = System.currentTimeMillis();;
+			LOG.info("Get Articles Count Request completed in time: " + (endTS-currTS));
+			return articleCount;
 		} catch (SolrServerException e) {
 			LOG.info("Failed to get articles count",e);
 		}
@@ -111,7 +120,7 @@ public class MediaMonitoringServiceImpl
 
 	@Override
 	public Map<String, Integer> getWordCloud(String query, String src, String startDate,  String endDate,int count) {
-		WordCloud wc = new WordCloud(solrManager);
+		WordCloud wc = new WordCloud();
 		Map<String, Integer> wordCount = wc.getWordCloud(query, startDate, endDate, src,count);
 		return filterMap(wordCount, TOP_N);
 	}
@@ -180,24 +189,3 @@ public class MediaMonitoringServiceImpl
 		return null;
 	}
 }
-	
-//ValueComparator vc = new ValueComparator(map);
-//Map<String,Integer> sortedMap  = new TreeMap<String, Integer>(vc);
-//sortedMap.putAll(map);
-//System.out.println("Before printing >." + sortedMap.size());
-//if(sortedMap.size() > topN){
-//	int count = 0;
-//	Map<String,Integer> prunedMap = new HashMap<String, Integer>();
-//	System.out.println("key set size: " + map.keySet().size());
-//	for(String key: sortedMap.keySet()){
-//		System.out.println(" key checking : " + key);
-//		if(count<=topN && sortedMap.get(key) != null){
-//			System.out.println("map vlaue : " + sortedMap.get(key));
-//			prunedMap.put(key, sortedMap.get(key));
-//			count++;
-//		}
-//	}
-//	return prunedMap;
-//}else{
-//	return sortedMap;
-//}
