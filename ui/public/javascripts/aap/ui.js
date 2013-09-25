@@ -49,20 +49,27 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
             title: {
                 text: 'Article Count'
             },
+           
             min: 0
         },
         xAxis: {
-            type: 'category'
+            type: 'category',
+            labels: {
+                overflow: 'justify'
+            }
         },
         series: [{
             data: chart_data.series,
+            dataLabels: {
+                enabled: true
+            }
         }],
         plotOptions: {
             bar: {
-                    dataLabels: {
-                        enabled: true
-                    }
+                dataLabels: {
+                    enabled: true
                 }
+            }
         },
         tooltip: {
             headerFormat: '<b>{point.key}</b>',
