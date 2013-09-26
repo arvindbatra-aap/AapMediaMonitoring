@@ -49,11 +49,18 @@
               </div>
 	        </div>
 		</script>
-
 	</head>
 
 	<body>
-
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) return;
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=194261983935731";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
 	<!-- Nav Bar -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 	  <div class="container">
@@ -93,8 +100,27 @@
 
 	        </ul>
 	        </li>
-	         <li><a id="about-btn" href="#">About</a></li>
+	        <li><a id="about-btn" href="#">About</a></li>
+
 	  	  </ul>
+	  	  <div class="social-container">
+	  	  	<div class="fb-like" data-href="http://aap.mediatrack.in" data-width="450" data-colorscheme="light" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+	  	  			  	  <!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function() {
+			    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			    po.src = 'https://apis.google.com/js/plusone.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+			<span style="margin-left:-25px">
+		  	  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://aap.mediatrack.in" data-text="What is media saying about Aam Aadmi Party ? Is all the media biased? If so, can we quantify it ?">Tweet</a>
+			  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</span>
+		  </div>
 	    </div>
 	  </div>
 	</div>
