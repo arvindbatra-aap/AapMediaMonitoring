@@ -73,6 +73,9 @@ class ExtractionManager(object):
 						val = ATTR_EXTRACTORS[attr].extract(datum)
 						if val:
 							extracted[attr] = self._clean(val)
+					
+				if 'url' not in extracted and 'canonical_url' not in extracted:
+					extracted['url'] = url
 
 				#Special check for date
 				if 'date' in extracted and (not self._isValidDate(extracted['date'])):

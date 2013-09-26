@@ -2,17 +2,31 @@ body {
   padding-top: 50px;
 }
 
+hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.font19 {
+	font-size: 19px;
+}
+
 .inner-container {
   padding: 40px 15px;
 }
 
-#article-count-trend-wrapper {
-	width: 700px;
-	margin: 0 auto;
-}
-
 #trend-breakdown {
 	height: 432px;
+	display: none;
+}
+
+#trend-breakdown-wrapper {
+	margin-top: 10px;
+}
+
+#article-count-trend-control {
+	text-align: center;
+	margin-bottom: 10px;
 	display: none;
 }
 
@@ -24,6 +38,10 @@ body {
 
 #articles-modal .modal-dialog {
 	width: 810px;
+}
+
+#about-modal .modal-dialog {
+	width: 930px;
 }
 
 #article-box {
@@ -48,6 +66,7 @@ body {
 	text-align: center;
 }
 
+
 @media (min-width: 1200px) {
 	.article-box {
 		width: 350px;
@@ -59,6 +78,11 @@ body {
 		position: absolute;
 		bottom: 0px;
 		width: 100%;
+	}
+
+	#trend-breakdown-wrapper {
+		margin-left: 30px;
+		margin-top: 0px;
 	}
 
 }
@@ -101,8 +125,3 @@ body {
 	margin: 10px;
 }
 
-#article-count-trend-control {
-	text-align: center;
-	margin-bottom: 10px;
-	display: none;
-}

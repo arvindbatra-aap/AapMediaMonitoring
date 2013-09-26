@@ -1,5 +1,6 @@
 var AAP_INI_CONFIG = {
-	'query' : user_query 
+	'query' : user_query,
+	'end'   : (new Date()).setDate((new Date()).getDate() - 1)
 };
 
 var $AAP;
@@ -13,7 +14,14 @@ $(document).ready(function(){
 		if(query && query.length > 0){
 			$AAP.setQuery(query);
 			$AAP.showArticleCountTrend();
+			$AAP.showArticles();
 			$AAP.showWordCloud();
+		}
+	});
+
+	$('#trend-query-string').keyup(function(event){
+		if(event.which == 13) {
+			$('#trend-update-btn').click();
 		}
 	});
 

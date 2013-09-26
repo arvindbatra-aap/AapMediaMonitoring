@@ -3,10 +3,7 @@ var _AAP = function() {
 	this._ui = new _AAP_UI(this);
 	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
 	this._query = "";
-
-	this._wordcloud_cache = {};
-	this._articles_cache = {};
-	this._breakdown_cache = {};
+	this._trend_breakdown_date = "";
 };
 
 _AAP.prototype.init = function(config) {
@@ -17,8 +14,17 @@ _AAP.prototype.init = function(config) {
 };
 
 _AAP.prototype.setQuery = function(query) {
+	console.log("Got new query:" + query);
 	this._query = query;
-}
+};
+
+_AAP.prototype.setTrendBreakdownDate = function(date) {
+	this._trend_breakdown_date = date;
+};
+
+_AAP.prototype.getTrendBreakdownDate = function() {
+	return this._trend_breakdown_date;
+};
 
 _AAP.prototype.showAllTrendSeries = function() {
 	this._ui.showAllTrendSeries();
@@ -28,7 +34,7 @@ _AAP.prototype.hideAllTrendSeries = function() {
 	this._ui.hideAllTrendSeries();
 };
 
-_AAP.prototype.showArticlesForSrcDate = function(src, date) {
+_AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {
 	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
 	var params = {
 		query : this._query,
@@ -44,8 +50,10 @@ _AAP.prototype.showArticlesForSrcDate = function(src, date) {
 
 	// Update article list
 	$.get('/articles/content', params, function(data, status, xhr) {
-		if(data) {
-			that._ui.hideArticlesModalLoading();
+		
+		that._ui.hideArticlesModalLoading();
+
+		if(!empty(data)) {
 			that._ui.renderArticlesModal(data);
 		}
 	});
@@ -59,7 +67,7 @@ _AAP.prototype.updateContentForSrcDate = function(src, date) {
 };
 
 _AAP.prototype.showArticleCountTrend = function(start, end) {
-	console.log("Loading Articles for query:" + this._query + " and start:" + start + " and end:" + end);
+	console.log("Loading Overall Articles Counts for query:" + this._query + " and start:" + start + " and end:" + end);
 
 	this._ui.showTrendLoading();
 	this._ui.showTrendBreakdownLoading();
@@ -73,7 +81,11 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 
 	// Update trend graph
 	$.get('/articles/count', params, function(data, status, xhr) {
-		if(data) {
+
+		that._ui.hideTrendLoading();
+		that._ui.hideTrendBreakdownLoading();
+
+		if(!empty(data.countByDate) && !empty(data.countBySrc)) {
 			var chart_data = {
 				dates: [],
 				series: []
@@ -131,13 +143,12 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 			// All timeline
 			chart_data.series.push({name: 'Total', data: total_data_chart});
 
-			that._ui.hideTrendLoading();
 			that._ui.renderArticleCountChart(chart_data);
-
-			that._ui.hideTrendBreakdownLoading();
 			that._ui.renderTrendBreakdownChart(breakdown_chart_data);
-
-
+		}
+		else {
+			that._ui.showNoResponseErrorTrendChart();
+			that._ui.showNoResponseErrorTrendBreakdown();
 		}
 	});
 };
@@ -155,7 +166,10 @@ _AAP.prototype.showTrendBreakdown = function(start, end) {
 
 	// Update article list
 	$.get('/articles/count', params, function(data, status, xhr) {
-		if(data) {
+
+		that._ui.hideTrendBreakdownLoading();
+
+		if(!empty(data.countByDate) && !empty(data.countBySrc)) {
 
 			var dates = [];
 
@@ -188,8 +202,9 @@ _AAP.prototype.showTrendBreakdown = function(start, end) {
 			}
 
 			that._ui.renderTrendBreakdownChart(breakdown_chart_data);
-			that._ui.hideTrendBreakdownLoading();
-
+		}
+		else {
+			that._ui.showNoResponseErrorTrendBreakdown();
 		}
 	});	
 };
@@ -208,9 +223,14 @@ _AAP.prototype.showArticles = function(start, end, src) {
 
 	// Update article list
 	$.get('/articles/content', params, function(data, status, xhr) {
-		if(data) {
+		
+		that._ui.hideArticlesLoading();
+
+		if(!empty(data)) {
 			that._ui.renderArticles(data);
-			that._ui.hideArticlesLoading();
+		}
+		else {
+			that._ui.showNoResponseErrorArticles();
 		}
 	});
 };
@@ -230,10 +250,15 @@ _AAP.prototype.showWordCloud = function(start, end, src) {
 
 	// Update article list
 	$.get('/wordcloud', params, function(data, status, xhr) {
-		if(data) {
+		
+		self._ui.hideWordCloudLoading();		
+		
+		if(!empty(data)) {
 			delete data[this._query];
 			self._ui.renderWordCloud(data);
-			self._ui.hideWordCloudLoading();
+		}
+		else {
+			self._ui.showNoResponseErrorWordCloud();
 		}
 	});
 

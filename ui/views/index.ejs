@@ -74,19 +74,19 @@
 	        	<li>
 	        		<div class="row" style="width: 1000px;padding-top:10px">
                     <ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        	<% for(var i=0; i < candidates.length; i++) {
-	        		candidate = candidates[i][0];
-	        		var tokens = candidate.split("\t");
-	        		var name = tokens[1];
-	        		var constituency = tokens[0]; 
-	        		var display = name + " (" + constituency + ")";
-	        		if (i%3 == 0 && i >0) { %>
-						</ul>
-                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
-	        		<% } %>
+		        	<% for(var i=0; i < candidates.length; i++) {
+		        		candidate = candidates[i][0];
+		        		var tokens = candidate.split("\t");
+		        		var name = tokens[1];
+		        		var constituency = tokens[0]; 
+		        		var display = name + " (" + constituency + ")";
+		        		if (i%3 == 0 && i >0) { %>
+							</ul>
+	                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+		        		<% } %>
 
-   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
-				<% } %>
+	   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
+					<% } %>
 				</ul>
                 </div>
 				</li>
@@ -106,15 +106,14 @@
 	  <div class="inner-container">
 
 	  	<div id="jumbotron">
-		    <h1>Welcome to AAP Media Monitoring Service</h1>
-		    <p class="lead">Here is the latest related media trend across different Indian sources...</p>
+		    <p class="lead">Enter a keyword below to track its media activity</p>
 
 		    <!-- Update Button -->
 			<div class="form-inline">
 			  <div class="form-group">
 			    <input type="text" class="form-control" id="trend-query-string" placeholder="<%= user_query %>" value="<%= user_query %>">
 			  </div>
-			  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>&nbsp;Update</button>
+			  <button id="trend-update-btn" class="btn btn-success"><span class="glyphicon glyphicon-screenshot"></span>&nbsp;Track</button>
 			</div>
 	
 			<!-- Update Button Ends -->
@@ -122,7 +121,7 @@
 
 		<div class="row" style="margin-top:30px">
 			<!-- Trend Graph -->
-		    <div class="col-md-4 chart-box" id="article-count-trend-wrapper">
+		    <div class="col-lg-7 chart-box" id="article-count-trend-wrapper">
 			    <div id="article-count-trend">	
 			    </div>
 			    <div id="article-count-trend-control">
@@ -136,10 +135,11 @@
 					  </div>
 					</div>
 				</div>
+				<div class="clearfix"></div>
 			</div>
 
   			<!-- Trend Breakdown -->
-		    <div id="trend-breakdown-wrapper" style="margin-left:30px" class="col-md-4 chart-box">
+		    <div id="trend-breakdown-wrapper" class="col-lg-4 chart-box">
 			    <div id="trend-breakdown">
 				</div>
 				<div id="trend-breakdown-loading" class="loading-bar">
@@ -214,10 +214,87 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">About AAP...</h4>
+          <h4 class="modal-title">About...</h4>
         </div>
         <div class="modal-body">
-          ... Arvind Kejriwal Rocks ... \m/
+          
+        	<div class="row">
+        		<div class="col-lg-4">
+		        	<ul class="nav nav-pills nav-stacked">
+					  <li class="active"><a href="#about-aapmm" data-toggle="tab">AAP Media Monitoring</a></li>
+					  <li><a href="#about-method" data-toggle="tab">Our Methodology</a></li>
+					  <li><a href="#about-team" data-toggle="tab">Team</a></li>
+					  <li><a href="#about-next" data-toggle="tab">What's Next?</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-8">
+					<div class="tab-content">
+					  <div class="fade in tab-pane active" id="about-aapmm">
+					  	<p class="lead font19">
+					  		What is media saying about Aam Aadmi Party? Who is writing what?<br/>
+							Is all the media biased? If so, can we quantify it?<br/>
+							Which campaigns attract media attention and by how much?<br/>
+							Who provides us with more media estate - TOI or HT?<br/>
+							What was Hindu's coverage on Arvind's St. Stephens speech?<br/>
+						</p>
+						<p>
+							The above are some of the questions that we seek to answer with this small effort. <strong>AAP Media Monitoring (AAPMM) Service</strong> tracks traditional news media channels. It maintains historical data from various sources and provides breakup of news stories by different media outlets along with the articles. It also tries to summarize the key topics covered on a given day.
+						</p> 
+						<p>
+							It is a <i>work in progress</i>, we have just taken the first step. We will be soon adding more analysis, comparisons and more sources. If you have any suggestions, feedbacks or comments feel free to reach out to us at <a href="mailto:aapmm@googlegroups.com">aapmm@googlegroups.com</a>
+						</p>
+					  </div>
+					  <div class="fade tab-pane" id="about-method">
+					  	<p>
+							Traditional News media is a big universe and covering everything requires infrastructure that is much beyond the scope of this project. But there is no need to do so, we can stand on the shoulder of giants!
+						</p>
+						<p>
+							AAPMM sources data via two ways - 
+							<ul>
+								<li>
+									<b>Direct crawling</b><br/>
+									A selected list of news sources are crawled everyday and top stories from these sources are stored and indexed. This works for our usecase as almost all AAP related stories are indeed top stories. The selected list of sources includes TOI, Hindustan Times, The Hindu, Deccan Herald, Zee News and Indian Express.
+								</li> 
+								<li>
+									<b>Google News RSS feed</b><br/>
+									AAPMM uses topic specific RSS feeds provided by Google News to cover a much broader list of sources. This helps us to get good coverage, but we are limited by the number of topics.
+								</li>
+							</ul>
+						</p>
+						<p>
+							Using open source solutions for crawling, extraction, indexing, api, monitoring and frontend, the entire system works in an automated manner.  
+						</p>
+					  </div>
+					  <div class="fade tab-pane" id="about-team">
+					    <p>
+					    	Ten of us have contributed in bits and pieces to bring this solution together. We are - 
+					    </p>
+					    <ul>
+					    	<li>Abhinav Anand</li>
+							<li>Abhishek Shrivastava</li>
+							<li>Ankit Gupta</li>
+							<li>Arvind Batra</li>
+							<li>Gurmeet Singh</li>
+							<li>Nikesh Garera</li>
+							<li>Parag Sarda</li>
+							<li>Pratik Patre</li>
+							<li>Pranay Venkata</li>
+							<li>Rohit Hiwale</li>
+						</ul>
+					  </div>
+					  <div class="fade tab-pane" id="about-next">
+					  	<p>
+					  		As we said earlier, this is just a start. We are going to be bringing in many more changes as we go along. 
+					  	</p>
+					  	<p>
+							<i>"Who watches the Watchmen?"</i><br/>
+							We are generally interested in how the media is doing? AAP is our first case in point to understand this area. Once we have sufficient data, we will be coming up with many more case studies. Stay tuned!  
+					  	</p>
+					  </div>
+					</div>
+				</div>
+			</div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -233,10 +310,12 @@
 	<!--<script src="/javascripts/jquery.min.js"></script>-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
 	<script src="/javascripts/handlebars.js"></script>
 	<script src="/javascripts/bootstrap.min.js"></script>
 	<script src="/javascripts/alertify-0.3.7.min.js"></script>		
 
+	<script src="/javascripts/aap/util.js"></script>
 	<script src="/javascripts/aap/ui.js"></script>
 	<script src="/javascripts/aap/core.js"></script>
 	<script src="/javascripts/aap/aap.js"></script>

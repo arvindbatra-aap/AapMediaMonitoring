@@ -26,6 +26,9 @@ var _AAP_UI = function (context) {
 _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
     console.log("Rendering Trend Breakdown Chart in div:" + this._TREND_BREAKDOWN_DIV + " with data:");
     console.log(chart_data);
+    
+    this._context.setTrendBreakdownDate(chart_data.date);
+
     var that = this;
     $(this._TREND_BREAKDOWN_DIV).empty().show();
     $(this._TREND_BREAKDOWN_DIV).highcharts({
@@ -46,22 +49,54 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
             title: {
                 text: 'Article Count'
             },
+           
             min: 0
         },
         xAxis: {
-            type: 'category'
+            type: 'category',
+            labels: {
+                overflow: 'justify'
+            }
         },
         series: [{
             data: chart_data.series,
+            dataLabels: {
+                enabled: true
+            }
         }],
         plotOptions: {
             bar: {
-                    dataLabels: {
-                        enabled: true
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<b>{point.key}</b>',
+            pointFormat: ' : {point.y}',
+      
+        },
+        exporting: {
+            enabled: true
+        },
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function() {
+                            var date = that._context.getTrendBreakdownDate();
+                            console.log("Clicked within Trend Breakdown Chart on Source: " + this.name + " for date:" + date);
+                            date = (new Date(date)).getTime();
+                            that._context.showArticles(date, date, this.name);
+                            that._context.showWordCloud(date, date, this.name);
+                        }
                     }
                 }
+            }
         }
     });
+    setTimeout(removeHC, 500);
 }
 
 _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
@@ -88,12 +123,17 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
             min: 0
         },
         legend: {
+            reversed: true,
             maxHeight: 100,
             itemWidth: 200,
             itemDistance: 10,
             labelFormatter: function() {
+
                 return this.name.length > 25 ? this.name.substr(0,25) + '...' : this.name;
             }
+        },
+        exporting: {
+            enabled: true
         },
         series: chart_data.series,
         ignoreHiddenSeries: false,
@@ -103,7 +143,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
                 point: {
                     events: {
                         click: function() {
-                            console.log("Clicked on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
+                            console.log("Clicked within Trend Chart on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
                             that._context.updateContentForSrcDate(this.series.name, this.x);
                         }
                     }
@@ -112,7 +152,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
         }
 	});
     this._chart = $(this._ARTICLE_COUNT_CHART_DIV).highcharts();
-    console.log(this._chart);
+    setTimeout(removeHC, 500);
 };
 
 _AAP_UI.prototype.showAllTrendSeries = function() {
@@ -122,6 +162,7 @@ _AAP_UI.prototype.showAllTrendSeries = function() {
             this._chart.series[i].setVisible(true, false);
         }
     }
+    this._chart.redraw();
 };
 
 _AAP_UI.prototype.hideAllTrendSeries = function() {
@@ -132,6 +173,7 @@ _AAP_UI.prototype.hideAllTrendSeries = function() {
             this._chart.series[i].setVisible(false, false);
         }
     }
+    this._chart.redraw();
 };
 
 _AAP_UI.prototype.renderArticles = function(articles) {
@@ -156,7 +198,7 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
         max = Math.max(max, histogram[tag]);
         min = Math.min(min, histogram[tag]);
     }
-    console.log(max);
+   
     if (max > 20) {
         for (var tag in histogram) {
             jqCloudInput.push({text: tag, weight: (20.0 * (histogram[tag] - min))/((max - min) * 1.0), link:"/?q=" + tag});
@@ -166,7 +208,7 @@ _AAP_UI.prototype.renderWordCloud = function(histogram) {
             jqCloudInput.push({text: tag, weight: histogram[tag], link:"/?q=" + tag});
         }
     }
-    console.log(jqCloudInput);
+   
     $(this._WORDCLOUD_CONTAINER_DIV).show();
     $(this._WORDCLOUD_CONTAINER_DIV).jQCloud(jqCloudInput);
 };
@@ -201,6 +243,7 @@ _AAP_UI.prototype.hideArticlesModalLoading = function() {
     $(this._ARTICLES_MODAL_LOADING_DIV).hide();
 };
 
+/* Word Cloud */
 _AAP_UI.prototype.showWordCloudLoading = function() {
     $(this._WORDCLOUD_CONTAINER_DIV).empty().hide();
     $(this._WORDCLOUD_LOADING_DIV).show();
@@ -210,6 +253,11 @@ _AAP_UI.prototype.hideWordCloudLoading = function() {
     $(this._WORDCLOUD_LOADING_DIV).hide();
 };
 
+_AAP_UI.prototype.showNoResponseErrorWordCloud = function() {
+    $(this._WORDCLOUD_CONTAINER_DIV).text("Sorry! Not enough data to generate a word cloud.").show();
+};
+
+/* Overall Trend Chart */
 _AAP_UI.prototype.hideTrendLoading = function() {
 	$(this._ARTICLE_COUNT_LOADING_DIV).hide();
     $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).show();
@@ -221,6 +269,12 @@ _AAP_UI.prototype.showTrendLoading = function() {
 	$(this._ARTICLE_COUNT_LOADING_DIV).show();
 };
 
+_AAP_UI.prototype.showNoResponseErrorTrendChart = function() {
+    $(this._ARTICLE_COUNT_CHART_CONTROL_DIV).hide();
+    $(this._ARTICLE_COUNT_CHART_DIV).text("Sorry! Not enough data to generate a trend chart!").show();
+};
+
+/* Trend Breakdown Chart */
 _AAP_UI.prototype.hideTrendBreakdownLoading = function() {
     $(this._TREND_BREAKDOWN_LOADING_DIV).hide();};
 
@@ -229,10 +283,20 @@ _AAP_UI.prototype.showTrendBreakdownLoading = function() {
     $(this._TREND_BREAKDOWN_LOADING_DIV).show();
 };
 
+_AAP_UI.prototype.showNoResponseErrorTrendBreakdown = function() {
+    $(this._TREND_BREAKDOWN_DIV).text("Sorry! Not enough data to generate a breakdown chart!").show();
+};
+
+/* Articles */
 _AAP_UI.prototype.hideArticlesLoading = function() {
     $(this._ARTICLES_LOADING_DIV).hide();
 };
+
 _AAP_UI.prototype.showArticlesLoading = function() {
     $(this._ARTICLES_CONTAINER_DIV).find('.article-box, .clearfix').remove();
     $(this._ARTICLES_LOADING_DIV).show();
+};
+
+_AAP_UI.prototype.showNoResponseErrorArticles = function() {
+    $(this._ARTICLES_LOADING_DIV).text("Sorry! There are no articles for the given query!").show();
 };
