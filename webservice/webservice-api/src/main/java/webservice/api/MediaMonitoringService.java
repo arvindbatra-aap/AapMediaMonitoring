@@ -31,6 +31,7 @@ import javax.ws.rs.core.Response;
 
 import org.aap.monitoring.Article;
 import org.aap.monitoring.ArticleCount;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 
 @Path( "media" )
 public interface MediaMonitoringService
@@ -47,11 +48,11 @@ public interface MediaMonitoringService
     @Produces( { MediaType.APPLICATION_JSON } )
     ArticleCount getNumArticles(@QueryParam(value = "query") String keyword, @QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate, @QueryParam(value = "src") String src,  @QueryParam(value = "start") int start, @QueryParam(value = "count") int count);
     
-    @Path("triggerIndexer")
+    /*@Path("triggerIndexer")
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
     //yyyy-MM-dd
-    Response triggerIndexer(@QueryParam(value = "date")String date);
+    Response triggerIndexer(@QueryParam(value = "date")String date);*/
     
     @Path("getArticlesFromSolr")
     @GET
@@ -62,4 +63,10 @@ public interface MediaMonitoringService
     @GET
     @Produces( { MediaType.APPLICATION_JSON } )
     Map<String,Integer> getWordCloud(@QueryParam(value = "query")String query,@QueryParam(value = "src")String src, @QueryParam(value = "startDate") String startDate, @QueryParam(value = "endDate") String endDate, @QueryParam(value = "count") int count);
+    
+    @Path("deleteIndexBySrc")
+    @GET
+    @Produces( { MediaType.APPLICATION_JSON } )
+    UpdateResponse deleteIndexBySrc(@QueryParam(value = "src")String src);
+    
 }
