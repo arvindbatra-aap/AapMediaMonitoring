@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.common.SolrInputDocument;
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class SQLManager {
 
@@ -26,20 +24,19 @@ public class SQLManager {
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";
     String user = "root";
     String password = "aapmysql00t";
-private static final String DRIVER_NAME="com.mysql.jdbc.Driver";
-  static
-    {
-        try
-        {
-            System.out.println("searching for driver");
-            Class.forName(DRIVER_NAME);
-        }
-        catch(ClassNotFoundException cnfe)
-        {
-
-
-        }
-    }
+    private static final String DRIVER_NAME="com.mysql.jdbc.Driver";
+	  static
+	    {
+	        try
+	        {
+	            LOG.info("searching for driver");
+	            Class.forName(DRIVER_NAME);
+	        }
+	        catch(ClassNotFoundException cnfe)
+	        {
+	        	LOG.info("Failed to get drivers");
+	        }
+	    }
 
 
     public SQLManager() throws SQLException {

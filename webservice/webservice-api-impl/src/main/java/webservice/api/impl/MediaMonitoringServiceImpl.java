@@ -29,6 +29,7 @@ import org.aap.monitoring.SolrManager;
 import org.aap.monitoring.WordCloud;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Iterables;
@@ -98,7 +99,7 @@ public class MediaMonitoringServiceImpl
 	}
 
 
-	@Override
+	/*@Override
 	public Response triggerIndexer(String date) {
 		try {
 			sqlManager.triggerIndexer(date);
@@ -106,7 +107,7 @@ public class MediaMonitoringServiceImpl
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}*/
 
 	@Override
 	public Collection<Article> getArticlesFromSolr(String solrQuery, int start, int count) {
@@ -185,6 +186,16 @@ public class MediaMonitoringServiceImpl
 			return keywordList;
 		} catch (SQLException e) {
 			LOG.error("Failed to get synonym list", e);
+		}
+		return null;
+	}
+
+	@Override
+	public UpdateResponse deleteIndexBySrc(String src) {
+		try{
+			return solrManager.deleteIndexForSrc(src);
+		}catch(Exception e){
+			LOG.info("Failed to delete index by src: " + src ,e);
 		}
 		return null;
 	}
