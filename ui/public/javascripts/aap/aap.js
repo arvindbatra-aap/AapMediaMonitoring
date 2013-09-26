@@ -53,6 +53,12 @@ $(document).ready(function(){
 	$('#compare-do-btn').click(function(){
 		$AAP.doQueryComparison();
 	});
+
+	$('.compare-query-field > input').keyup(function(event){
+		if(event.which == 13) {
+			$('#compare-add-btn').click();
+		}
+	});
 });
 
 

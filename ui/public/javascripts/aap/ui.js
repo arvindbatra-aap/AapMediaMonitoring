@@ -166,7 +166,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	console.log("Rendering Article Count Chart in div:" + this._ARTICLE_COUNT_CHART_DIV + " with data:");
 	console.log(chart_data);
     var that = this;
-	$(this._ARTICLE_COUNT_CHART_DIV).empty();
+	$(this._ARTICLE_COUNT_CHART_DIV).empty().parent().show();
 	$(this._ARTICLE_COUNT_CHART_DIV).highcharts({
 		chart: {
             type: 'line',

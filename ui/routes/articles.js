@@ -38,19 +38,23 @@ exports.getMultiQueryCounts = function(req, res) {
 
     for(var i=0; i<queries.length; i++) {
 
-        parallel_construct[queries[i]] = function(callback) {
-            var uri = API_HOST + '/getArticlesCount?query=' + queries[i] + constructFiltersFromReq(req);
-            console.log("Querying article counts API with URI:" + uri);
+        parallel_construct[queries[i]] = (function(query) {
+            return function(callback) {
+                var uri = API_HOST + '/getArticlesCount?query=' + query + constructFiltersFromReq(req);
+                console.log("Querying article counts API with URI:" + uri);
 
-            request(uri, function(error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    console.log(body);
-                    callback(null, JSON.parse(body));
-                }
-            }); 
-        }
+                request(uri, function(error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        console.log(body);
+                        callback(null, JSON.parse(body));
+                    }
+                }); 
+            }
+        })(queries[i]);
 
     }
+
+    console.log(parallel_construct);
 
     async.parallel(parallel_construct, function(err, results) {
         res.send(results);

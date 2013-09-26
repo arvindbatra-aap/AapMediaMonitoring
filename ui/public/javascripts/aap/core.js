@@ -43,9 +43,49 @@ _AAP.prototype.doQueryComparison = function() {
 
 	var that = this;
 
-	$.get('/articles/multicount', {queries: queries}, function(data, status, xhr) {
-		if(!empty(data)) {
-			console.log(data);
+	$.get('/articles/multicount', {queries: queries}, function(all_data, status, xhr) {
+		if(!empty(all_data)) {
+			console.log(all_data);
+			var global_chart_data = {
+				series: []
+			};
+
+			for(var query in all_data) {
+				if(all_data.hasOwnProperty(query) && !empty(all_data[query].countBySrc) && !empty(all_data[query].countByDate)) {
+
+					var data = all_data[query];
+					var dates = []
+
+					for(var date in data.countByDate) {
+						dates.push(date);
+					}
+
+					var epochLatest = dates[dates.length-1];
+
+					var total_data = new Array(dates.length);
+
+					for(var source in data.countBySrc) {
+						for(var i=0; i<dates.length; i++) {
+							if(data.countBySrc[source][dates[i]]) {
+								total_data[i] = total_data[i] + data.countBySrc[source][dates[i]] || data.countBySrc[source][dates[i]];
+							}
+							else {
+								total_data[i] = total_data[i] + 0 || 0;
+							}
+						}
+					}
+
+					var total_data_chart = [];
+					for(var i=0; i<dates.length; i++) {
+						total_data_chart.push([parseInt(dates[i]), total_data[i]]);
+					}
+					console.log(total_data_chart);
+					// All timeline
+					global_chart_data.series.push({name: query, data: total_data_chart});
+				}
+			}
+
+			that._ui.renderArticleCountChart(global_chart_data);
 		}
 	});
 };
