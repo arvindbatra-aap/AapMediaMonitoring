@@ -61,9 +61,9 @@ private static final String DRIVER_NAME="com.mysql.jdbc.Driver";
             try {
                 String query = "SELECT * from ARTICLE_TBL" ;
                 if(!StringUtils.isBlank(dateString)){
-                    query += " where publishedDate > " + dateString ;
+                    query += " where publishedDate > '" + dateString ;
                 }
-                query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
+                query += "' order by publishedDate limit " + start + ", " + resultSize  + ";";
                 st = con.createStatement();
                 long currTS = System.currentTimeMillis();
                 LOG.info("DB query " + query + " started ...");
