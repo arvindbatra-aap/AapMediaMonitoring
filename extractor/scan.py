@@ -2,6 +2,7 @@ import os
 import os.path
 import sys, traceback
 
+from HTMLParser import HTMLParser
 from extractor.manager import ExtractionManager
 from logging import info, error, getLogger, INFO, ERROR, DEBUG
 import datetime
@@ -17,11 +18,10 @@ db = MySQLdb.connect(host="localhost", # your host, usually localhost
 
 db.charset="utf8"
 db.autocommit(True)
-
 cur = db.cursor() 
 
 #EXTRACT_PATH = "/root/crawl-raw/2013-09-19/www.washingtonpost.com"
-#EXTRACT_PATH = '/root/crawl-raw/2013-09-20/'
+#EXTRACT_PATH = '/root/crawl-raw/2013-09-20/zeenews.india.com'
 EXTRACT_PATH = '/root/crawl-raw/'
 
 # Set Log Level to Info
@@ -33,6 +33,26 @@ file_count = 0
 
 # Set Start Date of extraction
 date_7_days_ago = (datetime.datetime.now() - datetime.timedelta(days=7)).date()
+
+from HTMLParser import HTMLParser
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
+
+
+
+
 
 manager = ExtractionManager()
 for root, dirs, files in os.walk(EXTRACT_PATH):
@@ -89,6 +109,7 @@ for root, dirs, files in os.walk(EXTRACT_PATH):
 							url=extracted['url']
 					if 'content' in extracted:
 						content=extracted['content']
+						content = strip_tags(content)
 					if 'date' in extracted:
 						date1=extracted['date']
 					else:
