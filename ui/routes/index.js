@@ -8,7 +8,7 @@ exports.home = function(req, res){
 	csv().from.path(__dirname + '/../../../AapMediaMonitoring/candidatelist/CandidateList.csv', {})
 		.to.array( function(data){
 			var query = req.param("q") || 'Aam Aadmi Party';
-			res.render('index', { user_query: query , candidates: data});
+			res.render('index', { user_query: query, candidates: data, current_page: 'trend'});
 		});
 };
 
@@ -21,6 +21,6 @@ exports.compare = function(req, res){
 	csv().from.path(__dirname + '/../../../AapMediaMonitoring/candidatelist/CandidateList.csv', {})
 		.to.array( function(data){
 			var query = req.param("q") || 'Aam Aadmi Party';
-			res.render('compare', { user_query: query , candidates: data});
+			res.render('compare', { user_query: query, candidates: data, current_page: 'compare'});
 		});
 };

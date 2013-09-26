@@ -4,8 +4,15 @@ var _AAP_UI = function (context) {
     this._chart = null;
 	this._context = context;
 
+    this._compare_queries = [];
+
     this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
-	
+    this._COMPARE_QUERY_FIELD_TEMPLATE = Handlebars.compile($("#compare-query-field-template").html());
+    
+
+    this._COMPARE_PANEL_DIV = '#compare-panel';
+    this._COMPARE_QUERY_FIELD = '.compare-query-field';
+
     this._ARTICLE_COUNT_CHART_DIV = '#article-count-trend';
 	this._ARTICLE_COUNT_LOADING_DIV = '#trend-loading';
     this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
@@ -21,6 +28,11 @@ var _AAP_UI = function (context) {
 
     this._ARTICLES_MODAL_DIV = '#articles-modal';
     this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
+};
+
+_AAP_UI.prototype.renderNewCompareQueryField = function() {
+    var html = this._COMPARE_QUERY_FIELD_TEMPLATE();
+    $(this._COMPARE_PANEL_DIV).find('span.vstext').last().append(html);
 };
 
 _AAP_UI.prototype.renderGetLinkPopover = function(link) {

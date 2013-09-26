@@ -125,3 +125,14 @@ hr {
 	margin: 10px;
 }
 
+
+/* Compare page */
+
+#compare-panel {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.compare-query-field {
+	margin-bottom: 5px !important;
+}

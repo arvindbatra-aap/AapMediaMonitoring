@@ -35,6 +35,7 @@
 		<link rel="shortcut icon" href="/favicon.png" />
 		<script>
 			var user_query = "<%= user_query %>";
+			var current_page = "<%= current_page %>";
 		</script>
 
 		<script id="article-box-template" type="text/x-handlebars-template">
@@ -49,6 +50,13 @@
               </div>
 	        </div>
 		</script>
+
+		<script id="compare-query-field-template" type="text/x-handlebars-template">
+			<div class="form-group compare-query-field">
+		    	<input type="text" class="form-control" placeholder="Enter a keyword...">
+		  	</div>
+		  	<span class="vstext">vs</span>
+	  	</script>
 
 	</head>
 
@@ -104,7 +112,7 @@
 	<div class="container">
 
 	  <div class="inner-container">
-	  	
+
 	  	<%- body %>
 
   	  </div>

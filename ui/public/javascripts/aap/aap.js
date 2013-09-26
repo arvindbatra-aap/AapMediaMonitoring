@@ -1,6 +1,7 @@
 var AAP_INI_CONFIG = {
 	'query' : user_query,
-	'domain': 'http://aap.mediatrack.in'
+	'domain': 'http://aap.mediatrack.in',
+	'page'  : current_page
 };
 
 var $AAP;
@@ -29,6 +30,10 @@ $(document).ready(function(){
 		$AAP.showGetLinkPopover();
 	});
 
+	$('#compare-btn').click(function(){
+		document.location.href="/compare";
+	});
+
 	$('#about-btn').click(function(){
 		$('#about-modal').modal();
 	});
@@ -39,6 +44,10 @@ $(document).ready(function(){
 
 	$('#hide-all-series-btn').click(function(){
 		$AAP.hideAllTrendSeries();
+	});
+
+	$('#compare-add-btn').click(function(){
+		$AAP.showNewCompareQueryField();
 	});
 });
 

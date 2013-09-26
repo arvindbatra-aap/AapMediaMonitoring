@@ -5,19 +5,33 @@ var _AAP = function() {
 	this._query = "";
 	this._trend_breakdown_date = "";
 	this._domain = ""; 
+	this._page = "";
 };
 
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
 	this._domain = config.domain;
-	this.showArticleCountTrend(config.start, config.end);
-	this.showArticles(config.start, config.end);
-	this.showWordCloud(config.start, config.end);
+	this._page = config.current_page;
+
+	if(this._page == 'trend') {
+		console.log("Initializing trend page...");
+		this.showArticleCountTrend(config.start, config.end);
+		this.showArticles(config.start, config.end);
+		this.showWordCloud(config.start, config.end);		
+	}
+	else {
+		console.log("Initializing compare page...");
+		// compare page init		
+	}
 };
 
 _AAP.prototype.setQuery = function(query) {
 	console.log("Got new query:" + query);
 	this._query = query;
+};
+
+_AAP.prototype.showNewCompareQueryField = function() {
+	this._ui.renderNewCompareQueryField();
 };
 
 _AAP.prototype.setTrendBreakdownDate = function(date) {
