@@ -3,11 +3,11 @@ base_dir=$( cd $(dirname $0) ; pwd -P )
 
 # Rebuild the indexer 
 cd $base_dir/indexer/indexer
-#mvn clean install
+mvn clean install
 
 # Rebuild the webservice
 cd $base_dir/webservice
-#mvn clean package 
+mvn clean package 
 
 tomcat_webapp_dir="/var/lib/tomcat6/webapps/"
 # Copy the war to the tomcat webapps folder
@@ -23,7 +23,7 @@ rm -rf $tomcat_webapp_dir/ROOT/*
 /usr/bin/unzip -q $tomcat_webapp_dir/ROOT.war -d $tomcat_webapp_dir/ROOT
 
 # Copy jars into war folder
-mv $tomcat_webapp_dir/ROOT/WEB-INF/lib/mysql-connector-java*.jar /usr/share/tomcat6/lib/
+cp $tomcat_webapp_dir/ROOT/WEB-INF/lib/mysql-connector-java*.jar /usr/share/tomcat6/lib/
 
 # Start tomcat server.
 /etc/init.d/tomcat6 start
