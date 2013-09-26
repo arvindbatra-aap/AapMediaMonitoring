@@ -4,10 +4,12 @@ var _AAP = function() {
 	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
 	this._query = "";
 	this._trend_breakdown_date = "";
+	this._domain = ""; 
 };
 
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
+	this._domain = config.domain;
 	this.showArticleCountTrend(config.start, config.end);
 	this.showArticles(config.start, config.end);
 	this.showWordCloud(config.start, config.end);
@@ -32,6 +34,11 @@ _AAP.prototype.showAllTrendSeries = function() {
 
 _AAP.prototype.hideAllTrendSeries = function() {
 	this._ui.hideAllTrendSeries();
+};
+
+_AAP.prototype.showGetLinkPopover = function() {
+	var link = this._domain + '?q=' + encodeURIComponent(this._query);
+	this._ui.renderGetLinkPopover(link);
 };
 
 _AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {

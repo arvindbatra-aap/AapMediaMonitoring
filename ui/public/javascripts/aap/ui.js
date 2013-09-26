@@ -23,6 +23,32 @@ var _AAP_UI = function (context) {
     this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 };
 
+_AAP_UI.prototype.renderGetLinkPopover = function(link) {
+    
+    if($('#get-link-btn').data('state') == 'open') {
+        $('#get-link-btn').popover('destroy');
+        $('#get-link-btn').data('state', 'closed');
+    }
+    else {
+        $('#get-link-btn').popover({
+            html: true,
+            title: 'Copy the link below',
+            trigger: 'manual',
+            content: function() {
+                return "<input type='text' value='"+link+"' style='width:250px' readonly id='get-link-field'/>";
+            }
+        });
+        $('#get-link-btn').popover('show');
+        $('#get-link-field').select();
+        $('#get-link-btn').data('state', 'open');
+
+        setTimeout(function() {
+            $('#get-link-btn').popover('destroy');
+            $('#get-link-btn').data('state', 'closed');
+        }, 5000);
+    }
+};
+
 _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
     console.log("Rendering Trend Breakdown Chart in div:" + this._TREND_BREAKDOWN_DIV + " with data:");
     console.log(chart_data);
