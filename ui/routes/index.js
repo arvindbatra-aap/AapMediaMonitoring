@@ -5,9 +5,32 @@
 
 exports.home = function(req, res){
 	var csv = require('csv');
+	var committee = ['Arvind Kejriwal',
+							'Manish Sisodia',
+							'Gopal Rai',
+							'Prashant Bhushan',
+							'Sanjay Singh',
+							'Pankaj Gupta',
+							'Kumar Vishwas',
+							'Naveen Jaihind', 
+							'Dinesh Waghela',
+							'Yogendra Yadav',
+							'Ajit Jha',
+							'Christina Samy',
+							'Anand Kumar',
+							'Shazia Ilmi',
+							'Habung Pyang', 
+							'Yogesh Dhahiya',
+							'Ashok Aggarwal',
+							'Illias Azmi',
+							'Subash Ware',
+							'Krishnakant Sevada',
+							'Mayank Gandhi',
+							'Rakesh Sinha',
+							'Prem Singh Pahari']
 	csv().from.path(__dirname + '/../../../AapMediaMonitoring/candidatelist/CandidateList.csv', {})
 		.to.array( function(data){
 			var query = req.param("q") || 'Aam Aadmi Party';
-			res.render('index', { user_query: query , candidates: data});
+			res.render('index', { user_query: query , candidates: data, core_committee: committee});
 		});
 };
