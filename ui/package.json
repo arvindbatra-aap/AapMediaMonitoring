@@ -11,6 +11,7 @@
     "mysql": "*",
     "request": "*",
     "csv": "*",
-    "ejs-locals": "~1.0.2"
+    "ejs-locals": "~1.0.2",
+    "async": "~0.2.9"
   }
 }
