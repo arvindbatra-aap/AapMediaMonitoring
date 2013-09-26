@@ -17,7 +17,9 @@ function constructFiltersFromReq(req) {
         filter += "&endDate=" + (new Date(parseInt(req.param("end")))).toISOString().substr(0,10);
     }
     else {
-        filter += "&endDate=" + (new Date()).toISOString().substr(0,10)
+        var today = new Date();
+        today.setDate(today.getDate() - 1);
+        filter += "&endDate=" + today.toISOString().substr(0,10)
     }
 
     if(req.param("src") && req.param("src") != 'Total') {
