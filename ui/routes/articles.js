@@ -1,4 +1,5 @@
 var request = require('request');
+var async = require('async');
 
 var API_HOST = "http://66.175.223.5:9090/restServices/media";
 var START_DATE = "2013-09-20";
@@ -28,6 +29,33 @@ function constructFiltersFromReq(req) {
 
     return filter;
 }
+
+exports.getMultiQueryCounts = function(req, res) {
+    var queries = req.param('queries');
+    console.log("Querying for multiple keywords in parallel...");
+
+    var parallel_construct = {};
+
+    for(var i=0; i<queries.length; i++) {
+
+        parallel_construct[queries[i]] = function(callback) {
+            var uri = API_HOST + '/getArticlesCount?query=' + queries[i] + constructFiltersFromReq(req);
+            console.log("Querying article counts API with URI:" + uri);
+
+            request(uri, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    console.log(body);
+                    callback(null, JSON.parse(body));
+                }
+            }); 
+        }
+
+    }
+
+    async.parallel(parallel_construct, function(err, results) {
+        res.send(results);
+    });
+};
 
 exports.getArticlesCount = function(req, res) {
     var uri = API_HOST + '/getArticlesCount?query=' + req.param("query") + constructFiltersFromReq(req);

@@ -5,6 +5,7 @@ var _AAP_UI = function (context) {
 	this._context = context;
 
     this._compare_queries = [];
+    this._compare_query_fields = 2;
 
     this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
     this._COMPARE_QUERY_FIELD_TEMPLATE = Handlebars.compile($("#compare-query-field-template").html());
@@ -32,8 +33,31 @@ var _AAP_UI = function (context) {
 
 _AAP_UI.prototype.renderNewCompareQueryField = function() {
     var html = this._COMPARE_QUERY_FIELD_TEMPLATE();
-    $(this._COMPARE_PANEL_DIV).find('span.vstext').last().append(html);
+    $(this._COMPARE_PANEL_DIV).find('span.vstext').last().after(html);
+    this._compare_query_fields++;
 };
+
+_AAP_UI.prototype.adjustCompareQueryFields = function() {
+    var that = this;
+    this._compare_queries = [];
+
+    // Remove empty fields and load queries of non-empty fields
+    $(this._COMPARE_PANEL_DIV).find(this._COMPARE_QUERY_FIELD).each(function(){
+        var val = $(this).find('input').val();
+        if(val == "" && that._compare_query_fields > 1) {
+            $(this).next('.vstext').remove();
+            $(this).remove();
+            that._compare_query_fields--;
+        }
+        else if(val != "") {
+            that._compare_queries.push(val);
+        }
+    });
+};
+
+_AAP_UI.prototype.getCompareQueries = function() {
+    return this._compare_queries;
+}
 
 _AAP_UI.prototype.renderGetLinkPopover = function(link) {
     

@@ -49,6 +49,10 @@ $(document).ready(function(){
 	$('#compare-add-btn').click(function(){
 		$AAP.showNewCompareQueryField();
 	});
+
+	$('#compare-do-btn').click(function(){
+		$AAP.doQueryComparison();
+	});
 });
 
 

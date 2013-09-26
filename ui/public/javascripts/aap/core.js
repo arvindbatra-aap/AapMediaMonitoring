@@ -30,6 +30,26 @@ _AAP.prototype.setQuery = function(query) {
 	this._query = query;
 };
 
+_AAP.prototype.doQueryComparison = function() {
+	this._ui.adjustCompareQueryFields();
+	var queries = this._ui.getCompareQueries();
+
+	if(empty(queries)) {
+		return;
+	}
+
+	console.log("Showing compare graph for queries:");
+	console.log(queries);
+
+	var that = this;
+
+	$.get('/articles/multicount', {queries: queries}, function(data, status, xhr) {
+		if(!empty(data)) {
+			console.log(data);
+		}
+	});
+};
+
 _AAP.prototype.showNewCompareQueryField = function() {
 	this._ui.renderNewCompareQueryField();
 };
