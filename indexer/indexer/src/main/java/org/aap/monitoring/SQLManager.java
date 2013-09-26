@@ -50,7 +50,7 @@ private static final String DRIVER_NAME="com.mysql.jdbc.Driver";
     public void triggerIndexer(String dateString) throws SQLException {
         int currSize = -1;
         int start = 0;
-        int resultSize = 1500;
+        int resultSize = 500;
         int count=0, failedCount=0;
         
         while(currSize != 0){
