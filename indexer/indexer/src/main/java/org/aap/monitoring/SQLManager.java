@@ -26,6 +26,21 @@ public class SQLManager {
     String url = "jdbc:mysql://66.175.223.5:3306/AAP";
     String user = "root";
     String password = "aapmysql00t";
+private static final String DRIVER_NAME="com.mysql.jdbc.Driver";
+  static
+    {
+        try
+        {
+            System.out.println("searching for driver");
+            Class.forName(DRIVER_NAME);
+        }
+        catch(ClassNotFoundException cnfe)
+        {
+
+
+        }
+    }
+
 
     public SQLManager() throws SQLException {
         this.solrManager = new SolrManager();
@@ -35,7 +50,7 @@ public class SQLManager {
     public void triggerIndexer(String dateString) throws SQLException {
         int currSize = -1;
         int start = 0;
-        int resultSize = 1500;
+        int resultSize = 500;
         int count=0, failedCount=0;
         
         while(currSize != 0){
@@ -46,9 +61,9 @@ public class SQLManager {
             try {
                 String query = "SELECT * from ARTICLE_TBL" ;
                 if(!StringUtils.isBlank(dateString)){
-                    query += " where publishedDate > " + dateString ;
+                    query += " where publishedDate > '" + dateString ;
                 }
-                query += " order by publishedDate limit " + start + ", " + resultSize  + ";";
+                query += "' order by publishedDate limit " + start + ", " + resultSize  + ";";
                 st = con.createStatement();
                 long currTS = System.currentTimeMillis();
                 LOG.info("DB query " + query + " started ...");
