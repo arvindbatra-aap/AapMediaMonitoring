@@ -34,6 +34,7 @@ _AAP_UI.prototype.renderGetLinkPopover = function(link) {
             html: true,
             title: 'Copy the link below',
             trigger: 'manual',
+            placement: 'auto top',
             content: function() {
                 return "<input type='text' value='"+link+"' style='width:250px' readonly id='get-link-field'/>";
             }

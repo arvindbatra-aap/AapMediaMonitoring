@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>AAP Media Monitoring Service</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Aam Admi Party Media Monitoring Service" />
+		<meta name="author" content="" />
+		<meta name="keywords" content="AAP, Media, Times Of India, The Hindu, India, Monitoring Service" />
+
+		<!-- Le styles -->
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" />
+		<link href="/stylesheets/datepicker.css" rel="stylesheet" />
+		<link href="/stylesheets/aap.css" rel="stylesheet" />
+		<link href="/stylesheets/jqcloud.css" rel="stylesheet" />
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.core.css">
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.bootstrap.css">
+
+		<style>
+		  body {
+		    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		  }
+		  .control-group::before, .control-group::after {
+		  	display: inline !important; /* bootstrap override */
+		  }	
+		</style>
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		  <script src="/javascripts/html5shiv.js"></script>
+		  <script src="/javascripts/respond.min.js"></script>
+		<![endif]-->
+
+		<link rel="shortcut icon" href="/favicon.png" />
+		<script>
+			var user_query = "<%= user_query %>";
+		</script>
+
+		<script id="article-box-template" type="text/x-handlebars-template">
+			<div class="col-lg-4 article-box">
+			  <div class="article-inner-box">
+		          <h3>{{title}}</h3>
+		          <p class='text-muted publish-info'>Published by <b>{{src}}</b> on <b>{{date}}</b></p>
+		          <p>{{content}}</p>
+	          </div>
+	          <div class="article-inner-row">
+	          	<p><a class="btn btn-primary view-article-btn" href="{{url}}" target="_blank">View Article »</a></p>
+              </div>
+	        </div>
+		</script>
+
+	</head>
+
+	<body>
+
+	<!-- Nav Bar -->
+	<div class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="/">AAP Media Monitor</a>
+	    </div>
+	    <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Trend</a></li>
+		    <li class="dropdown">
+	        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Candidates <b class="caret"></b></a>
+	        <ul class="dropdown-menu">
+	        	<li>
+	        		<div class="row" style="width: 1000px;padding-top:10px">
+                    <ul class="col-md-5" style="list-style:none; margin-left:20px">
+		        	<% for(var i=0; i < candidates.length; i++) {
+		        		candidate = candidates[i][0];
+		        		var tokens = candidate.split("\t");
+		        		var name = tokens[1];
+		        		var constituency = tokens[0]; 
+		        		var display = name + " (" + constituency + ")";
+		        		if (i%3 == 0 && i >0) { %>
+							</ul>
+	                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+		        		<% } %>
+
+	   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
+					<% } %>
+				</ul>
+                </div>
+				</li>
+
+	        </ul>
+	        </li>
+	         <li><a id="about-btn" href="#">About</a></li>
+	  	  </ul>
+	    </div>
+	  </div>
+	</div>
+	<!-- Nav Bar Ends -->
+
+	<!-- Body Container -->
+	<div class="container">
+
+	  <div class="inner-container">
+	  	
+	  	<%- body %>
+
+  	  </div>
+
+	</div>
+	<!-- Body Container Ends -->
+
+
+  <!-- About Modal -->
+  <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">About...</h4>
+        </div>
+        <div class="modal-body">
+          
+        	<div class="row">
+        		<div class="col-lg-4">
+		        	<ul class="nav nav-pills nav-stacked">
+					  <li class="active"><a href="#about-aapmm" data-toggle="tab">AAP Media Monitoring</a></li>
+					  <li><a href="#about-method" data-toggle="tab">Our Methodology</a></li>
+					  <li><a href="#about-team" data-toggle="tab">Team</a></li>
+					  <li><a href="#about-next" data-toggle="tab">What's Next?</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-8">
+					<div class="tab-content">
+					  <div class="fade in tab-pane active" id="about-aapmm">
+					  	<p class="lead font19">
+					  		What is media saying about Aam Aadmi Party? Who is writing what?<br/>
+							Is all the media biased? If so, can we quantify it?<br/>
+							Which campaigns attract media attention and by how much?<br/>
+							Who provides us with more media estate - TOI or HT?<br/>
+							What was Hindu's coverage on Arvind's St. Stephens speech?<br/>
+						</p>
+						<p>
+							The above are some of the questions that we seek to answer with this small effort. <strong>AAP Media Monitoring (AAPMM) Service</strong> tracks traditional news media channels. It maintains historical data from various sources and provides breakup of news stories by different media outlets along with the articles. It also tries to summarize the key topics covered on a given day.
+						</p> 
+						<p>
+							It is a <i>work in progress</i>, we have just taken the first step. We will be soon adding more analysis, comparisons and more sources. If you have any suggestions, feedbacks or comments feel free to reach out to us at <a href="mailto:aapmm@googlegroups.com">aapmm@googlegroups.com</a>
+						</p>
+					  </div>
+					  <div class="fade tab-pane" id="about-method">
+					  	<p>
+							Traditional News media is a big universe and covering everything requires infrastructure that is much beyond the scope of this project. But there is no need to do so, we can stand on the shoulder of giants!
+						</p>
+						<p>
+							AAPMM sources data via two ways - 
+							<ul>
+								<li>
+									<b>Direct crawling</b><br/>
+									A selected list of news sources are crawled everyday and top stories from these sources are stored and indexed. This works for our usecase as almost all AAP related stories are indeed top stories. The selected list of sources includes TOI, Hindustan Times, The Hindu, Deccan Herald, Zee News and Indian Express.
+								</li> 
+								<li>
+									<b>Google News RSS feed</b><br/>
+									AAPMM uses topic specific RSS feeds provided by Google News to cover a much broader list of sources. This helps us to get good coverage, but we are limited by the number of topics.
+								</li>
+							</ul>
+						</p>
+						<p>
+							Using open source solutions for crawling, extraction, indexing, api, monitoring and frontend, the entire system works in an automated manner.  
+						</p>
+					  </div>
+					  <div class="fade tab-pane" id="about-team">
+					    <p>
+					    	Ten of us have contributed in bits and pieces to bring this solution together. We are: 
+					    </p>
+					    <ul>
+					    	<li>Abhinav Anand</li>
+							<li>Abhishek Shrivastava</li>
+							<li>Ankit Gupta</li>
+							<li>Arvind Batra</li>
+							<li>Gurmeet Singh</li>
+							<li>Nikesh Garera</li>
+							<li>Parag Sarda</li>
+							<li>Pratik Patre</li>
+							<li>Pranay Venkata</li>
+							<li>Rohit Hiwale</li>
+						</ul>
+					  </div>
+					  <div class="fade tab-pane" id="about-next">
+					  	<p>
+					  		As we said earlier, this is just a start. We are going to be bringing in many more changes as we go along. 
+					  	</p>
+					  	<p>
+							<i>"Who watches the Watchmen?"</i><br/>
+							We are generally interested in how the media is doing? AAP is our first case in point to understand this area. Once we have sufficient data, we will be coming up with many more case studies. Stay tuned!  
+					  	</p>
+					  </div>
+					</div>
+				</div>
+			</div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- About Modal Ends -->
+
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!--<script src="/javascripts/jquery.min.js"></script>-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+	<script src="/javascripts/handlebars.js"></script>
+	<script src="/javascripts/bootstrap.min.js"></script>
+	<script src="/javascripts/alertify-0.3.7.min.js"></script>		
+
+	<script src="/javascripts/aap/util.js"></script>
+	<script src="/javascripts/aap/ui.js"></script>
+	<script src="/javascripts/aap/core.js"></script>
+	<script src="/javascripts/aap/aap.js"></script>
+	<script src="http://www.lucaongaro.eu/demos/jqcloud/jqcloud-1.0.0.min.js"></script>
+
+	<!-- Google Analytics -->
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-44363373-1', 'mediatrack.in');
+	  ga('send', 'pageview');
+	</script>
+
+	</body>
+</html>

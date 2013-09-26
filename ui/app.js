@@ -4,12 +4,16 @@
  */
 
 var express = require('express')
+  , engine = require('ejs-locals')
   , index = require('./routes/index')
   , articles = require('./routes/articles')
   , http = require('http')
   , path = require('path');
 
 var app = express();
+
+// use ejs-locals for all ejs templates:
+app.engine('ejs', engine);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -28,6 +32,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', index.home);
+app.get('/compare', index.compare);
 app.get('/articles/count', articles.getArticlesCount);
 app.get('/articles/content', articles.getArticlesContent);
 app.get('/wordcloud', articles.getWordCloud);
