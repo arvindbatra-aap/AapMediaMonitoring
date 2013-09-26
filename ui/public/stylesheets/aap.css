@@ -15,6 +15,11 @@ hr {
   padding: 40px 15px;
 }
 
+.social-container {
+	margin-top:15px;
+	float:right;
+}
+
 #trend-breakdown {
 	height: 432px;
 	display: none;
@@ -124,7 +129,6 @@ hr {
 .view-article-btn {
 	margin: 10px;
 }
-
 
 /* Compare page */
 

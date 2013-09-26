@@ -11,7 +11,7 @@ var _AAP = function() {
 _AAP.prototype.init = function(config) {
 	this._query = config.query;
 	this._domain = config.domain;
-	this._page = config.current_page;
+	this._page = config.page;
 
 	if(this._page == 'trend') {
 		console.log("Initializing trend page...");
