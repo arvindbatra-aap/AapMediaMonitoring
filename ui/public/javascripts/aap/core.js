@@ -2,7 +2,9 @@ var _AAP = function() {
 	console.log("Initializing AAP Media Monitoring Service...");
 	this._ui = new _AAP_UI(this);
 	this._VISIBLE_SOURCES = ["timesofindia.indiatimes.com", "www.hindustantimes.com", "www.indianexpress.com", "www.thehindu.com", "zeenews.india.com"];
+	
 	this._query = "";
+
 	this._trend_breakdown_date = "";
 	this._domain = ""; 
 	this._page = "";
@@ -56,6 +58,34 @@ _AAP.prototype.showGetLinkPopover = function() {
 	}
 	
 	this._ui.renderGetLinkPopover(link);
+};
+
+_AAP.prototype.handleTrendGraphPointClick = function(src, date) {
+	if(this._page == "trend") {
+		console.log("Updating all UI components for query:" + this._query + " and source:" + src + " and date:" + date);
+		this.showTrendBreakdown(date, date);
+		this.showWordCloud(date, date, src);
+		this.showArticles(date, date, src);		
+	}
+	else if(this._page == "compare") {
+		// From the graph in compare page, instead of source we have query...
+		this._query = src;
+		console.log("Updating all UI components for query:" + this._query + " and date:" + date);
+		this.showTrendBreakdown(date, date);
+
+		// Scroll down to bottom so user can see it!
+		setTimeout(this._ui.scrollToBottom, 1000);
+	}
+};
+
+_AAP.prototype.handleTrendBreakdownPointClick = function(src, date) {
+	if(this._page == "trend") {
+	    this.showArticles(date, date, src);
+	    this.showWordCloud(date, date, src);		
+	}
+	else if(this._page == "compare") {
+		// do nothing
+	}
 };
 
 _AAP.prototype.doQueryComparison = function() {
@@ -139,7 +169,6 @@ _AAP.prototype.hideAllTrendSeries = function() {
 	this._ui.hideAllTrendSeries();
 };
 
-
 _AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {
 	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
 	var params = {
@@ -163,13 +192,6 @@ _AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {
 			that._ui.renderArticlesModal(data);
 		}
 	});
-};
-
-_AAP.prototype.updateContentForSrcDate = function(src, date) {
-	console.log("Updating all UI components for query:" + this._query + " and source:" + src + " and date:" + date);
-	this.showTrendBreakdown(date, date);
-	this.showWordCloud(date, date, src);
-	this.showArticles(date, date, src);
 };
 
 _AAP.prototype.showArticleCountTrend = function(start, end) {
@@ -204,7 +226,8 @@ _AAP.prototype.showArticleCountTrend = function(start, end) {
 			var epochLatest = chart_data.dates[chart_data.dates.length-1];
 			var breakdown_chart_data = {
 				date: (new Date(parseInt(epochLatest))).toISOString().substr(0,10),
-				series: []
+				series: [],
+				subtitle: that._query + "-" + (new Date(parseInt(epochLatest))).toISOString().substr(0,10)
 			};		
 			
 			var count = 0;
@@ -287,7 +310,8 @@ _AAP.prototype.showTrendBreakdown = function(start, end) {
 
 			var breakdown_chart_data = {
 				date: (new Date(parseInt(epochLatest))).toISOString().substr(0,10),
-				series: []
+				series: [],
+				subtitle: that._query + " - " + (new Date(parseInt(epochLatest))).toISOString().substr(0,10)
 			};		
 			
 			var count = 0;

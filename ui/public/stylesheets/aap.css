@@ -135,6 +135,7 @@ hr {
 #compare-panel {
 	margin: 0 auto;
 	text-align: center;
+	margin-bottom: 20px;
 }
 
 .compare-query-field {

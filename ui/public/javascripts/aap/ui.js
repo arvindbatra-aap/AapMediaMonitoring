@@ -59,6 +59,10 @@ _AAP_UI.prototype.adjustCompareQueryFields = function() {
     });
 };
 
+_AAP_UI.prototype.scrollToBottom = function() {
+    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
+};
+
 _AAP_UI.prototype.getCompareQueries = function() {
     return this._compare_queries;
 }
@@ -97,7 +101,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
     this._context.setTrendBreakdownDate(chart_data.date);
 
     var that = this;
-    $(this._TREND_BREAKDOWN_DIV).empty().show();
+    $(this._TREND_BREAKDOWN_DIV).empty().show().parent().show();
     $(this._TREND_BREAKDOWN_DIV).highcharts({
         chart: {
             type: 'bar'
@@ -109,7 +113,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
             text: 'Breakdown by Source'
         },
         subtitle: {
-            text: chart_data.date
+            text: chart_data.subtitle
         },
         yAxis: {
             allowDecimals: false,
@@ -155,8 +159,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
                             var date = that._context.getTrendBreakdownDate();
                             console.log("Clicked within Trend Breakdown Chart on Source: " + this.name + " for date:" + date);
                             date = (new Date(date)).getTime();
-                            that._context.showArticles(date, date, this.name);
-                            that._context.showWordCloud(date, date, this.name);
+                            that._context.handleTrendBreakdownPointClick(this.name, date);
                         }
                     }
                 }
@@ -170,7 +173,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	console.log("Rendering Article Count Chart in div:" + this._ARTICLE_COUNT_CHART_DIV + " with data:");
 	console.log(chart_data);
     var that = this;
-	$(this._ARTICLE_COUNT_CHART_DIV).empty().parent().show();
+	$(this._ARTICLE_COUNT_CHART_DIV).empty().show().parent().show();
 	$(this._ARTICLE_COUNT_CHART_DIV).highcharts({
 		chart: {
             type: 'line',
@@ -211,7 +214,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
                     events: {
                         click: function() {
                             console.log("Clicked within Trend Chart on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
-                            that._context.updateContentForSrcDate(this.series.name, this.x);
+                            that._context.handleTrendGraphPointClick(this.series.name, this.x);
                         }
                     }
                 }
