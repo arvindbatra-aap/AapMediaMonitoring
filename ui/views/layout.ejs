@@ -34,7 +34,17 @@
 
 		<link rel="shortcut icon" href="/favicon.png" />
 		<script>
-			var user_query = "<%= user_query %>";
+			<% if(typeof(user_query) == "string") { %>
+				var user_query = "<%= user_query %>";
+			<% }
+			else if(typeof(user_query) == "object" && typeof(user_query.length) != 'undefined') { %>
+				var user_query = [
+				<% for(var i=0; i<user_query.length; i++) { %>
+					"<%= user_query[i] %>",
+				<% } %> 
+				];
+			<% } %>
+
 			var current_page = "<%= current_page %>";
 		</script>
 

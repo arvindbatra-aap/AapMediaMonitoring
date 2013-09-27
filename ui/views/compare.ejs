@@ -2,21 +2,21 @@
 
 <div class="row well" id="compare-panel">
 	<div class="form-inline">
+
+	  <% for(var i=0; i<user_query.length; i++) { %>
 	  <div class="form-group compare-query-field">
-	    <input type="text" class="form-control" placeholder="Enter a keyword...">
+	    <input type="text" class="form-control" placeholder="Enter a keyword..." value="<%= user_query[i] %>">
 	  </div>
 	  <span class='vstext'>vs</span>	  
-	  <div class="form-group compare-query-field">
-	    <input type="text" class="form-control" placeholder="Enter a keyword...">
-	  </div>
-	  <span class='vstext'>vs</span>
+	  <% } %>
+
 	  <button id='compare-add-btn' class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Add</button>
 	</div>
   
   <br/>
 
   <button id='compare-do-btn' class="btn btn-success"><span class="glyphicon glyphicon-stats"></span>&nbsp;Compare</button>
-  <!--<button id="get-link-btn" class="btn btn-primary"><span class="glyphicon glyphicon-link"></span>&nbsp;Get Link</button>-->
+  <button id="get-link-btn" class="btn btn-primary"><span class="glyphicon glyphicon-link"></span>&nbsp;Get Link</button>
 
 </div>
 

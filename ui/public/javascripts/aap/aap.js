@@ -26,16 +26,8 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#get-link-btn').click(function(){
-		$AAP.showGetLinkPopover();
-	});
-
 	$('#compare-btn').click(function(){
 		document.location.href="/compare";
-	});
-
-	$('#about-btn').click(function(){
-		$('#about-modal').modal();
 	});
 
 	$('#show-all-series-btn').click(function(){
@@ -46,6 +38,8 @@ $(document).ready(function(){
 		$AAP.hideAllTrendSeries();
 	});
 
+
+	/* Compare Page */
 	$('#compare-add-btn').click(function(){
 		$AAP.showNewCompareQueryField();
 	});
@@ -59,6 +53,16 @@ $(document).ready(function(){
 			$('#compare-add-btn').click();
 		}
 	});
+
+	/* Common */
+	$('#get-link-btn').click(function(){
+		$AAP.showGetLinkPopover();
+	});
+
+	$('#about-btn').click(function(){
+		$('#about-modal').modal();
+	});
+
 });
 
 

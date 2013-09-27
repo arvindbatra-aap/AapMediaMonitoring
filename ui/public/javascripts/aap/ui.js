@@ -31,6 +31,10 @@ var _AAP_UI = function (context) {
     this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 };
 
+_AAP_UI.prototype.setInitialCompareQueryFieldsCount = function(count) {
+    this._compare_queries_fields = count;
+};
+
 _AAP_UI.prototype.renderNewCompareQueryField = function() {
     var html = this._COMPARE_QUERY_FIELD_TEMPLATE();
     $(this._COMPARE_PANEL_DIV).find('span.vstext').last().after(html);

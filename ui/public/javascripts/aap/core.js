@@ -9,19 +9,31 @@ var _AAP = function() {
 };
 
 _AAP.prototype.init = function(config) {
-	this._query = config.query;
 	this._domain = config.domain;
 	this._page = config.page;
 
 	if(this._page == 'trend') {
 		console.log("Initializing trend page...");
+		this._query = config.query;
+
 		this.showArticleCountTrend(config.start, config.end);
 		this.showArticles(config.start, config.end);
 		this.showWordCloud(config.start, config.end);		
 	}
-	else {
+	else if(this._page == 'compare') {
 		console.log("Initializing compare page...");
-		// compare page init		
+		this._ui.setInitialCompareQueryFieldsCount(config.query.length);
+
+		var allempty = true;
+		for(var i=0; i<config.query.length; i++) {
+			if(!empty(config.query[i])) {
+				allempty = false;
+			}
+		}
+
+		if(!allempty) { 
+			this.doQueryComparison();
+		}
 	}
 };
 
@@ -30,11 +42,28 @@ _AAP.prototype.setQuery = function(query) {
 	this._query = query;
 };
 
+_AAP.prototype.showGetLinkPopover = function() {
+	var link;
+	if(this._page == 'trend') {
+		link = this._domain + '?q=' + encodeURIComponent(this._query);	
+	}
+	else if(this._page == 'compare') {
+		link = this._domain + '/compare?';
+		var queries = this._ui.getCompareQueries();
+		for(var i=0; i<queries.length; i++) {
+			link += "q=" + encodeURIComponent(queries[i]) + "&";
+		}
+	}
+	
+	this._ui.renderGetLinkPopover(link);
+};
+
 _AAP.prototype.doQueryComparison = function() {
 	this._ui.adjustCompareQueryFields();
 	var queries = this._ui.getCompareQueries();
 
 	if(empty(queries)) {
+		console.log("No non-empty fields to compare!");
 		return;
 	}
 
@@ -45,7 +74,7 @@ _AAP.prototype.doQueryComparison = function() {
 
 	$.get('/articles/multicount', {queries: queries}, function(all_data, status, xhr) {
 		if(!empty(all_data)) {
-			console.log(all_data);
+			
 			var global_chart_data = {
 				series: []
 			};
@@ -79,7 +108,7 @@ _AAP.prototype.doQueryComparison = function() {
 					for(var i=0; i<dates.length; i++) {
 						total_data_chart.push([parseInt(dates[i]), total_data[i]]);
 					}
-					console.log(total_data_chart);
+
 					// All timeline
 					global_chart_data.series.push({name: query, data: total_data_chart});
 				}
@@ -110,10 +139,6 @@ _AAP.prototype.hideAllTrendSeries = function() {
 	this._ui.hideAllTrendSeries();
 };
 
-_AAP.prototype.showGetLinkPopover = function() {
-	var link = this._domain + '?q=' + encodeURIComponent(this._query);
-	this._ui.renderGetLinkPopover(link);
-};
 
 _AAP.prototype.showArticlesForSrcDateInModal = function(src, date) {
 	console.log("Loading articles for query:" + this._query + " and source:" +  src + " and date:" + date);
