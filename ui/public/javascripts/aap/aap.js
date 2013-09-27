@@ -13,6 +13,7 @@ $(document).ready(function(){
 	$('#trend-update-btn').click(function(){
 		var query = $('#trend-query-string').val();
 		if(query && query.length > 0){
+			$AAP.abortAllActiveAjax();
 			$AAP.setQuery(query);
 			$AAP.showArticleCountTrend();
 			$AAP.showArticles();

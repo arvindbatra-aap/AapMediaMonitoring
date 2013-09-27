@@ -324,7 +324,7 @@ _AAP_UI.prototype.hideWordCloudLoading = function() {
 };
 
 _AAP_UI.prototype.showNoResponseErrorWordCloud = function() {
-    $(this._WORDCLOUD_CONTAINER_DIV).text("Sorry! Not enough data to generate a word cloud.").show();
+    $(this._WORDCLOUD_CONTAINER_DIV).hide();
 };
 
 /* Overall Trend Chart */
@@ -354,7 +354,7 @@ _AAP_UI.prototype.showTrendBreakdownLoading = function() {
 };
 
 _AAP_UI.prototype.showNoResponseErrorTrendBreakdown = function() {
-    $(this._TREND_BREAKDOWN_DIV).text("Sorry! Not enough data to generate a breakdown chart!").show();
+    $(this._TREND_BREAKDOWN_DIV).parent().hide();
 };
 
 /* Articles */
