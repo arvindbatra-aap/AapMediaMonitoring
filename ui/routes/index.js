@@ -48,3 +48,15 @@ exports.compare = function(req, res){
 			res.render('compare', { user_query: queries, candidates: data, current_page: 'compare', core_committee: committee});
 		});
 };
+
+/*
+ * GET about page.
+ */
+
+exports.about = function(req, res){
+	var csv = require('csv');
+	csv().from.path(__dirname + '/../../../AapMediaMonitoring/candidatelist/CandidateList.csv', {})
+		.to.array( function(data){;
+			res.render('about', { user_query: "", candidates: data, current_page: 'about', core_committee: committee});
+		});
+};

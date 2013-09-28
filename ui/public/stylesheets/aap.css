@@ -57,12 +57,12 @@ hr {
 	padding-left: 0px;
 	padding-right: 0px;
 	margin: 10px;
-	width: 350px;
+	max-width: 350px;
 }
 
 #wordcloud {
 	height: 400px;
-	width: 350px;
+	max-width: 350px;
 	display: none;
 }
 

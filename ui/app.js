@@ -34,11 +34,12 @@ if ('development' == app.get('env')) {
 
 app.get('/', index.home);
 app.get('/compare', index.compare);
+app.get('/about', index.about);
 app.get('/articles/count', articles.getArticlesCount);
 app.get('/articles/content', articles.getArticlesContent);
 app.get('/articles/multicount', articles.getMultiQueryCounts);
 app.get('/wordcloud', articles.getWordCloud);
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express server listening on port ' + app.get('port') + ' with env ' + app.get('env'));
 });

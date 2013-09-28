@@ -60,10 +60,6 @@ $(document).ready(function(){
 		$AAP.showGetLinkPopover();
 	});
 
-	$('#about-btn').click(function(){
-		$('#about-modal').modal();
-	});
-
 });
 
 
