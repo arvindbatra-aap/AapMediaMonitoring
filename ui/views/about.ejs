@@ -51,17 +51,17 @@
 			    <p>
 			    	Ten of us have contributed in bits and pieces to bring this solution together. We are: 
 			    </p>
-			    <ul>
-			    	<li>Abhinav Anand</li>
-					<li>Abhishek Shrivastava</li>
-					<li>Ankit Gupta</li>
-					<li>Arvind Batra</li>
-					<li>Gurmeet Singh</li>
-					<li>Nikesh Garera</li>
-					<li>Parag Sarda</li>
-					<li>Pratik Patre</li>
-					<li>Pranay Venkata</li>
-					<li>Rohit Hiwale</li>
+			    <ul class="aap-team-wrapper">
+			    	<% for(var i=0; i<labs_team.length; i++) { %>
+			    	<li><span class='aap-team'><%= labs_team[i].n %></span><span class='social-profiles-box'>
+			    		<% if(labs_team[i].f) { %>
+			    			&nbsp;<a href='http://www.facebook.com/<%= labs_team[i].f %>'><img src='/images/facebook.png' /></a>
+			    		<% } if(labs_team[i].t) { %>
+			    		&nbsp;<a href='http://www.twitter.com/<%= labs_team[i].t %>'><img  src='/images/twitter.png' /></a>
+			    		<% } if(labs_team[i].e) { %>
+			    		&nbsp;<a href='mailto:<%= labs_team[i].e %>'><img  src='/images/email.png' /></a></span></li>
+			    		<% } %>
+			    	<% } %>
 				</ul>
 			  </div>
 			  <div class="fade tab-pane" id="about-next">

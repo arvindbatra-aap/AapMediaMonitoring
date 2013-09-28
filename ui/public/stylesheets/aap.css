@@ -151,3 +151,13 @@ hr {
 .compare-query-field {
 	margin-bottom: 5px !important;
 }
+
+/* About page */
+
+.social-profiles-box {
+	display: none;
+}
+
+.aap-team {
+	cursor: pointer;
+}

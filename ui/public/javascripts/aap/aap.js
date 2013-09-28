@@ -55,6 +55,15 @@ $(document).ready(function(){
 		}
 	});
 
+	/* About page */
+	$('.aap-team-wrapper > li').hover(function(){
+		$(this).find('.social-profiles-box').show();
+	}, function(){
+		$(this).find('.social-profiles-box').fadeOut('slow');
+	}).click(function(){
+		$(this).find('.social-profiles-box').show();
+	});
+
 	/* Common */
 	$('#get-link-btn').click(function(){
 		$AAP.showGetLinkPopover();

@@ -22,6 +22,38 @@ var committee = ['Arvind Kejriwal',
 				'Rakesh Sinha',
 				'Prem Singh Pahari'];
 
+var labs_team = [{
+	n: 'Abhinav Anand (Hum)',
+	e: 'ab.rvian@gmail.com'	
+}, {
+	n: 'Abhishek Shrivastava',
+	f: 'abhishekdelta',
+	t: 'abhishekdelta'	
+}, {
+	n: 'Ankit Gupta (Chunky)',
+	f: 'ankitgupta'
+}, {
+	n: 'Arvind Batra',
+}, {
+	n: 'Gurmeet Singh',
+	f: 'guru27gurmeet'
+}, {
+	n: 'Nikesh Garera'
+}, {
+	n: 'Parag Sarda',
+	f: 'parag.sarda'	
+}, {
+	n: 'Pratik Patre',
+	e: 'pbpatre@gmail.com',
+	f: 'pbpatre'	
+}, {
+	n: 'Pranay Venkata',
+	f: 'svpranay'
+}, {
+	n: 'Rohit Hiwale',
+	f: 'rohit.hiwale'	
+}];
+
 /*
  * GET home page.
  */
@@ -57,6 +89,6 @@ exports.about = function(req, res){
 	var csv = require('csv');
 	csv().from.path(__dirname + '/../../../AapMediaMonitoring/candidatelist/CandidateList.csv', {})
 		.to.array( function(data){;
-			res.render('about', { user_query: "", candidates: data, current_page: 'about', core_committee: committee});
+			res.render('about', { user_query: "", candidates: data, current_page: 'about', core_committee: committee, labs_team: labs_team});
 		});
 };
