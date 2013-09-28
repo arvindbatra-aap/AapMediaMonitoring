@@ -11,6 +11,10 @@ hr {
 	font-size: 19px;
 }
 
+.marginbot10 {
+	margin-bottom: 10px;
+}
+
 .inner-container {
   padding: 40px 15px;
 }
@@ -34,6 +38,12 @@ hr {
 	margin-bottom: 10px;
 	display: none;
 }
+
+
+#trend-query-form > div, #trend-query-form > button {
+	margin-bottom: 10px !important;
+}
+
 
 .loading-bar {
 	padding-top: 20px;
