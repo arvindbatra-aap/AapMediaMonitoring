@@ -45,7 +45,6 @@ exports.getMultiQueryCounts = function(req, res) {
 
                 request(uri, function(error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        console.log(body);
                         callback(null, JSON.parse(body));
                     }
                 }); 
@@ -57,6 +56,8 @@ exports.getMultiQueryCounts = function(req, res) {
     console.log(parallel_construct);
 
     async.parallel(parallel_construct, function(err, results) {
+        console.log(results);
+        res.setHeader("Cache-Control","max-age=10800");
         res.send(results);
     });
 };
@@ -68,6 +69,7 @@ exports.getArticlesCount = function(req, res) {
     request(uri, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body);
+            res.setHeader("Cache-Control","max-age=10800");
             res.send(JSON.parse(body));
         }
     });
@@ -80,6 +82,7 @@ exports.getArticlesContent = function(req, res) {
     request(uri, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body);
+            res.setHeader("Cache-Control","max-age=10800");
             res.send(JSON.parse(body));
         }
     });
@@ -92,6 +95,7 @@ exports.getWordCloud = function(req, res) {
     request(uri, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body);
+            res.setHeader("Cache-Control","max-age=10800");
             res.send(JSON.parse(body));
         }
     });
