@@ -4,8 +4,16 @@ var _AAP_UI = function (context) {
     this._chart = null;
 	this._context = context;
 
+    this._compare_queries = [];
+    this._compare_query_fields = 2;
+
     this._ARTICLE_BOX_TEMPLATE = Handlebars.compile($("#article-box-template").html());
-	
+    this._COMPARE_QUERY_FIELD_TEMPLATE = Handlebars.compile($("#compare-query-field-template").html());
+    
+
+    this._COMPARE_PANEL_DIV = '#compare-panel';
+    this._COMPARE_QUERY_FIELD = '.compare-query-field';
+
     this._ARTICLE_COUNT_CHART_DIV = '#article-count-trend';
 	this._ARTICLE_COUNT_LOADING_DIV = '#trend-loading';
     this._ARTICLE_COUNT_CHART_CONTROL_DIV = '#article-count-trend-control';
@@ -23,6 +31,42 @@ var _AAP_UI = function (context) {
     this._ARTICLES_MODAL_LOADING_DIV = '#articles-modal-loading';
 };
 
+_AAP_UI.prototype.setInitialCompareQueryFieldsCount = function(count) {
+    this._compare_queries_fields = count;
+};
+
+_AAP_UI.prototype.renderNewCompareQueryField = function() {
+    var html = this._COMPARE_QUERY_FIELD_TEMPLATE();
+    $(this._COMPARE_PANEL_DIV).find('span.vstext').last().after(html);
+    this._compare_query_fields++;
+};
+
+_AAP_UI.prototype.adjustCompareQueryFields = function() {
+    var that = this;
+    this._compare_queries = [];
+
+    // Remove empty fields and load queries of non-empty fields
+    $(this._COMPARE_PANEL_DIV).find(this._COMPARE_QUERY_FIELD).each(function(){
+        var val = $(this).find('input').val();
+        if(val == "" && that._compare_query_fields > 1) {
+            $(this).next('.vstext').remove();
+            $(this).remove();
+            that._compare_query_fields--;
+        }
+        else if(val != "") {
+            that._compare_queries.push(val);
+        }
+    });
+};
+
+_AAP_UI.prototype.scrollToBottom = function() {
+    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
+};
+
+_AAP_UI.prototype.getCompareQueries = function() {
+    return this._compare_queries;
+}
+
 _AAP_UI.prototype.renderGetLinkPopover = function(link) {
     
     if($('#get-link-btn').data('state') == 'open') {
@@ -34,6 +78,7 @@ _AAP_UI.prototype.renderGetLinkPopover = function(link) {
             html: true,
             title: 'Copy the link below',
             trigger: 'manual',
+            placement: 'auto top',
             content: function() {
                 return "<input type='text' value='"+link+"' style='width:250px' readonly id='get-link-field'/>";
             }
@@ -56,7 +101,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
     this._context.setTrendBreakdownDate(chart_data.date);
 
     var that = this;
-    $(this._TREND_BREAKDOWN_DIV).empty().show();
+    $(this._TREND_BREAKDOWN_DIV).empty().show().parent().show();
     $(this._TREND_BREAKDOWN_DIV).highcharts({
         chart: {
             type: 'bar'
@@ -68,7 +113,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
             text: 'Breakdown by Source'
         },
         subtitle: {
-            text: chart_data.date
+            text: chart_data.subtitle
         },
         yAxis: {
             allowDecimals: false,
@@ -114,8 +159,7 @@ _AAP_UI.prototype.renderTrendBreakdownChart = function(chart_data) {
                             var date = that._context.getTrendBreakdownDate();
                             console.log("Clicked within Trend Breakdown Chart on Source: " + this.name + " for date:" + date);
                             date = (new Date(date)).getTime();
-                            that._context.showArticles(date, date, this.name);
-                            that._context.showWordCloud(date, date, this.name);
+                            that._context.handleTrendBreakdownPointClick(this.name, date);
                         }
                     }
                 }
@@ -129,7 +173,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
 	console.log("Rendering Article Count Chart in div:" + this._ARTICLE_COUNT_CHART_DIV + " with data:");
 	console.log(chart_data);
     var that = this;
-	$(this._ARTICLE_COUNT_CHART_DIV).empty();
+	$(this._ARTICLE_COUNT_CHART_DIV).empty().show().parent().show();
 	$(this._ARTICLE_COUNT_CHART_DIV).highcharts({
 		chart: {
             type: 'line',
@@ -170,7 +214,7 @@ _AAP_UI.prototype.renderArticleCountChart = function(chart_data) {
                     events: {
                         click: function() {
                             console.log("Clicked within Trend Chart on series: " + this.series.name + " on date:" + (new Date(this.x)).toDateString());
-                            that._context.updateContentForSrcDate(this.series.name, this.x);
+                            that._context.handleTrendGraphPointClick(this.series.name, this.x);
                         }
                     }
                 }
@@ -280,7 +324,7 @@ _AAP_UI.prototype.hideWordCloudLoading = function() {
 };
 
 _AAP_UI.prototype.showNoResponseErrorWordCloud = function() {
-    $(this._WORDCLOUD_CONTAINER_DIV).text("Sorry! Not enough data to generate a word cloud.").show();
+    $(this._WORDCLOUD_CONTAINER_DIV).hide();
 };
 
 /* Overall Trend Chart */
@@ -310,7 +354,7 @@ _AAP_UI.prototype.showTrendBreakdownLoading = function() {
 };
 
 _AAP_UI.prototype.showNoResponseErrorTrendBreakdown = function() {
-    $(this._TREND_BREAKDOWN_DIV).text("Sorry! Not enough data to generate a breakdown chart!").show();
+    $(this._TREND_BREAKDOWN_DIV).parent().hide();
 };
 
 /* Articles */

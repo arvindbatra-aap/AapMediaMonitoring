@@ -1,6 +1,7 @@
 var AAP_INI_CONFIG = {
 	'query' : user_query,
-	'domain': 'http://aap.mediatrack.in'
+	'domain': 'http://aap.mediatrack.in',
+	'page'  : current_page
 };
 
 var $AAP;
@@ -12,6 +13,7 @@ $(document).ready(function(){
 	$('#trend-update-btn').click(function(){
 		var query = $('#trend-query-string').val();
 		if(query && query.length > 0){
+			$AAP.abortAllActiveAjax();
 			$AAP.setQuery(query);
 			$AAP.showArticleCountTrend();
 			$AAP.showArticles();
@@ -25,12 +27,8 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#get-link-btn').click(function(){
-		$AAP.showGetLinkPopover();
-	});
-
-	$('#about-btn').click(function(){
-		$('#about-modal').modal();
+	$('#compare-btn').click(function(){
+		document.location.href="/compare";
 	});
 
 	$('#show-all-series-btn').click(function(){
@@ -40,6 +38,37 @@ $(document).ready(function(){
 	$('#hide-all-series-btn').click(function(){
 		$AAP.hideAllTrendSeries();
 	});
+
+
+	/* Compare Page */
+	$('#compare-add-btn').click(function(){
+		$AAP.showNewCompareQueryField();
+	});
+
+	$('#compare-do-btn').click(function(){
+		$AAP.doQueryComparison();
+	});
+
+	$('.compare-query-field > input').keyup(function(event){
+		if(event.which == 13) {
+			$('#compare-add-btn').click();
+		}
+	});
+
+	/* About page */
+	$('.aap-team-wrapper > li').hover(function(){
+		$(this).find('.social-profiles-box').show();
+	}, function(){
+		$(this).find('.social-profiles-box').fadeOut('slow');
+	}).click(function(){
+		$(this).find('.social-profiles-box').show();
+	});
+
+	/* Common */
+	$('#get-link-btn').click(function(){
+		$AAP.showGetLinkPopover();
+	});
+
 });
 
 

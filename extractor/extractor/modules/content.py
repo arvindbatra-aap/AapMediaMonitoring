@@ -13,7 +13,7 @@ class ContentExtractor(BasicExtractor):
 
 	def extract(self, datum):
 		input_data = {}
-		input_data["content"] = etree.tostring(datum['content'])
+		input_data["content"] = datum['raw_html']
 		input_data["url"] = datum['url']
 		url = 'http://localhost:2121/api/content'
 		req = urllib2.Request(url, simplejson.dumps(input_data))

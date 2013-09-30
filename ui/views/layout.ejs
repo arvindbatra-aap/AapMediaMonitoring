@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>AAP Media Monitoring Service</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Aam Admi Party Media Monitoring Service" />
+		<meta name="author" content="" />
+		<meta name="keywords" content="AAP, Media, Times Of India, The Hindu, India, Monitoring Service" />
+
+		<!-- Le styles -->
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" />
+		<link href="/stylesheets/datepicker.css" rel="stylesheet" />
+		<link href="/stylesheets/aap.css" rel="stylesheet" />
+		<link href="/stylesheets/jqcloud.css" rel="stylesheet" />
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.core.css">
+		<link rel="stylesheet" media="screen" href="/stylesheets/alertify.bootstrap.css">
+
+		<style>
+		  body {
+		    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+		  }
+		  .control-group::before, .control-group::after {
+		  	display: inline !important; /* bootstrap override */
+		  }	
+		</style>
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		  <script src="/javascripts/html5shiv.js"></script>
+		  <script src="/javascripts/respond.min.js"></script>
+		<![endif]-->
+
+		<link rel="shortcut icon" href="/favicon.png" />
+		<script>
+			<% if(typeof(user_query) == "string") { %>
+				var user_query = "<%= user_query %>";
+			<% }
+			else if(typeof(user_query) == "object" && typeof(user_query.length) != 'undefined') { %>
+				var user_query = [
+				<% for(var i=0; i<user_query.length; i++) { %>
+					"<%= user_query[i] %>",
+				<% } %> 
+				];
+			<% } %>
+
+			var current_page = "<%= current_page %>";
+		</script>
+
+		<script id="article-box-template" type="text/x-handlebars-template">
+			<div class="col-lg-4 article-box">
+			  <div class="article-inner-box">
+		          <h3>{{title}}</h3>
+		          <p class='text-muted publish-info'>Published by <b>{{src}}</b> on <b>{{date}}</b></p>
+		          <p>{{content}}</p>
+	          </div>
+	          <div class="article-inner-row">
+	          	<p><a class="btn btn-primary view-article-btn" href="{{url}}" target="_blank">View Article »</a></p>
+              </div>
+	        </div>
+		</script>
+
+		<script id="compare-query-field-template" type="text/x-handlebars-template">
+			<div class="form-group compare-query-field">
+		    	<input type="text" class="form-control" placeholder="Enter a keyword..."/>
+		  	</div>
+		  	<span class="vstext">vs</span>
+	  	</script>
+
+	</head>
+
+	<body>
+
+	<!-- FB SDK -->
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=194261983935731";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
+	<!-- Nav Bar -->
+	<div class="navbar navbar-inverse navbar-fixed-top"  role="navigation">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="/">AAP Media Monitor</a>
+	    </div>
+	    <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="/">Trend</a></li>
+   			
+   			<li class="dropdown">
+		        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Candidates <b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		        	<li>
+		        		<div class="row" style="width: 1000px;padding-top:10px">
+		                    <ul class="col-md-5" style="list-style:none; margin-left:20px">
+				        	<% for(var i=0; i < candidates.length; i++) {
+				        		candidate = candidates[i][0];
+				        		var tokens = candidate.split("\t");
+				        		var name = tokens[1];
+				        		var constituency = tokens[0]; 
+				        		var display = name + " (" + constituency + ")";
+				        		if (i%3 == 0 && i >0) { %>
+									</ul>
+			                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+				        		<% } %>
+
+			   					<li style="height:25px"><a href="/?q=<%= name%>"><%= display %></a></li>
+							<% } %>
+							</ul>
+	                	</div>
+					</li>
+
+		        </ul>
+	    	</li>
+
+	    	<li class="dropdown">
+		        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Core Committee <b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		        	<li>
+		        		<div class="row" style="width: 1000px;padding-top:10px">
+		                    <ul class="col-md-5" style="list-style:none; margin-left:20px">
+				        	<% for(var i=0; i < core_committee.length; i++) {
+				        		member = core_committee[i];
+				        		if (i%3 == 0 && i >0) { %>
+									</ul>
+			                    	<ul class="col-md-5" style="list-style:none; margin-left:20px">
+				        		<% } %>
+
+			   					<li style="height:25px"><a href="/?q=<%= member%>"><%= member %></a></li>
+							<% } %>
+							</ul>
+	                	</div>
+					</li>
+
+		        </ul>
+		    </li>
+
+	        <li><a id="about-btn" href="/about">About</a></li>
+	  	  </ul>
+
+	  	  <!-- Social buttons -->
+	  	  <div class="social-container">
+	  	  	<div class="fb-like" data-href="http://aap.mediatrack.in" data-width="450" data-colorscheme="light" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+	  	  			  	  <!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  (function() {
+			    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+			    po.src = 'https://apis.google.com/js/plusone.js';
+			    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>
+			<span style="margin-left:-25px">
+		  	  <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://aap.mediatrack.in" data-text="What is media saying about Aam Aadmi Party ? Is all the media biased? If so, can we quantify it ?">Tweet</a>
+			  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</span>
+		  </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- Nav Bar Ends -->
+
+	<!-- Body Container -->
+	<div class="container">
+
+	  <div class="inner-container">
+
+	  	<%- body %>
+
+  	  </div>
+
+	</div>
+	<!-- Body Container Ends -->
+
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!--<script src="/javascripts/jquery.min.js"></script>-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+	<script src="/javascripts/handlebars.js"></script>
+	<script src="/javascripts/bootstrap.min.js"></script>
+	<script src="/javascripts/alertify-0.3.7.min.js"></script>		
+
+	<script src="/javascripts/aap/util.js"></script>
+	<script src="/javascripts/aap/ui.js"></script>
+	<script src="/javascripts/aap/core.js"></script>
+	<script src="/javascripts/aap/aap.js"></script>
+	<script src="http://www.lucaongaro.eu/demos/jqcloud/jqcloud-1.0.0.min.js"></script>
+
+	<!-- Google Analytics -->
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-44363373-1', 'mediatrack.in');
+	  ga('send', 'pageview');
+	</script>
+
+	</body>
+</html>

@@ -1,0 +1,35 @@
+<% layout('layout') -%>
+
+<div class="row well" id="compare-panel">
+	<div class="form-inline">
+
+	  <% for(var i=0; i<user_query.length; i++) { %>
+	  <div class="form-group compare-query-field">
+	    <input type="text" class="form-control" placeholder="Enter a keyword..." value="<%= user_query[i] %>">
+	  </div>
+	  <span class='vstext'>vs</span>	  
+	  <% } %>
+
+	  <button id='compare-add-btn' class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Add</button>
+	</div>
+  
+  <br/>
+
+  <button id='compare-do-btn' class="btn btn-success"><span class="glyphicon glyphicon-stats"></span>&nbsp;Compare</button>
+  <button id="get-link-btn" class="btn btn-primary"><span class="glyphicon glyphicon-link"></span>&nbsp;Get Link</button>
+
+</div>
+
+
+<!-- Compare Trend Graph -->
+<div class="col-lg-12 chart-box" id="article-count-trend-wrapper" style='display:none'>
+    <div id="article-count-trend">	
+    </div>
+</div>
+
+
+<!-- Trend Breakdown -->
+<div id="trend-breakdown-wrapper" class="col-lg-12 chart-box" style='display:none; margin-left:0px; margin-top: 20px;'>
+    <div id="trend-breakdown">
+	</div>
+</div>

@@ -11,8 +11,17 @@ hr {
 	font-size: 19px;
 }
 
+.marginbot10 {
+	margin-bottom: 10px;
+}
+
 .inner-container {
   padding: 40px 15px;
+}
+
+.social-container {
+	margin-top:15px;
+	float:right;
 }
 
 #trend-breakdown {
@@ -29,6 +38,12 @@ hr {
 	margin-bottom: 10px;
 	display: none;
 }
+
+
+#trend-query-form > div, #trend-query-form > button {
+	margin-bottom: 10px !important;
+}
+
 
 .loading-bar {
 	padding-top: 20px;
@@ -52,12 +67,12 @@ hr {
 	padding-left: 0px;
 	padding-right: 0px;
 	margin: 10px;
-	width: 350px;
+	max-width: 350px;
 }
 
 #wordcloud {
 	height: 400px;
-	width: 350px;
+	max-width: 350px;
 	display: none;
 }
 
@@ -125,3 +140,24 @@ hr {
 	margin: 10px;
 }
 
+/* Compare page */
+
+#compare-panel {
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.compare-query-field {
+	margin-bottom: 5px !important;
+}
+
+/* About page */
+
+.social-profiles-box {
+	display: none;
+}
+
+.aap-team {
+	cursor: pointer;
+}
