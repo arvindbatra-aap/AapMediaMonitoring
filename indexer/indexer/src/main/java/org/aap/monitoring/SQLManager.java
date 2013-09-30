@@ -66,7 +66,7 @@ public class SQLManager {
                 LOG.info("DB query " + query + " started ...");
                 rs = st.executeQuery(query);
                 long endTS = System.currentTimeMillis();
-                LOG.info("DB query completed in time:  " + (endTS-currTS));
+                LOG.info("DB query completed in time:  " + (endTS-currTS) + "ms");
                 List<SolrInputDocument> inputDocuments = new ArrayList<SolrInputDocument>();
                 while (rs.next()) {
                     currSize++;
@@ -78,12 +78,13 @@ public class SQLManager {
                         LOG.error("Failed to create document", e);
                         failedCount++;
                     }
-                    count++;
                 }
-               try {
-				solrManager.insertDocuments(inputDocuments);
-               } catch (Exception e) {
-				LOG.error("Failed in inserting documents to solr",e);
+               if(currSize > 0){
+	               try {
+					solrManager.insertDocuments(inputDocuments);
+	               } catch (Exception e) {
+					LOG.error("Failed in inserting documents to solr",e);
+	               }
                }
                 start = start + currSize;
             } catch (SQLException ex) {

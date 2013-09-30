@@ -62,7 +62,7 @@ public class SolrManager {
             solrServer.add(inputDocuments);
             solrServer.commit();
             long endTS = System.currentTimeMillis();
-            LOG.info("Inserted " + inputDocuments.size() + " documents in " + (endTS-currTS));
+            LOG.info("Inserted " + inputDocuments.size() + " documents in " + (endTS-currTS) + "ms");
         } catch (Exception e) {
            LOG.error("Exception in adding document", e);
            throw e;
